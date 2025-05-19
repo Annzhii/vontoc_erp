@@ -1,0 +1,462 @@
+<template>
+	<component
+		:is="isMobile ? SendMailMobileLayout : Dialog"
+		v-model="show"
+		:options="{ title: __('Send Mail'), size: '4xl' }"
+	>
+		<template #body-content>
+			<TextEditor
+				v-if="!isDraftLoading"
+				ref="textEditor"
+				:editor-class="[
+					'prose-sm max-w-none',
+					'min-h-[15rem]',
+					'[&_p.reply-to-content]:hidden',
+				]"
+				:content="mail.html"
+				@change="(val) => (mail.html = val)"
+			>
+				<template #top>
+					<div class="flex flex-col gap-3 border-b">
+						<div class="flex items-center gap-2 sm:border-t sm:pt-2.5">
+							<span class="text-xs text-gray-500">{{ __('From') }}:</span>
+							<FormControl
+								v-model="mail.from"
+								type="autocomplete"
+								:options="addressOptions.data || []"
+							/>
+						</div>
+						<div class="flex items-center gap-2">
+							<span class="text-xs text-gray-500">{{ __('To') }}:</span>
+							<MultiselectInputControl
+								v-model="mail.to"
+								class="flex-1 text-sm"
+								:validate="validateEmail"
+								:error-message="
+									(value) =>
+										__(`'{0}' is an invalid email address`, [value])
+								"
+							/>
+							<div class="flex gap-1.5">
+								<Button
+									:label="__('Cc')"
+									variant="ghost"
+									:class="[
+										cc ? '!bg-gray-300 hover:bg-gray-200' : '!text-gray-500',
+									]"
+									@click="toggleCC()"
+								/>
+								<Button
+									:label="__('Bcc')"
+									variant="ghost"
+									:class="[
+										bcc ? '!bg-gray-300 hover:bg-gray-200' : '!text-gray-500',
+									]"
+									@click="toggleBCC()"
+								/>
+							</div>
+						</div>
+						<div v-if="cc" class="flex items-center gap-2">
+							<span class="text-xs text-gray-500">{{ __('Cc') }}:</span>
+							<MultiselectInputControl
+								ref="ccInput"
+								v-model="mail.cc"
+								class="flex-1 text-sm"
+								:validate="validateEmail"
+								:error-message="
+									(value) =>
+										__(`'{0}' is an invalid email address`, [value])
+								"
+							/>
+						</div>
+						<div v-if="bcc" class="flex items-center gap-2">
+							<span class="text-xs text-gray-500">{{ __('Bcc') }}:</span>
+							<MultiselectInputControl
+								ref="bccInput"
+								v-model="mail.bcc"
+								class="flex-1 text-sm"
+								:validate="validateEmail"
+								:error-message="
+									(value) =>
+										__(`'{0}' is an invalid email address`, [value])
+								"
+							/>
+						</div>
+						<div class="flex items-center gap-2 pb-2.5">
+							<span class="text-xs text-gray-500">{{ __('Subject') }}:</span>
+							<input
+								v-model="mail.subject"
+								class="text-ink-gray-8 flex-1 border-none bg-white text-base focus-visible:!ring-0"
+							/>
+						</div>
+					</div>
+				</template>
+				<template #editor="{ editor }">
+					<div
+						class="flex h-[calc(100dvh-16.9rem)] flex-col overflow-y-auto py-2.5 text-sm sm:max-h-[40vh]"
+						:class="{
+							'h-[calc(100dvh-19.7rem)]': cc || bcc,
+							'h-[calc(100dvh-21.9rem)]': cc && bcc,
+						}"
+					>
+						<EditorContent :editor="editor" />
+
+						<!-- Attachments -->
+						<div
+							v-if="localMailID && attachments.data?.length"
+							class="mt-auto flex flex-col gap-2.5 pt-2.5 text-gray-700"
+						>
+							<a
+								v-for="(file, index) in attachments.data"
+								:key="index"
+								class="flex cursor-pointer items-center rounded bg-gray-100 p-2.5"
+								:href="file.file_url"
+								target="_blank"
+							>
+								<span class="mr-1 font-medium">
+									{{ file.file_name || file.name }}
+								</span>
+								<span class="mr-1 font-extralight">
+									({{ formatBytes(file.file_size) }})
+								</span>
+								<FeatherIcon
+									class="ml-auto h-3.5 w-3.5"
+									name="x"
+									@click.stop.prevent="
+										removeAttachment.submit({ name: file.name })
+									"
+								/>
+							</a>
+						</div>
+					</div>
+				</template>
+				<template #bottom>
+					<FileUploader
+						:upload-args="{
+							doctype: 'Outgoing Mail',
+							docname: localMailID,
+							private: true,
+						}"
+						:validate-file="
+							async () => {
+								if (!localMailID) await createDraftMail.submit()
+							}
+						"
+						:class="{ 'fixed bottom-0 left-0 right-0 px-3': isMobile }"
+						@success="attachments.fetch()"
+					>
+						<template #default="{ file, progress, uploading, openFileSelector }">
+							<div
+								v-if="uploading"
+								class="mb-2 rounded bg-gray-100 p-2.5 text-sm text-gray-700"
+							>
+								<div class="mb-1.5 flex items-center">
+									<span class="mr-1 font-medium">
+										{{ file.name }}
+									</span>
+									<span class="font-extralight">
+										({{ formatBytes(file.size) }})
+									</span>
+								</div>
+								<Progress :value="progress" />
+							</div>
+
+							<div
+								class="flex flex-wrap justify-between gap-2 overflow-hidden border-t py-2.5"
+							>
+								<!-- Text Editor Buttons -->
+								<div class="flex items-center gap-1 overflow-x-auto">
+									<TextEditorFixedMenu :buttons="textEditorMenuButtons" />
+									<Button variant="ghost" @click="openFileSelector()">
+										<template #icon>
+											<Paperclip class="h-4" />
+										</template>
+									</Button>
+								</div>
+
+								<!-- Send & Discard -->
+								<div class="ml-auto flex items-center space-x-2 sm:mt-0">
+									<Button :label="__('Discard')" @click="discardMail" />
+									<Button variant="solid" :label="__('Send')" @click="send" />
+								</div>
+							</div>
+						</template>
+					</FileUploader>
+				</template>
+			</TextEditor>
+			<div v-else class="min-h-[30rem]" />
+		</template>
+	</component>
+</template>
+<script setup>
+import { computed, inject, nextTick, reactive, ref, watch } from 'vue'
+import { EditorContent } from '@tiptap/vue-3'
+import { useDebounceFn } from '@vueuse/core'
+import { Laugh, Paperclip } from 'lucide-vue-next'
+import {
+	Button,
+	Dialog,
+	FeatherIcon,
+	FileUploader,
+	TextEditor,
+	TextEditorFixedMenu,
+	createDocumentResource,
+	createResource,
+} from 'frappe-ui'
+
+import { formatBytes, validateEmail } from '@/utils'
+import { useScreenSize } from '@/utils/composables'
+import { userStore } from '@/stores/user'
+import MultiselectInputControl from '@/components/Controls/MultiselectInputControl.vue'
+import SendMailMobileLayout from '@/components/SendMailMobileLayout.vue'
+
+
+const { mailID, replyDetails } = defineProps({
+  mailID: String,
+  replyDetails: Object,
+})
+
+const emit = defineEmits(['reloadMails'])
+
+const show = defineModel()
+
+const user = inject('$user')
+const { isMobile } = useScreenSize()
+const { setCurrentMail } = userStore()
+
+const localMailID = ref()
+const textEditor = ref(null)
+const ccInput = ref(null)
+const bccInput = ref(null)
+const cc = ref(false)
+const bcc = ref(false)
+const emoji = ref()
+const isSend = ref(false)
+const isMailWatcherActive = ref(true)
+const isDraftLoading = ref(false)
+
+const SYNC_DEBOUNCE_TIME = 1500
+
+const editor = computed(() => textEditor.value.editor)
+
+const isMailEmpty = computed(() => {
+  const isSubjectEmpty = !mail.subject.length
+  let isHtmlEmpty = true
+  if (mail.html) {
+    const element = document.createElement('div')
+    element.innerHTML = mail.html
+    isHtmlEmpty = !element.textContent?.trim()
+    isHtmlEmpty = Array.from(element.children).some((d) => !d.textContent?.trim())
+  }
+  const isRecipientsEmpty = [mail.to, mail.cc, mail.bcc].every((d) => !d.length)
+
+  return isSubjectEmpty && isHtmlEmpty && isRecipientsEmpty
+})
+
+const discardMail = async () => {
+	if (localMailID.value) await deleteDraftMail.submit()
+	else if (!isMailEmpty.value) Object.assign(mail, emptyMail)
+	show.value = false
+}
+
+const syncMail = useDebounceFn(() => {
+	if (!isMailWatcherActive.value) return
+	if (localMailID.value) updateDraftMail.submit()
+	else if (!isMailEmpty.value) createDraftMail.submit()
+}, SYNC_DEBOUNCE_TIME)
+
+const emptyMail = {
+	from: user.data?.default_outgoing,
+	to: '',
+	cc: '',
+	bcc: '',
+	subject: '',
+	html: '',
+}
+
+const mail = reactive({ ...emptyMail })
+
+watch(show, () => {
+	if (!show.value) return
+	if (mailID) getDraftMail(mailID)
+	else {
+		localMailID.value = undefined
+		Object.assign(mail, emptyMail)
+	}
+
+	if (!replyDetails) return
+	mail.to = replyDetails.to.split(',').filter((item) => item != '')
+	mail.cc = replyDetails.cc.split(',').filter((item) => item != '')
+	mail.bcc = replyDetails.bcc.split(',').filter((item) => item != '')
+	cc.value = mail.cc.length > 0 ? true : false
+	bcc.value = mail.bcc.length > 0 ? true : false
+	mail.subject = replyDetails.subject
+	mail.html = replyDetails.html
+	mail.in_reply_to_mail_type = replyDetails.in_reply_to_mail_type
+	mail.in_reply_to_mail_name = replyDetails.in_reply_to_mail_name
+})
+
+watch(
+	() => mailID,
+	(val) => {
+		// TODO: use documentresource directly
+		if (val) getDraftMail(val)
+	},
+)
+
+watch(mail, syncMail)
+
+const addressOptions = createResource({
+	url: 'mail.api.mail.get_user_addresses',
+	auto: true,
+})
+
+const createDraftMail = createResource({
+	url: 'mail.api.outbound.send',
+	method: 'POST',
+	makeParams: () => ({
+		// TODO: use mail account display_name
+		from_: `${user.data?.full_name} <${mail.from}>`,
+		do_not_submit: !isSend.value,
+		...mail,
+	}),
+	onSuccess: (data) => {
+		if (isSend.value) Object.assign(mail, emptyMail)
+		else {
+			localMailID.value = data
+			setCurrentMail('Drafts', data)
+			emit('reloadMails')
+		}
+	},
+})
+
+const updateDraftMail = createResource({
+	url: 'mail.api.mail.update_draft_mail',
+	makeParams: () => ({
+		mail_id: localMailID.value,
+		from_: `${user.data?.full_name} <${mail.from}>`,
+		do_submit: isSend.value,
+		...mail,
+	}),
+	onSuccess: () => emit('reloadMails'),
+})
+
+// TODO: delete using documentresource directly
+const deleteDraftMail = createResource({
+	url: 'frappe.client.delete',
+	makeParams: () => ({
+		doctype: 'Outgoing Mail',
+		name: localMailID.value,
+	}),
+	onSuccess: () => emit('reloadMails'),
+})
+
+const attachments = createResource({
+	url: 'mail.api.mail.get_attachments_for_mail',
+	makeParams: () => ({
+		type: 'Outgoing Mail',
+		name: localMailID.value,
+	}),
+})
+
+const removeAttachment = createResource({
+	url: 'frappe.client.delete',
+	method: 'DELETE',
+	makeParams: (values) => ({ doctype: 'File', name: values.name }),
+	onSuccess: () => attachments.fetch(),
+})
+
+const getDraftMail = (name) => {
+	isDraftLoading.value = true
+
+	createDocumentResource({
+		doctype: 'Outgoing Mail',
+		name: name,
+		onSuccess: (data) => {
+			isMailWatcherActive.value = false
+			const mailDetails = {
+				from_: `${data.display_name} <${data.sender}>`,
+				subject: data.subject,
+				html: data.body_html,
+				in_reply_to_mail_name: data.in_reply_to_mail_name,
+				in_reply_to_mail_type: data.in_reply_to_mail_type,
+			}
+			for (const recipient of data.recipients) {
+				const recipientType = recipient.type.toLowerCase()
+				if (recipientType in mailDetails) mailDetails[recipientType].push(recipient.email)
+				else mailDetails[recipientType] = [recipient.email]
+			}
+			localMailID.value = name
+			attachments.fetch()
+			Object.assign(mail, mailDetails)
+			if (mailDetails.cc) cc.value = true
+			if (mailDetails.bcc) bcc.value = true
+			isDraftLoading.value = false
+
+			setTimeout(() => {
+				isMailWatcherActive.value = true
+			}, SYNC_DEBOUNCE_TIME + 1)
+		},
+	})
+}
+
+const send = async () => {
+	isSend.value = true
+	if (localMailID.value) await updateDraftMail.submit()
+	else await createDraftMail.submit()
+	isSend.value = false
+	show.value = false
+}
+
+const toggleCC = () => {
+	cc.value = !cc.value
+	if (cc.value) nextTick(() => ccInput.value.setFocus())
+}
+
+const toggleBCC = () => {
+	bcc.value = !bcc.value
+	if (bcc.value) nextTick(() => bccInput.value.setFocus())
+}
+
+const appendEmoji = () => {
+	editor.value.commands.insertContent(emoji.value)
+	editor.value.commands.focus()
+	emoji.value = ''
+}
+
+const textEditorMenuButtons = [
+	'Paragraph',
+	['Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6'],
+	'Separator',
+	'Bold',
+	'Italic',
+	'FontColor',
+	'Separator',
+	'Align Left',
+	'Align Center',
+	'Align Right',
+	'Separator',
+	'Bullet List',
+	'Numbered List',
+	'Separator',
+	// todo: fix inline image upload
+	// 'Image',
+	'Link',
+	'Horizontal Rule',
+	[
+		'InsertTable',
+		'AddColumnBefore',
+		'AddColumnAfter',
+		'DeleteColumn',
+		'AddRowBefore',
+		'AddRowAfter',
+		'DeleteRow',
+		'MergeCells',
+		'SplitCell',
+		'ToggleHeaderColumn',
+		'ToggleHeaderRow',
+		'ToggleHeaderCell',
+		'DeleteTable',
+	],
+]
+</script>

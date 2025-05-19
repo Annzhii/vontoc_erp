@@ -5,6 +5,17 @@ app_description = "custom app vontoc erp"
 app_email = "annnzhiii@gmail.com"
 app_license = "mit"
 
+fixtures = ["Print Format"]
+
+doctype_js = {
+    "Request for Quotation": "public/js/rfq_supplier_validate.js"
+}
+
+app_include_js = "/assets/vontoc_erp/dist/app.js"
+
+
+# app_include_js = "/assets/vontoc_erp/js/rfq_process_trace.js"
+
 # Apps
 # ------------------
 

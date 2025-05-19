@@ -1,0 +1,23 @@
+{
+  "name": "vontoc_erp",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@iconify-icons/lucide": "^1.2.135",
+    "@tailwindcss/vite": "^4.1.5",
+    "frappe-ui": "^0.1.139",
+    "tailwindcss": "^4.1.5",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "autoprefixer": "^10.4.21",
+    "vite": "^6.3.4"
+  }
+}
