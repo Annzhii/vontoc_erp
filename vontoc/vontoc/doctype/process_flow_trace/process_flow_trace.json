@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-06-11 04:59:22.132535",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "process_flow_trace_number",
+  "process_flow_type",
+  "process_flow_trace_step",
+  "process_flow_trace_reference",
+  "process_flow_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "process_flow_trace_number",
+   "fieldtype": "Data",
+   "label": "Process Flow Trace Number"
+  },
+  {
+   "fieldname": "process_flow_type",
+   "fieldtype": "Select",
+   "label": "Process Flow Type",
+   "options": "RFQ\nAdvance\nPurchase\nDelivery"
+  },
+  {
+   "fieldname": "process_flow_trace_step",
+   "fieldtype": "Table",
+   "label": "Process Flow Trace Step",
+   "options": "Process Flow Trace Item"
+  },
+  {
+   "fieldname": "process_flow_trace_reference",
+   "fieldtype": "Table",
+   "label": "Process Flow Trace Reference",
+   "options": "Process Flow Trace Doc Item"
+  },
+  {
+   "default": "Open",
+   "fieldname": "process_flow_status",
+   "fieldtype": "Select",
+   "label": "Process Flow Status",
+   "options": "Open\nClosed"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-07-15 22:34:05.304347",
+ "modified_by": "Administrator",
+ "module": "VONTOC",
+ "name": "Process Flow Trace",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

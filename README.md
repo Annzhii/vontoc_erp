@@ -39,3 +39,13 @@ This app can use GitHub Actions for CI. The following workflows are configured:
 ### License
 
 mit
+
+
+This release includes a complete procurement flow:
+
+1. **RFQ** – Collect and manage supplier quotations  
+2. **Advance** – Record prepayments before purchase orders  
+3. **Purchase** – Create and track confirmed purchase orders  
+4. **Delivery** – Handle goods delivery and receipt
+
+All steps are linked and traceable to ensure clear procurement tracking.

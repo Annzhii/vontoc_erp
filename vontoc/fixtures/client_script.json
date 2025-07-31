@@ -1,0 +1,24 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Supplier Quotation",
+  "enabled": 1,
+  "modified": "2025-05-30 18:57:14.706441",
+  "module": "VONTOC",
+  "name": "Create Guideline Price",
+  "script": "frappe.ui.form.on('Supplier Quotation', {\n    refresh: function(frm) {\n        frm.add_custom_button(__('Create Guideline Price'), function() {\n            frappe.call({\n                method: \"vontoc.api.guideline_price.create_guideline_price\",\n                args: {\n                    supplier_quotation: frm.doc.name\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.set_route(\"Form\", \"Guideline Price\", r.message);\n                    }\n                }\n            });\n        });\n    }\n});\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Item",
+  "enabled": 0,
+  "modified": "2025-05-30 20:59:26.251083",
+  "module": "VONTOC",
+  "name": "test script",
+  "script": "frappe.ui.form.on('Item', {\n\trefresh(frm) {\n\t\t// your code here\n\t}\n})",
+  "view": "Form"
+ }
+]

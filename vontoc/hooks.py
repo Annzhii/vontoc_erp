@@ -5,6 +5,14 @@ app_description = "Vontoc"
 app_email = "info@vontoc.com"
 app_license = "mit"
 
+fixtures = ["Print Format", "Client Script", "Workflow", "Property Setter", "Item Group", "Document Naming Rule", "Report", "Payment term", "Letter Head", "Payment Terms Template"]
+
+# 把Supplier Quotation Comparison 报告的的python文件替换为custom app里面python文件
+doctype_js = {
+    "Request for Quotation": "public/js/request_for_quotation.js",
+    "Delivery Note": "public/js/delivery_note.js",
+}
+
 # Apps
 # ------------------
 
@@ -129,9 +137,19 @@ app_license = "mit"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
+override_doctype_class = {
+    "Payment Entry": "vontoc.api.overrides.VONTOCPaymentEntry",
+    "Purchase Order": "vontoc.api.overrides.VONTOCPurchaseOrder",
+    "Purchase Receipt": "vontoc.api.overrides.VONTOCPurchaseReceipt",
+    "Purchase Invoice": "vontoc.api.overrides.VONTOCPurchaseInvoice",
+    "Payment Request": "vontoc.api.overrides.VONTOCPaymentRequest",
+    "Payment Entry": "vontoc.api.overrides.VONTOCPaymentEntry",
+    "Request for Quotation": "vontoc.api.overrides.VONTOCRequestforQuotation",
+    "Sales Order": "vontoc.api.overrides.VONTOCSalesOrder",
+    "Sales Invoice": "vontoc.api.overrides.VONTOCSalesInvoice",
+    "Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote"
 # 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+}
 
 # Document Events
 # ---------------
