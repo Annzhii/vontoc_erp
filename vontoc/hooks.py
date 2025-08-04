@@ -5,7 +5,7 @@ app_description = "Vontoc"
 app_email = "info@vontoc.com"
 app_license = "mit"
 
-fixtures = ["Print Format", "Client Script", "Workflow", "Workflow State", "Property Setter", "Item Group", "Document Naming Rule", "Report", "Payment Term", "Letter Head", "Payment Terms Template"]
+fixtures = ["Print Format", "Client Script", "Workflow", "Workflow State", "Property Setter", "Item Group", "Document Naming Rule", "Report", "Payment Term", "Letter Head", "Payment Terms Template", "Terms and Conditions", "Print Settings"]
 
 # 把Supplier Quotation Comparison 报告的的python文件替换为custom app里面python文件
 doctype_js = {
