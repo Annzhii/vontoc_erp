@@ -1,0 +1,137 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-07-04 14:55:20.031043",
+  "name": "Warehouse Received",
+  "style": "",
+  "workflow_state_name": "Warehouse Received"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-07-15 21:36:19.135510",
+  "name": "Shipped",
+  "style": "",
+  "workflow_state_name": "Shipped"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-05-30 21:05:32.715884",
+  "name": "Quotation Received",
+  "style": "",
+  "workflow_state_name": "Quotation Received"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "remove",
+  "modified": "2025-05-26 19:20:52.586912",
+  "name": "Rejected",
+  "style": "Danger",
+  "workflow_state_name": "Rejected"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-07-17 21:10:58.875479",
+  "name": "Return Required",
+  "style": "",
+  "workflow_state_name": "Return Required"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-07-07 05:47:48.242182",
+  "name": "Received",
+  "style": "",
+  "workflow_state_name": "Received"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-07-15 22:15:17.054823",
+  "name": "Returned",
+  "style": "",
+  "workflow_state_name": "Returned"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-07-15 21:35:40.219991",
+  "name": "Dispatched",
+  "style": "",
+  "workflow_state_name": "Dispatched"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-05-30 21:05:21.653848",
+  "name": "Sent For Quotation",
+  "style": "",
+  "workflow_state_name": "Sent For Quotation"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-07-04 14:54:10.444589",
+  "name": "Pending Warehouse Receipt",
+  "style": "",
+  "workflow_state_name": "Pending Warehouse Receipt"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-07-15 21:34:02.516604",
+  "name": "Ready For Dispatch",
+  "style": "",
+  "workflow_state_name": "Ready For Dispatch"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "ok-sign",
+  "modified": "2025-05-26 19:20:52.586178",
+  "name": "Approved",
+  "style": "Success",
+  "workflow_state_name": "Approved"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "question-sign",
+  "modified": "2025-05-26 19:20:52.585511",
+  "name": "Pending",
+  "style": "",
+  "workflow_state_name": "Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-07-02 05:52:46.413238",
+  "name": "Sent For Approval",
+  "style": "",
+  "workflow_state_name": "Sent For Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-05-30 21:32:39.886383",
+  "name": "Draft",
+  "style": "",
+  "workflow_state_name": "Draft"
+ }
+]
