@@ -8,7 +8,6 @@ from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_r
 
 @frappe.whitelist()
 def sent_po_for_approval(docname):
-    frappe.msgprint("调用成功")
     to_close = [{
         "doctype": "Purchase Order",
         'docname': docname
@@ -17,7 +16,7 @@ def sent_po_for_approval(docname):
     to_open = [{
         "doctype": "Purchase Order",
         "docname": docname,
-        "user": "Administrator",
+        "user": "approver",
         "description": "请审核采购单",
     }]
 
@@ -72,7 +71,7 @@ def create_purchase_invoice(self):
         "doctype": "Purchase Invoice",
         "docname": pi.name,
         "user": "Purchase",
-        "description": "让供应商开具相应发票",
+        "description": "审核采购发票上面的金额,并让供应商开具相应金额发票",
     }]
 
     pf_name = get_process_flow_trace_id_by_reference(self.doctype, self.name)

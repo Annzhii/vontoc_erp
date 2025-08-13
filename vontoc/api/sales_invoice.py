@@ -5,32 +5,24 @@ from erpnext.accounts.doctype.payment_request.payment_request import make_paymen
 
 @frappe.whitelist()
 def sales_invoice_submitted(docname):
-    # 获取 Sales Invoice 文档
     doc = frappe.get_doc("Sales Invoice", docname)
 
-    # 创建 Payment Request（注意使用 keyword arguments）
     payment_request = make_payment_request(
         dt="Sales Invoice",
         dn=docname,
-        recipient_id=doc.customer,  # or doc.contact_person if more appropriate
+        recipient_id=doc.customer,  
         mute_email=True
     )
 
-    # 插入 Payment Request（非立即提交）
-    #payment_request.insert(ignore_permissions=True)
-
-    # 关闭 Sales Invoice 的流程
     to_close = [{
         "doctype": "Sales Invoice",
         'docname': docname
     }]
-
-    # 打开 Payment Request 的新待办
     to_open = [{
         "doctype": "Payment Request",
         "docname": payment_request.name,
-        "user": "Accounts",
-        "description": "匹配款项",
+        "user": "Sales",
+        "description": "填入正确的收款或付款金额。",
     }]
     ref_type, reference = get_invoice_source_and_refs(docname)
 
@@ -44,7 +36,6 @@ def sales_invoice_submitted(docname):
         "todo_name": None
     }
 
-    # 更新流程状态
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info=process_flow_info)
 
 def get_invoice_source_and_refs(si_name):

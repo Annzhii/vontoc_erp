@@ -19,8 +19,8 @@ def payment_request_submitted(self):
     to_open = [{
         "doctype": "Payment Entry",
         "docname": payment_entry.name,
-        "user": "stock",
-        "description": "完成付款",
+        "user": "Accounts",
+        "description": "根据实际收付款情况填写款项单。",
     }]
     pf_name = get_process_flow_trace_id_by_reference(self.reference_doctype, self.reference_name)
     process_flow_info = {
@@ -33,4 +33,4 @@ def payment_request_submitted(self):
 
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
 
-    frappe.msgprint(f"已自动创建并付款单：{payment_entry.name}")
+    frappe.msgprint(f"已自动创建款项单：{payment_entry.name}")

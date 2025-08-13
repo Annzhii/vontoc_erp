@@ -19,7 +19,7 @@ def material_request_submitted (docname):
         "doctype": "Purchase Order",
         "docname": po_doc.name,
         "user": "Purchase",
-        "description": "请提交采购单",
+        "description": "审核采购单，补充供应商信息后提交，等待审批。",
     }]
 
     _process_flow_trace_info = {
@@ -31,4 +31,4 @@ def material_request_submitted (docname):
     }
     process_flow_engine(to_open = to_open, process_flow_trace_info=_process_flow_trace_info)
     
-    return f"你已经成功提交了RFQ"
+    frappe.msgprint(f"已自动创建采购单：{po_doc.name}")

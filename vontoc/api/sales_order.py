@@ -34,7 +34,7 @@ def create_sales_invoice_or_payment_request(sales_order_name):
             "doctype": "Sales Invoice",
             "docname": sales_invoice.name,
             "user": "Sales",
-            "description": "请发送Deposit Invoice",
+            "description": "请检查预收款发票的金额，并且发送给客户。",
         }]
 
         _process_flow_trace_info = {
@@ -76,8 +76,8 @@ def create_sales_invoice_or_payment_request(sales_order_name):
         to_open = [{
             "doctype": "Payment Request",
             "docname": payment_request.name,
-            "user": "Accounts",
-            "description": "请处理预付款请求",
+            "user": "Sales",
+            "description": "请提交付款请求。",
         }]
         _process_flow_trace_info = {
             "trace": "add",

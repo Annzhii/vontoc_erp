@@ -34,7 +34,7 @@ def rfq_process_step_03(rfq):
     to_open = [{
         "doctype": "Guideline Price",
         "docname": gp.name,
-        "user": "Sales",
+        "user": "Manager",
         "description": "请报指导价格",
     }]
 

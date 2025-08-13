@@ -1,7 +1,6 @@
 import frappe
 from frappe.utils import flt
 
-
 @frappe.whitelist()
 def get_user_profile_name():
     user = frappe.get_doc("User", frappe.session.user)
