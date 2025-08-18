@@ -58,10 +58,10 @@
   "is_group": 0,
   "item_group_defaults": [],
   "item_group_name": "复模产品",
-  "modified": "2025-08-18 05:29:21.995530",
+  "modified": "2025-08-18 05:39:54.384408",
   "name": "复模产品",
-  "old_parent": "产品",
-  "parent_item_group": "产品",
+  "old_parent": "所有物料群组",
+  "parent_item_group": "所有物料群组",
   "taxes": []
  },
  {
@@ -71,10 +71,10 @@
   "is_group": 0,
   "item_group_defaults": [],
   "item_group_name": "CNC产品",
-  "modified": "2025-08-18 05:29:44.872753",
+  "modified": "2025-08-18 05:39:48.715268",
   "name": "CNC产品",
-  "old_parent": "产品",
-  "parent_item_group": "产品",
+  "old_parent": "所有物料群组",
+  "parent_item_group": "所有物料群组",
   "taxes": []
  },
  {
@@ -84,10 +84,10 @@
   "is_group": 0,
   "item_group_defaults": [],
   "item_group_name": "压铸产品",
-  "modified": "2025-08-18 05:29:40.741932",
+  "modified": "2025-08-18 05:39:33.949879",
   "name": "压铸产品",
-  "old_parent": "产品",
-  "parent_item_group": "产品",
+  "old_parent": "所有物料群组",
+  "parent_item_group": "所有物料群组",
   "taxes": []
  },
  {
@@ -239,35 +239,22 @@
   "image": null,
   "is_group": 1,
   "item_group_defaults": [],
-  "item_group_name": "产品",
-  "modified": "2025-08-18 05:29:13.416728",
-  "name": "产品",
-  "old_parent": "所有物料群组",
-  "parent_item_group": "所有物料群组",
-  "taxes": []
- },
- {
-  "docstatus": 0,
-  "doctype": "Item Group",
-  "image": null,
-  "is_group": 1,
-  "item_group_defaults": [],
-  "item_group_name": "产品1",
-  "modified": "2025-08-17 23:23:00.358825",
-  "name": "产品1",
-  "old_parent": "所有物料群组",
-  "parent_item_group": "所有物料群组",
-  "taxes": []
- },
- {
-  "docstatus": 0,
-  "doctype": "Item Group",
-  "image": null,
-  "is_group": 1,
-  "item_group_defaults": [],
   "item_group_name": "其他",
   "modified": "2025-08-17 23:19:01.475691",
   "name": "其他",
+  "old_parent": "所有物料群组",
+  "parent_item_group": "所有物料群组",
+  "taxes": []
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Item Group",
+  "image": null,
+  "is_group": 1,
+  "item_group_defaults": [],
+  "item_group_name": "产品",
+  "modified": "2025-08-18 05:29:13.416728",
+  "name": "产品",
   "old_parent": "所有物料群组",
   "parent_item_group": "所有物料群组",
   "taxes": []
@@ -305,10 +292,10 @@
   "is_group": 0,
   "item_group_defaults": [],
   "item_group_name": "注塑产品",
-  "modified": "2025-08-18 05:29:49.904937",
+  "modified": "2025-08-18 05:39:42.597653",
   "name": "注塑产品",
-  "old_parent": "产品",
-  "parent_item_group": "产品",
+  "old_parent": "所有物料群组",
+  "parent_item_group": "所有物料群组",
   "taxes": []
  }
 ]
