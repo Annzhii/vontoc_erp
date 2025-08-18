@@ -306,7 +306,7 @@
   "doctype": "Workflow",
   "document_type": "Delivery Note",
   "is_active": 1,
-  "modified": "2025-07-18 17:23:41.350274",
+  "modified": "2025-08-15 21:52:10.167368",
   "name": "Delivery Note",
   "override_status": 1,
   "send_email_alert": 0,
@@ -328,7 +328,7 @@
     "workflow_builder_id": null
    },
    {
-    "allow_edit": "Administrator",
+    "allow_edit": "Approver",
     "avoid_status_override": 0,
     "doc_status": "0",
     "is_optional_state": 0,
@@ -344,7 +344,7 @@
     "workflow_builder_id": null
    },
    {
-    "allow_edit": "Administrator",
+    "allow_edit": "Delivery User",
     "avoid_status_override": 0,
     "doc_status": "0",
     "is_optional_state": 0,
@@ -360,7 +360,7 @@
     "workflow_builder_id": null
    },
    {
-    "allow_edit": "Administrator",
+    "allow_edit": "Stock User",
     "avoid_status_override": 0,
     "doc_status": "0",
     "is_optional_state": 0,
@@ -408,7 +408,7 @@
     "workflow_builder_id": null
    },
    {
-    "allow_edit": "Administrator",
+    "allow_edit": "Stock User",
     "avoid_status_override": 0,
     "doc_status": "0",
     "is_optional_state": 0,
@@ -441,7 +441,7 @@
    {
     "action": "Approve",
     "allow_self_approval": 1,
-    "allowed": "Administrator",
+    "allowed": "Approver",
     "condition": null,
     "next_state": "Ready For Dispatch",
     "parent": "Delivery Note",
@@ -455,7 +455,7 @@
     "action": "Dispatch",
     "allow_self_approval": 1,
     "allowed": "Stock Manager",
-    "condition": null,
+    "condition": "doc.custom_packing_confirmed == 1",
     "next_state": "Dispatched",
     "parent": "Delivery Note",
     "parentfield": "transitions",

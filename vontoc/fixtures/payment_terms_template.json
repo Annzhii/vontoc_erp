@@ -6,6 +6,7 @@
   "modified": "2025-07-27 21:30:23.723766",
   "name": "PAYMENT TEMPLATE - PRODUCTION 50/50",
   "template_name": "PAYMENT TEMPLATE - PRODUCTION 50/50",
+  "template_payment_terms_before_invoice": 0,
   "terms": [
    {
     "credit_days": 0,
@@ -48,6 +49,7 @@
   "modified": "2025-07-27 21:17:31.485560",
   "name": "PAYMENT TEMPLATE - TOOLING 50/50",
   "template_name": "PAYMENT TEMPLATE - TOOLING 50/50",
+  "template_payment_terms_before_invoice": 0,
   "terms": [
    {
     "credit_days": 0,

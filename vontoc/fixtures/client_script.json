@@ -92,10 +92,10 @@
   "doctype": "Client Script",
   "dt": "Delivery Note",
   "enabled": 1,
-  "modified": "2025-07-17 23:27:40.277287",
+  "modified": "2025-08-15 22:14:37.306395",
   "module": "VONTOC",
   "name": "Send Delivery Note After Packing Slip",
-  "script": "frappe.ui.form.on('Delivery Note', {\n    refresh: function(frm) {\n        frappe.call({\n            method: \"vontoc.utils.utils.get_user_profile_name\", // 假设返回当前用户角色\n            callback: function(r) {\n                if (\n                    r.message === \"delivery\" &&  // 你返回的角色名\n                    !frm.doc.custom_packing_confirmed    // 自定义字段判断\n                ) {\n                    frm.add_custom_button(\"完成装箱单\", () => {\n                        frappe.call({\n                            method: \"vontoc.api.delivery_note.mark_ready_for_dispatch\",\n                            args: {\n                                docname: frm.doc.name\n                            },\n                            callback: function() {\n                                frappe.msgprint(\"装箱已确认\");\n                                frm.reload_doc();\n                            }\n                        });\n                    });\n                }\n            }\n        });\n    }\n});\n",
+  "script": "frappe.ui.form.on('Delivery Note', {\n    refresh: function(frm) {\n        frappe.call({\n            method: \"vontoc.utils.utils.get_user_profile_name\", // 假设返回当前用户角色\n            callback: function(r) {\n                if (\n                    r.message === \"delivery\" &&  // 你返回的角色名\n                    !frm.doc.custom_packing_confirmed &&    // 自定义字段判断\n                    frm.doc.workflow_state === \"Approved\"\n                ) {\n                    frm.add_custom_button(\"完成装箱单\", () => {\n                        frappe.call({\n                            method: \"vontoc.api.delivery_note.mark_ready_for_dispatch\",\n                            args: {\n                                docname: frm.doc.name\n                            },\n                            callback: function() {\n                                frm.reload_doc();\n                            }\n                        });\n                    });\n                }\n            }\n        });\n    }\n});\n",
   "view": "Form"
  },
  {
@@ -103,10 +103,10 @@
   "doctype": "Client Script",
   "dt": "Delivery Note",
   "enabled": 1,
-  "modified": "2025-07-17 23:32:34.276042",
+  "modified": "2025-08-15 21:54:14.295785",
   "module": "VONTOC",
   "name": "Send Delivery Note After Dispatch",
-  "script": "frappe.ui.form.on('Delivery Note', {\n    refresh: function(frm) {\n        frappe.call({\n            method: \"vontoc.utils.utils.get_user_profile_name\",\n            callback: function(r) {\n                const isDeliveryUser = r.message === \"delivery\";\n                const notDispatched = !frm.doc.custom_delivery_dispatched;\n                const notReturned = frm.doc.status !== \"Return\" && frm.doc.status !== \"Return Issued\";\n                const isSubmitted = frm.doc.docstatus === 1;\n                if (isDeliveryUser && notDispatched && notReturned && isSubmitted) {\n                    frm.add_custom_button(\"发货完成\", () => {\n                        frappe.call({\n                            method: \"vontoc.api.delivery_note.delivery_dispatched\",\n                            args: {\n                                docname: frm.doc.name\n                            },\n                            callback: function() {\n                                frappe.msgprint(\"发货已完成\");\n                                frm.reload_doc();\n                            }\n                        });\n                    });\n                }\n            }\n        });\n    }\n});\n\n",
+  "script": "frappe.ui.form.on('Delivery Note', {\n    refresh: function(frm) {\n        frappe.call({\n            method: \"vontoc.utils.utils.get_user_profile_name\",\n            callback: function(r) {\n                const isDeliveryUser = r.message === \"delivery\";\n                const notDispatched = !frm.doc.custom_delivery_dispatched;\n                const notReturned = !frm.doc.is_return;\n                const isSubmitted = frm.doc.docstatus === 1;\n                if (isDeliveryUser && notDispatched && notReturned && isSubmitted) {\n                    frm.add_custom_button(\"发货完成\", () => {\n                        frappe.call({\n                            method: \"vontoc.api.delivery_note.delivery_dispatched\",\n                            args: {\n                                docname: frm.doc.name\n                            },\n                            callback: function() {\n                                frm.reload_doc();\n                            }\n                        });\n                    });\n                }\n            }\n        });\n    }\n});\n\n",
   "view": "Form"
  },
  {

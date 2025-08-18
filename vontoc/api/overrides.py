@@ -190,8 +190,8 @@ class VONTOCPurchaseReceipt(PurchaseReceipt):
 
 class VONTOCPurchaseInvoice(PurchaseInvoice):
 	def on_submit(self):
-		super().on_submit()
-
+		#super().on_submit()
+		
 		self.check_prev_docstatus()
 
 		if self.is_return and not self.update_billed_amount_in_purchase_order:
@@ -233,10 +233,11 @@ class VONTOCPurchaseInvoice(PurchaseInvoice):
 
 		update_linked_doc(self.doctype, self.name, self.inter_company_invoice_reference)
 		self.update_advance_tax_references()
+
 		self.process_common_party_accounting()
 
 		submmit_pi(self)
-		frappe.msgprint(f"Grand Total: {self.grand_total}, Outstanding: {self.outstanding_amount}")
+
 class VONTOCPaymentRequest(PaymentRequest):
 	def on_submit(self):
 		if self.payment_request_type == "Outward":

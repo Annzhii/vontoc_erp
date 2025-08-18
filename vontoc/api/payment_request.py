@@ -32,5 +32,3 @@ def payment_request_submitted(self):
     }
 
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
-
-    frappe.msgprint(f"已自动创建款项单：{payment_entry.name}")

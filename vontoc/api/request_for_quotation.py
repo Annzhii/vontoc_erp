@@ -51,8 +51,6 @@ def rfq_process_step_03(rfq):
     }
     process_flow_engine(to_open = to_open, to_close = to_close, process_flow_trace_info=process_flow_trace_info)
 
-    return f"你已经成功提交了供应商的报价"
-
 @frappe.whitelist()
 def rfq_process_step_01(rfq):
     process_flow_trace_info={
@@ -78,8 +76,6 @@ def rfq_process_step_01(rfq):
         "todo_name": None
     }
     process_flow_engine(to_open = to_open, process_flow_trace_info=_process_flow_trace_info)
-    
-    return f"你已经成功提交了RFQ"
 
 @frappe.whitelist()
 def rfq_process_step_02(rfq):
@@ -109,8 +105,6 @@ def rfq_process_step_02(rfq):
     }
 
     process_flow_engine(to_open = to_open, to_close = to_close, process_flow_trace_info=_process_flow_trace_info)
-    
-    return f"你已经成功向供应商发送了RFQ"
 
 @frappe.whitelist()
 def has_zero_rate_items(rfq):

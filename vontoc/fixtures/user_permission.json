@@ -1,0 +1,15 @@
+[
+ {
+  "allow": "Item Group",
+  "applicable_for": null,
+  "apply_to_all_doctypes": 1,
+  "docstatus": 0,
+  "doctype": "User Permission",
+  "for_value": "临时物料",
+  "hide_descendants": 0,
+  "is_default": 0,
+  "modified": "2025-08-17 23:04:51.991778",
+  "name": "9e7hpfchbt",
+  "user": "sales@vontoc.com"
+ }
+]

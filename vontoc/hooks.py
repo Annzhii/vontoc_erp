@@ -18,7 +18,8 @@ fixtures = ["Print Format",
 "Payment Terms Template", 
 "Terms and Conditions", 
 "Print Settings",
-"Company"]
+"Company",
+"User Permission"]
 
 # 把Supplier Quotation Comparison 报告的的python文件替换为custom app里面python文件
 doctype_js = {
@@ -138,9 +139,9 @@ doctype_js = {
 # -----------
 # Permissions evaluated in scripted ways
 
-# permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
+permission_query_conditions = {
+    "ToDo": "vontoc.api.todo.get_permission_query_conditions"
+}
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",

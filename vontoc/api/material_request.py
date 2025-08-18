@@ -30,5 +30,3 @@ def material_request_submitted (docname):
         "todo_name": None
     }
     process_flow_engine(to_open = to_open, process_flow_trace_info=_process_flow_trace_info)
-    
-    frappe.msgprint(f"已自动创建采购单：{po_doc.name}")

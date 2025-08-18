@@ -133,8 +133,6 @@ def create_new_pr_for_shortfall(original_doc, shortfall_items):
     }
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
 
-    frappe.msgprint("已创建补收货单：" + pr.name)
-
 def create_purchase_invoice_from_pr(self):
     linked_pos = list({item.purchase_order for item in self.items if item.purchase_order})
     for po in linked_pos:
@@ -150,7 +148,7 @@ def create_purchase_invoice_from_pr(self):
         "doctype": "Purchase Invoice",
         "docname": inv.name,
         "user": "purchase",
-        "description": "上传发票"
+        "description": "审核采购发票上面的金额,并让供应商开具相应金额发票"
     }]
 
     _reference = get_linked_material_request(self.name)
@@ -163,4 +161,3 @@ def create_purchase_invoice_from_pr(self):
         "todo_name": None
     }
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
-    frappe.msgprint("已创建发票：" + inv.name)

@@ -19,8 +19,8 @@ def sent_dn_for_approval(docname):
     to_open = [{
         "doctype": "Delivery Note",
         "docname": docname,
-        "user": "delivery",
-        "description": "审批发货单",
+        "user": "approver",
+        "description": "审批Delivery Note，决定是否允许发货",
     }]
 
     _process_flow_trace_info = {
@@ -43,7 +43,7 @@ def approve_dn(docname):
         "doctype": "Delivery Note",
         "docname": docname,
         "user": "delivery",
-        "description": "安排发货",
+        "description": "联系货代，根据货物数量和装柜方式，制作Packing Slip，并点击安排完成装箱单按钮。",
     }]
     pf_name = get_process_flow_trace_id_by_reference(dn.doctype,docname)
     process_flow_info = {
@@ -66,7 +66,7 @@ def mark_ready_for_dispatch(docname):
 
     # 2. 准备流程控制
     assigned_user = "stock"
-    description = "准备发货"
+    description = "根据Delivery Note表单上的数量完成货物出库"
 
     to_close = [{
         "doctype": "Delivery Note",
@@ -98,8 +98,6 @@ def mark_ready_for_dispatch(docname):
         process_flow_trace_info=process_flow_info
     )
 
-    return "装箱已完成，已进入发货流程"
-
 def delivery_note_submitted(dn):
     # 如果是退货单，执行另外一个逻辑
     if dn.is_return == 1:
@@ -107,7 +105,7 @@ def delivery_note_submitted(dn):
 
     # 正常出库流程
     assigned_user = "delivery"
-    description = "已出库"
+    description = "判定实际出货数量是否和出库数量一致，如一致，完成出货，如不一致，确认数量差，完成退货入库"
 
     to_close = [{
         "doctype": "Delivery Note",
@@ -136,8 +134,6 @@ def delivery_note_submitted(dn):
         to_open=to_open,
         process_flow_trace_info=process_flow_info
     )
-
-    return "仓库出库"
 
 def handle_return_delivery_note(self):
     delivery_dispatched(self.return_against, from_return=1)
@@ -183,7 +179,7 @@ def delivery_dispatched(docname, from_return = None):
             "doctype": "Sales Invoice",
             "docname": created_si.name,
             "user": "sales",
-            "description": "向客户发送发票"
+            "description": "通知客户在发票时间内付清尾款，"
         })
 
     process_flow_info = {
@@ -246,7 +242,7 @@ def require_return(docname):
         "doctype": "Delivery Note",
         "docname": docname,
         "user": "stock",
-        "description": "完成退货入库",
+        "description": "验证Delivery Note上的数量和实际退货数量是否一致",
     }]
     pf_name = get_process_flow_trace_id_by_reference("Delivery Note", dn.return_against)
     process_flow_info = {

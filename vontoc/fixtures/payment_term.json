@@ -2,6 +2,7 @@
  {
   "credit_days": 0,
   "credit_months": 0,
+  "date_computed_based_on": null,
   "description": "50% advance payment upon order placement.",
   "discount": 0.0,
   "discount_type": "Percentage",
@@ -14,11 +15,13 @@
   "mode_of_payment": null,
   "modified": "2025-07-25 22:17:17.991932",
   "name": "advance",
-  "payment_term_name": "advance"
+  "payment_term_name": "advance",
+  "payment_terms_before_invoice": 0
  },
  {
   "credit_days": 60,
   "credit_months": 0,
+  "date_computed_based_on": null,
   "description": "50% due on sample approval.",
   "discount": 0.0,
   "discount_type": "Percentage",
@@ -31,6 +34,7 @@
   "mode_of_payment": null,
   "modified": "2025-07-27 21:17:03.429854",
   "name": "balance",
-  "payment_term_name": "balance"
+  "payment_term_name": "balance",
+  "payment_terms_before_invoice": 0
  }
 ]

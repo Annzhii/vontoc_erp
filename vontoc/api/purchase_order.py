@@ -103,7 +103,7 @@ def create_purchase_receipt(self):
         "doctype": "Purchase Receipt",
         "docname": pr.name,
         "user": "Purchase",
-        "description": "提交收货单",
+        "description": "跟进货物交期，并发送收货单。",
     }]
 
     pf_name = get_process_flow_trace_id_by_reference(self.doctype, self.name)
@@ -117,5 +117,3 @@ def create_purchase_receipt(self):
     }
 
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
-
-    frappe.msgprint(f"自动创建采购收货单：<a href='/app/purchase-receipt/{pr.name}'>{pr.name}</a>")
