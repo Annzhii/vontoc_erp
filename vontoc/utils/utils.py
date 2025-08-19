@@ -2,9 +2,53 @@ import frappe
 from frappe.utils import flt
 
 @frappe.whitelist()
+#前端JS调用
 def get_user_profile_name():
     user = frappe.get_doc("User", frappe.session.user)
     return user.get("role_profile_name")  # 可能返回 None
+
+def get_users_by_profile_or_role(user: str):
+    """优先通过 User Profile 查找用户，如果没有则通过 Role 查找用户。"""
+
+    # 1. 先按 User Profile 匹配
+    users = frappe.get_all(
+        'User',
+        filters={
+            'role_profile_name': user,
+            'enabled': 1
+        },
+        fields=['name', 'full_name', 'email']
+    )
+
+    # 2. 如果没有 → 再按 Role 匹配
+    if not users:
+        # 先拿所有 enabled 用户
+        enabled_users = frappe.get_all(
+            'User',
+            filters={'enabled': 1},
+            pluck='name'
+        )
+
+        if enabled_users:
+            # 从 Has Role 里找拥有这个角色的用户
+            role_users = frappe.get_all(
+                'Has Role',
+                filters={'role': user, 'parent': ('in', enabled_users)},
+                pluck='parent'
+            )
+
+            if role_users:
+                users = frappe.get_all(
+                    'User',
+                    filters={'name': ('in', role_users), 'enabled': 1},
+                    fields=['name', 'full_name', 'email']
+                )
+
+    # 3. 如果还是没有 → 抛异常
+    if not users:
+        frappe.throw(f"没有找到任何拥有 {user} 角色配置 或 角色的用户")
+
+    return users
 
 def mark_inspection_confirmed(docname):
     doc = frappe.get_doc("Purchase Receipt", docname)

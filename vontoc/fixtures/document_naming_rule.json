@@ -54,12 +54,12 @@
     "value": "Delivery"
    }
   ],
-  "counter": 18,
+  "counter": 26,
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Document Naming Rule",
   "document_type": "Process Flow Trace",
-  "modified": "2025-08-15 22:27:21.055668",
+  "modified": "2025-08-18 22:47:24.513547",
   "name": "7qems8kfsb",
   "prefix": "pt-delivery-ee",
   "prefix_digits": 5,
