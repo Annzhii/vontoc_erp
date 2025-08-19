@@ -17,7 +17,6 @@ fixtures = ["Print Format",
 "Payment Terms Template", 
 "Terms and Conditions", 
 "Print Settings",
-"Company",
 "User Permission"]
 
 # 把Supplier Quotation Comparison 报告的的python文件替换为custom app里面python文件
