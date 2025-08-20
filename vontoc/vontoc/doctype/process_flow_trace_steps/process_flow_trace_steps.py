@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class ProcessFlowTraceItem(Document):
+class ProcessFlowTraceSteps(Document):
 	pass

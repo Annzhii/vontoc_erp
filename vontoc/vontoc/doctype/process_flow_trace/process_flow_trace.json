@@ -27,7 +27,7 @@
    "fieldname": "process_flow_trace_step",
    "fieldtype": "Table",
    "label": "Process Flow Trace Step",
-   "options": "Process Flow Trace Item"
+   "options": "Process Flow Trace Steps"
   },
   {
    "fieldname": "process_flow_trace_reference",
@@ -46,7 +46,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-07-15 22:34:05.304347",
+ "modified": "2025-08-19 06:41:32.679124",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Process Flow Trace",

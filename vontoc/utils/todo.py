@@ -1,5 +1,6 @@
 import frappe
 from vontoc.utils.utils import get_users_by_profile_or_role
+from vontoc.utils.processflow import update_process_flow_trace
 
 def set_todo(doctype, docname, user, description):
     users = get_users_by_profile_or_role(user)
@@ -34,5 +35,5 @@ def close_todo(doc_name):
         todo_doc = frappe.get_doc("ToDo", todo.name)
         todo_doc.status = "Closed"
         todo_doc.save(ignore_permissions=True)
-
+        update_process_flow_trace(todo_doc)
     frappe.db.commit()

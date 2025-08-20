@@ -8,7 +8,9 @@
  "field_order": [
   "linked_todo",
   "start_time",
-  "end_time"
+  "end_time",
+  "description",
+  "allocated_to"
  ],
  "fields": [
   {
@@ -26,16 +28,27 @@
    "fieldname": "end_time",
    "fieldtype": "Datetime",
    "label": "End Time"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fieldname": "allocated_to",
+   "fieldtype": "Link",
+   "label": "Allocated to",
+   "options": "User"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-06-11 05:07:09.085525",
+ "modified": "2025-08-19 06:43:05.713431",
  "modified_by": "Administrator",
  "module": "VONTOC",
- "name": "Process Flow Trace Item",
+ "name": "Process Flow Trace Steps",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",

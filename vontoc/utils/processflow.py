@@ -1,4 +1,5 @@
 import frappe
+from frappe.utils import now_datetime
 
 def setup_pf_trace(process_flow_trace_info):
 
@@ -9,10 +10,20 @@ def setup_pf_trace(process_flow_trace_info):
     # 创建 Process Flow Trace 主文档
     pf_trace = frappe.new_doc("Process Flow Trace")
     pf_trace.process_flow_type = pf_type
-
+    
+    pf_type_map = {
+        "RFQ": "申请人提交RFQ",
+        "Advance": "业务员提交需要预付款的销售订单",
+        "Purchase": "申请人提交物料申请单",
+        "Delivery": "业务员提交发货通知"
+    }
+    description = pf_type_map.get(pf_type, pf_type)
     # 添加子表：Process Flow Trace Item
+    current_time = now_datetime()
     pf_trace.append("process_flow_trace_step", {
-
+        "start_time": current_time,
+        "end_time":current_time,
+        "description": description,
     })
 
     # 添加子表：Process Flow Trace Doc Item
@@ -39,10 +50,15 @@ def add_pf_trace(process_flow_trace_info):
     pf_trace = frappe.get_doc("Process Flow Trace", pf_name)
 
     # 添加子表：Process Flow Trace Step
-    for todo in todo_name or []:
+    for todo_name in todo_name or []:
+        todo = frappe.get_doc("ToDo", todo_name)
         pf_trace.append("process_flow_trace_step", {
-            "linked_todo": todo
+            "linked_todo": todo.name,
+            "start_time": todo.creation,
+            "description": todo.description,
+            "allocated_to": todo.allocated_to
         })
+
 
     # 添加子表：Process Flow Trace Reference
     if multi_ref_doc:
@@ -95,3 +111,27 @@ def get_process_flow_trace_id_by_reference(doctype, docname):
         limit=1
     )
     return result[0].parent if result else None
+
+def update_process_flow_trace(todo):
+    """
+    在 Process Flow Trace Steps 里找到 linked_todo = todo.name 的记录，
+    把 end_time 更新为 todo.modified（即关闭时间）
+    """
+    # 只在 ToDo 已关闭时更新
+    if todo.status != "Closed":
+        return
+
+    step_name = frappe.db.get_value(
+        "Process Flow Trace Steps",
+        {"linked_todo": todo.name},
+        "name"
+    )
+
+    if step_name:
+        frappe.db.set_value(
+            "Process Flow Trace Steps",
+            step_name,
+            "end_time",
+            todo.modified
+        )
+        frappe.db.commit()
