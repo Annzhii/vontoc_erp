@@ -316,14 +316,7 @@ class VONTOCSalesOrder(SalesOrder):
 		if not has_advance:
 			return
 
-		result = create_sales_invoice_or_payment_request(self.name)  # ✅ 用新版函数名
-
-		if result.get("status") == "sales_invoice_created":
-			frappe.msgprint(f"Sales Invoice created: {result.get('invoice_name')}")
-		elif result.get("status") == "payment_request_created":
-			frappe.msgprint(f"Payment Request created: {result.get('payment_request_name')}")
-		else:
-			frappe.msgprint("No document created.")
+		result = create_sales_invoice_or_payment_request(self.name)
 
 class VONTOCSalesInvoice(SalesInvoice):
 	def on_submit(self):
