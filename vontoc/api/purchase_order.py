@@ -5,6 +5,7 @@ from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
 from frappe import _
 from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_invoice
 from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_receipt
+from erpnext.accounts.doctype.payment_request.payment_request import make_payment_request
 
 @frappe.whitelist()
 def sent_po_for_approval(docname):
@@ -17,7 +18,7 @@ def sent_po_for_approval(docname):
         "doctype": "Purchase Order",
         "docname": docname,
         "user": "approver",
-        "description": "请审核采购单",
+        "description": "审批采购单",
     }]
 
     def get_first_material_request(po_name):
@@ -52,7 +53,10 @@ def create_invoice_or_receipt_based_on_terms(self):
     )
 
     if has_advance_term:
-        create_purchase_invoice(self)
+        if getattr(self, "custom_deposit_invoice", 0) == 1:
+            create_purchase_invoice(self)
+        else:
+            create_payment_request(self)
     else:
         create_purchase_receipt(self)
 
@@ -86,7 +90,36 @@ def create_purchase_invoice(self):
 
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
 
-    frappe.msgprint(f"自动创建采购发票：<a href='/app/purchase-invoice/{pi.name}'>{pi.name}</a>")
+def create_payment_request(self):
+    pr = make_payment_request(
+        dt="Purchase Order",                # 关联单据类型
+        dn=self.name,                       # 关联单据名称
+        recipient_id=self.supplier,         # 收款对象，这里是供应商
+        payment_request_type="Outward",     # 对供应商付款
+        mute_email=True                     # 不自动发邮件
+    )
+    to_close = [{
+        "doctype": "Purchase Order",
+        'docname': self.name
+    }]
+    to_open = [{
+        "doctype": "Payment Request",
+        "docname": pr.name,
+        "user": "Purchase",
+        "description": "填入正确的收款或付款金额。",
+    }]
+
+    pf_name = get_process_flow_trace_id_by_reference(self.doctype, self.name)
+
+    process_flow_info = {
+        "trace": "add",
+        "pf_name": pf_name,
+        "ref_doctype": "Payment Request",
+        "ref_docname": pr.name,
+        "todo_name": None
+    }
+
+    process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info=process_flow_info)
 
 def create_purchase_receipt(self):
 
@@ -117,3 +150,7 @@ def create_purchase_receipt(self):
     }
 
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
+
+def check_payment_schedule(doc):
+    if not doc.payment_schedule:
+        frappe.throw("提交采购订单前必须填写付款计划 (Payment Schedule)")

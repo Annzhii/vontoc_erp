@@ -15,7 +15,7 @@ def set_todo(doctype, docname, user, description):
             'reference_type': doctype,
             'reference_name': ref_doc.name,
             'assigned_by': frappe.session.user,
-            'owner': _user.parent,
+            'owner': _user.name,
             'allocated_to': _user.name,
             'status': 'Open',
             # 可以设置截止日期等字段，比如:

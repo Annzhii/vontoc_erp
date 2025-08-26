@@ -19,7 +19,7 @@ def material_request_submitted (docname):
         "doctype": "Purchase Order",
         "docname": po_doc.name,
         "user": "Purchase",
-        "description": "审核采购单，补充供应商信息后提交，等待审批。",
+        "description": "提交采购单，需要补充供应商和付款条例。",
     }]
 
     _process_flow_trace_info = {

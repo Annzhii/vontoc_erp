@@ -46,11 +46,6 @@ def create_sales_invoice_or_payment_request(sales_order_name):
         }
         process_flow_engine(to_open=to_open, process_flow_trace_info=_process_flow_trace_info)
 
-        return {
-            "status": "sales_invoice_created",
-            "invoice_name": sales_invoice.name
-        }
-
     else:
         process_flow_trace_info = {
             "trace": "setup",
@@ -87,8 +82,3 @@ def create_sales_invoice_or_payment_request(sales_order_name):
             "todo_name": None
         }
         process_flow_engine(to_open=to_open, process_flow_trace_info=_process_flow_trace_info)
-
-        return {
-            "status": "payment_request_created",
-            "payment_request_name": payment_request.name
-        }

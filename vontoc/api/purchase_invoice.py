@@ -21,7 +21,7 @@ def submmit_pi(self):
         "doctype": "Payment Request",
         "docname": payment_request.name,
         "user": "approver",
-        "description": "审核付款请求",
+        "description": "审批付款请求",
     }]
     mr = set()
     for item in self.items:
@@ -37,4 +37,27 @@ def submmit_pi(self):
         "todo_name": None
     }
 
+    process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
+
+@frappe.whitelist()
+def validate_pr(docname):
+    to_close = [{
+        "doctype": "Purchase Invoice",
+        'docname': docname
+    }]
+    to_open = [{
+        "doctype": "Purchase Invoice",
+        "docname": docname,
+        "user": "Accounts",
+        "description": "验证采购发票的金额和供应商提供发票金额是否一致，如一致，提交采购发票",
+    }]
+    pf_name = get_process_flow_trace_id_by_reference("Purchase Invoice", docname)
+
+    process_flow_info = {
+        "trace": "add",
+        "pf_name": pf_name,
+        "ref_doctype": "Purchase Invoice",
+        "ref_docname": docname,
+        "todo_name": None
+    }
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)

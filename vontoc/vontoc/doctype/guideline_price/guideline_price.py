@@ -57,8 +57,6 @@ def rfq_process_step_04(gp):
         }
         process_flow_engine(to_close = to_close, process_flow_trace_info=process_flow_trace_info)
 
-    return f"你已经成功提交了指导价格"
-
 @frappe.whitelist()
 def check_existing_prices(gp):
     doc = frappe.get_doc("Guideline Price", gp)
@@ -85,13 +83,13 @@ def create_standard_selling(doc):
         if item.item_code and item.standard_selling_price:
             exits_item_price = frappe.db.exists("Item Price",{
                 "item_code": item.item_code,
-                "price_list": "标准销售"
+                "price_list": "Standard Selling"
             })
             if not exits_item_price:
                 item_price = frappe.get_doc({
                     "doctype": "Item Price",
                     "item_code": item.item_code,
-                    "price_list": "标准销售",
+                    "price_list": "Standard Selling",
                     "price_list_rate": item.standard_selling_price,
                     "uom": item.uom  # 如果你在子表中有 uom 字段
                 })

@@ -20,7 +20,7 @@ def payment_request_submitted(self):
         "doctype": "Payment Entry",
         "docname": payment_entry.name,
         "user": "Accounts",
-        "description": "根据实际收付款情况填写款项单。",
+        "description": "付款或收款后提交款项单",
     }]
     pf_name = get_process_flow_trace_id_by_reference(self.reference_doctype, self.reference_name)
     process_flow_info = {
@@ -31,4 +31,27 @@ def payment_request_submitted(self):
         "todo_name": None
     }
 
+    process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
+
+@frappe.whitelist()
+def validate_pr(docname):
+    to_close = [{
+        "doctype": "Payment Request",
+        'docname': docname
+    }]
+    to_open = [{
+        "doctype": "Payment Request",
+        "docname": docname,
+        "user": "Approver",
+        "description": "审批付款请求",
+    }]
+    pf_name = get_process_flow_trace_id_by_reference("Payment Request", docname)
+
+    process_flow_info = {
+        "trace": "add",
+        "pf_name": pf_name,
+        "ref_doctype": "Payment Request",
+        "ref_docname": docname,
+        "todo_name": None
+    }
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)

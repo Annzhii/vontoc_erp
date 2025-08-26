@@ -27,7 +27,7 @@ from vontoc.utils.process_engine import process_flow_engine
 from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
 from erpnext.accounts.doctype.payment_request.payment_request import make_payment_entry
 from vontoc.api.purchase_receipt import create_new_pr_for_shortfall, create_purchase_invoice_from_pr
-from vontoc.api.purchase_order import create_invoice_or_receipt_based_on_terms
+from vontoc.api.purchase_order import create_invoice_or_receipt_based_on_terms, check_payment_schedule
 from vontoc.api.payment_entry import payment_entry_verified
 from vontoc.api.request_for_quotation import check_supplier
 from vontoc.api.sales_order import create_sales_invoice_or_payment_request
@@ -126,6 +126,7 @@ class VONTOCPurchaseOrder(PurchaseOrder):
 
 		#额外添加的流程逻辑，在approve之后（即表单提交之后）
 		create_invoice_or_receipt_based_on_terms(self)
+		check_payment_schedule(self)
 
 class VONTOCPurchaseReceipt(PurchaseReceipt):
 	def on_submit(self):
