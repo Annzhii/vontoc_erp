@@ -2,45 +2,12 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "Request for Quotation",
-  "enabled": 0,
-  "modified": "2025-06-08 05:16:23.957519",
-  "module": "VONTOC",
-  "name": "test",
-  "script": "frappe.ui.form.on('Request for Quotation', {\n\tbefore_submit(frm) {\n\t\tconsole.log (\"启动\")\n\t}\n})",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
-  "dt": "Request for Quotation",
-  "enabled": 0,
-  "modified": "2025-06-01 15:24:09.169244",
-  "module": "VONTOC",
-  "name": "Supplier Quotations Collected",
-  "script": "frappe.ui.form.on('Request for Quotation', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Supplier Quotations Collected'), function() {\n            frappe.call({\n                method: \"vontoc.api.guideline_price.create_guideline_price\",\n                args: {\n                    rfq: frm.doc.name\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.set_route(\"Form\", \"Guideline Price\", r.message);\n                    }\n                }\n            });\n        });\n\t}\n})",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
   "dt": "Material Request",
   "enabled": 1,
   "modified": "2025-06-30 07:12:13.626787",
   "module": "VONTOC",
   "name": "Submit Material Request",
   "script": "frappe.ui.form.on('Material Request', {\n    on_submit: function(frm) {\n        if (frm.doc.material_request_type === \"Purchase\") {\n            frappe.call({\n                method: 'vontoc.api.material_request.material_request_submitted',\n                args: {\n                    docname: frm.doc.name\n                },\n                callback: function(r) {\n                    if (!r.exc) {\n                        frappe.msgprint(__('已处理采购申请相关逻辑'));\n                    }\n                }\n            });\n        }\n    }\n});\n",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
-  "dt": "Purchase Order",
-  "enabled": 0,
-  "modified": "2025-07-04 15:02:52.602947",
-  "module": "VONTOC",
-  "name": "Submit Purchase Order",
-  "script": "frappe.ui.form.on('Purchase Order', {\n\tafter_workflow_action: function(frm) {\n\t\tif (frm.doc.workflow_state === 'Sent For Approval'){\n\t\t    frappe.call({\n                method: \"vontoc.api.purchase_order.sent_po_for_approval\",\n                args: {\n                    docname: frm.doc.name\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                        frm.reload_doc();\n                    }\n                }\n            });\n\t\t}\n\t}\n})",
   "view": "Form"
  },
  {
@@ -123,12 +90,23 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "Item",
-  "enabled": 0,
-  "modified": "2025-05-30 20:59:26.251083",
+  "dt": "Purchase Invoice",
+  "enabled": 1,
+  "modified": "2025-08-22 18:52:08.536275",
   "module": "VONTOC",
-  "name": "test script",
-  "script": "frappe.ui.form.on('Item', {\n\trefresh(frm) {\n\t\t// your code here\n\t}\n})",
+  "name": "Send Purchase Invoice After Pending",
+  "script": "frappe.ui.form.on(\"Purchase Invoice\", {\n    after_workflow_action: function(frm) {\n        if (frm.doc.workflow_state === 'Pending') {\n            frappe.call({\n                method: \"vontoc.api.purchase_invoice.validate_pr\",\n                args: {\n                    docname: frm.doc.name\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                        frm.reload_doc();\n                    }\n                }\n            });\n        }\n    }\n});\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Payment Request",
+  "enabled": 1,
+  "modified": "2025-08-25 21:21:51.304961",
+  "module": "VONTOC",
+  "name": "Send Payment Request After Pending",
+  "script": "frappe.ui.form.on('Payment Request', {\n    after_workflow_action: function(frm) {\n        if (frm.doc.workflow_state === 'Pending') {\n            frappe.call({\n                method: \"vontoc.api.payment_request.validate_pr\",\n                args: {\n                    docname: frm.doc.name\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                        frm.reload_doc();\n                    }\n                }\n            });\n        }\n    }\n})",
   "view": "Form"
  }
 ]

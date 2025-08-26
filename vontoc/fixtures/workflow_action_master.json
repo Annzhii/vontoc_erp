@@ -9,16 +9,16 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2025-07-07 05:48:16.733905",
-  "name": "Receive",
-  "workflow_action_name": "Receive"
+  "modified": "2025-06-01 00:10:53.422698",
+  "name": "Supplier Quotations Collected",
+  "workflow_action_name": "Supplier Quotations Collected"
  },
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2025-06-01 00:10:53.422698",
-  "name": "Supplier Quotations Collected",
-  "workflow_action_name": "Supplier Quotations Collected"
+  "modified": "2025-07-07 05:48:16.733905",
+  "name": "Receive",
+  "workflow_action_name": "Receive"
  },
  {
   "docstatus": 0,

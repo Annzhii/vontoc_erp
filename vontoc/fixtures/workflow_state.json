@@ -47,11 +47,11 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "question-sign",
-  "modified": "2025-05-26 19:20:52.585511",
-  "name": "Pending",
+  "icon": "",
+  "modified": "2025-07-04 14:54:10.444589",
+  "name": "Pending Warehouse Receipt",
   "style": "",
-  "workflow_state_name": "Pending"
+  "workflow_state_name": "Pending Warehouse Receipt"
  },
  {
   "docstatus": 0,
@@ -66,28 +66,10 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2025-07-04 14:54:10.444589",
-  "name": "Pending Warehouse Receipt",
-  "style": "",
-  "workflow_state_name": "Pending Warehouse Receipt"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2025-07-15 22:15:17.054823",
   "name": "Returned",
   "style": "",
   "workflow_state_name": "Returned"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "ok-sign",
-  "modified": "2025-05-26 19:20:52.586178",
-  "name": "Approved",
-  "style": "Success",
-  "workflow_state_name": "Approved"
  },
  {
   "docstatus": 0,
@@ -110,11 +92,29 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
+  "icon": "question-sign",
+  "modified": "2025-05-26 19:20:52.585511",
+  "name": "Pending",
+  "style": "",
+  "workflow_state_name": "Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
   "icon": "",
   "modified": "2025-07-15 21:34:02.516604",
   "name": "Ready For Dispatch",
   "style": "",
   "workflow_state_name": "Ready For Dispatch"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "ok-sign",
+  "modified": "2025-05-26 19:20:52.586178",
+  "name": "Approved",
+  "style": "Success",
+  "workflow_state_name": "Approved"
  },
  {
   "docstatus": 0,
