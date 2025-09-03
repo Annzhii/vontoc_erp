@@ -71,7 +71,7 @@ def create_sales_invoice_or_payment_request(sales_order_name):
         to_open = [{
             "doctype": "Payment Request",
             "docname": payment_request.name,
-            "user": "Sales",
+            "user": "approver",
             "description": "请提交付款请求。",
         }]
         _process_flow_trace_info = {

@@ -11,7 +11,7 @@ def item_quality_inspection_or_not(docname, has_inspection_required):
     if isinstance(has_inspection_required, str):
         has_inspection_required = has_inspection_required.lower() == 'true'
 
-    assigned_user = "inspection" if has_inspection_required else "stock"
+    assigned_user = "quality" if has_inspection_required else "stock"
     description = "完成质检" if has_inspection_required else "确认入库"
 
     to_close = [{

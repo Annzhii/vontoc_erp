@@ -21,7 +21,7 @@ def sales_invoice_submitted(docname):
     to_open = [{
         "doctype": "Payment Request",
         "docname": payment_request.name,
-        "user": "Sales",
+        "user": "approver",
         "description": "填入正确的收款或付款金额。",
     }]
     ref_type, reference = get_invoice_source_and_refs(docname)
