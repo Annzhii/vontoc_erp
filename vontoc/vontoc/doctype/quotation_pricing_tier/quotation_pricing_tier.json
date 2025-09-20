@@ -264,7 +264,6 @@
    "collapsible": 1,
    "fieldname": "currency_and_price_list",
    "fieldtype": "Section Break",
-   "hidden": 1,
    "label": "Currency and Price List",
    "options": "fa fa-tag"
   },
@@ -893,6 +892,7 @@
   },
   {
    "allow_on_submit": 1,
+   "default": "Quotation",
    "fieldname": "letter_head",
    "fieldtype": "Link",
    "label": "Letter Head",
@@ -1101,7 +1101,7 @@
  "icon": "fa fa-shopping-cart",
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-28 00:57:05.746835",
+ "modified": "2025-09-05 08:08:34.108368",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Quotation Pricing Tier",

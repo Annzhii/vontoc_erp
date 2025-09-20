@@ -1,0 +1,79 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "CRM Form Script",
+  "dt": "CRM Lead",
+  "enabled": 1,
+  "is_standard": 1,
+  "modified": "2025-07-28 23:58:41.783487",
+  "name": "Product Details Script for CRM Lead",
+  "script": "class CRMLead {\n  update_total() {\n    let total = 0\n    let total_qty = 0\n    let net_total = 0\n    let discount_applied = false\n\n    this.doc.products.forEach((d) => {\n      total += d.amount\n      net_total += d.net_amount\n      if (d.discount_percentage > 0) {\n        discount_applied = true\n      }\n    })\n\n    this.doc.total = total\n    this.doc.net_total = net_total || total\n\n    if (!net_total && discount_applied) {\n      this.doc.net_total = net_total\n    }\n  }\n}\n\nclass CRMProducts {\n  products_add() {\n    let row = this.doc.getRow('products')\n    row.trigger('qty')\n    this.doc.trigger('update_total')\n  }\n\n  products_remove() {\n    this.doc.trigger('update_total')\n  }\n\n  async product_code(idx) {\n    let row = this.doc.getRow('products', idx)\n\n    let a = await call(\"frappe.client.get_value\", {\n        doctype: \"CRM Product\",\n        filters: { name: row.product_code },\n        fieldname: [\"product_name\", \"standard_rate\"],\n    })\n\n    row.product_name = a.product_name\n    if (a.standard_rate && !row.rate) {\n        row.rate = a.standard_rate\n        row.trigger(\"rate\")\n    }\n  }\n\n  qty(idx) {\n    let row = this.doc.getRow('products', idx)\n    row.amount = row.qty * row.rate\n    row.trigger('discount_percentage', idx)\n  }\n\n  rate() {\n    let row = this.doc.getRow('products')\n    row.amount = row.qty * row.rate\n    row.trigger('discount_percentage')\n  }\n\n  discount_percentage(idx) {\n    let row = this.doc.getRow('products', idx)\n    if (!row.discount_percentage) {\n      row.net_amount = row.amount\n      row.discount_amount = 0\n    }\n    if (row.discount_percentage && row.amount) {\n      row.discount_amount = (row.discount_percentage / 100) * row.amount\n      row.net_amount = row.amount - row.discount_amount\n    }\n    this.doc.trigger('update_total')\n  }\n}",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "CRM Form Script",
+  "dt": "CRM Deal",
+  "enabled": 1,
+  "is_standard": 1,
+  "modified": "2025-07-28 23:58:41.784433",
+  "name": "Product Details Script for CRM Deal",
+  "script": "class CRMDeal {\n  update_total() {\n    let total = 0\n    let total_qty = 0\n    let net_total = 0\n    let discount_applied = false\n\n    this.doc.products.forEach((d) => {\n      total += d.amount\n      net_total += d.net_amount\n      if (d.discount_percentage > 0) {\n        discount_applied = true\n      }\n    })\n\n    this.doc.total = total\n    this.doc.net_total = net_total || total\n\n    if (!net_total && discount_applied) {\n      this.doc.net_total = net_total\n    }\n  }\n}\n\nclass CRMProducts {\n  products_add() {\n    let row = this.doc.getRow('products')\n    row.trigger('qty')\n    this.doc.trigger('update_total')\n  }\n\n  products_remove() {\n    this.doc.trigger('update_total')\n  }\n\n  async product_code(idx) {\n    let row = this.doc.getRow('products', idx)\n\n    let a = await call(\"frappe.client.get_value\", {\n        doctype: \"CRM Product\",\n        filters: { name: row.product_code },\n        fieldname: [\"product_name\", \"standard_rate\"],\n    })\n\n    row.product_name = a.product_name\n    if (a.standard_rate && !row.rate) {\n        row.rate = a.standard_rate\n        row.trigger(\"rate\")\n    }\n  }\n\n  qty(idx) {\n    let row = this.doc.getRow('products', idx)\n    row.amount = row.qty * row.rate\n    row.trigger('discount_percentage', idx)\n  }\n\n  rate() {\n    let row = this.doc.getRow('products')\n    row.amount = row.qty * row.rate\n    row.trigger('discount_percentage')\n  }\n\n  discount_percentage(idx) {\n    let row = this.doc.getRow('products', idx)\n    if (!row.discount_percentage) {\n      row.net_amount = row.amount\n      row.discount_amount = 0\n    }\n    if (row.discount_percentage && row.amount) {\n      row.discount_amount = (row.discount_percentage / 100) * row.amount\n      row.net_amount = row.amount - row.discount_amount\n    }\n    this.doc.trigger('update_total')\n  }\n}",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "CRM Form Script",
+  "dt": "CRM Deal",
+  "enabled": 1,
+  "is_standard": 1,
+  "modified": "2025-09-19 06:40:05.481411",
+  "name": "Forecasting Script",
+  "script": "class CRMDeal {\n    async status() {\n        await this.doc.trigger('updateProbability')\n    }\n    async updateProbability() {\n        let status = await call(\"frappe.client.get_value\", {\n            doctype: \"CRM Deal Status\",\n            fieldname: \"probability\",\n            filters: { name: this.doc.status },\n        })\n\n        this.doc.probability = status.probability\n    }\n}",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "CRM Form Script",
+  "dt": "CRM Deal",
+  "enabled": 1,
+  "is_standard": 1,
+  "modified": "2025-07-29 00:53:41.474253",
+  "name": "Create Quotation from CRM Deal",
+  "script": "\nasync function setupForm({ doc, call, $dialog, updateField, toast }) {\n\tlet actions = [];\n\tlet is_erpnext_integration_enabled = await call(\"frappe.client.get_single_value\", {doctype: \"ERPNext CRM Settings\", field: \"enabled\"});\n\tif (![\"Lost\", \"Won\"].includes(doc?.status) && is_erpnext_integration_enabled) {\n\t\tactions.push({\n\t\t\tlabel: __(\"Create Quotation\"),\n\t\t\tonClick: async () => {\n\t\t\t\tlet quotation_url = await call(\n\t\t\t\t\t\"crm.fcrm.doctype.erpnext_crm_settings.erpnext_crm_settings.get_quotation_url\", \n\t\t\t\t\t{\n\t\t\t\t\t\tcrm_deal: doc.name,\n\t\t\t\t\t\torganization: doc.organization\n\t\t\t\t\t}\n\t\t\t\t);\n\n\t\t\t\tif (quotation_url) {\n\t\t\t\t\twindow.open(quotation_url, '_blank');\n\t\t\t\t}\n\t\t\t}\n\t\t})\n\t}\n\tif (is_erpnext_integration_enabled) {\n\t\tlet customer_url = await call(\"crm.fcrm.doctype.erpnext_crm_settings.erpnext_crm_settings.get_customer_link\", {\n\t\t\tcrm_deal: doc.name\n\t\t});\n\t\tif (customer_url) {\n\t\t\tactions.push({\n\t\t\t\tlabel: __(\"View Customer\"),\n\t\t\t\tonClick: () => window.open(customer_url, '_blank')\n\t\t\t});\n\t\t}\n\t}\n\treturn {\n\t\tactions: actions,\n\t};\n}\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "CRM Form Script",
+  "dt": "CRM Deal",
+  "enabled": 1,
+  "is_standard": 1,
+  "modified": "2025-09-19 17:21:30.125903",
+  "name": "CRM Deal Quotation Query",
+  "script": "async function setupForm({ doc, call, $dialog, updateField, toast }) {\n    let actions = [];\n\n    // Previous Quotation 按钮\n    actions.push({\n        label: \"Previous Quotation\",\n        onClick: () => {\n            const url = `/app/quotation?party_name=${encodeURIComponent(doc.name)}`;\n            window.open(url, \"_blank\");\n        }\n    });\n\n    return { actions };\n}\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "CRM Form Script",
+  "dt": "CRM Deal",
+  "enabled": 1,
+  "is_standard": 1,
+  "modified": "2025-09-19 17:40:40.392467",
+  "name": "Create Tiered Pricing",
+  "script": "async function setupForm({ doc }) {\n    let actions = [];\n\n    // 仅当状态不是 \"Won\" 时显示按钮\n    if (doc.status !== \"Won\") {\n        actions.push({\n            label: \"Create Tiered Pricing\",\n            onClick: () => {\n                // 构造 URL，带上默认字段值\n                const url = `/app/quotation-pricing-tier/new`\n                    + `?quotation_to=${encodeURIComponent(\"CRM Deal\")}`\n                    + `&party_name=${encodeURIComponent(doc.name)}`;\n\n                window.open(url, \"_blank\");\n            }\n        });\n    }\n\n    return { actions };\n}\n\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "CRM Form Script",
+  "dt": "CRM Deal",
+  "enabled": 1,
+  "is_standard": 0,
+  "modified": "2025-09-19 17:26:02.054976",
+  "name": "CRM Deal Tiered Pricing Query",
+  "script": "async function setupForm({ doc, call, $dialog, updateField, toast }) {\n    let actions = [];\n\n    // Previous Quotation 按钮\n    actions.push({\n        label: \"Previous Tiered Pricing\",\n        onClick: () => {\n            const url = `/app/quotation-pricing-tier?party_name=${encodeURIComponent(doc.name)}`;\n            window.open(url, \"_blank\");\n        }\n    });\n\n    return { actions };\n}\n",
+  "view": "Form"
+ }
+]

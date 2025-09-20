@@ -1,20 +1,15 @@
 {% from "templates/includes/rfq/rfq_macros.html" import item_name_and_description %}
 
-{% set item_shown_map = {} %}
 {% for d in doc.items %}
-	{% set show_name = not item_shown_map.get(d.item_code) %}
 	<div class="rfq-item">
 		<div class="row">
 			<div class="col-sm-5 col-12" style="margin-bottom: 10px;margin-top: 5px;">
-				{% if show_name %}
-					{{ item_name_and_description(d, doc) }}
-				{% else %}
-					&nbsp;
-				{% endif %}
+				{{ item_name_and_description(d, doc) }}
 			</div>
 
 			<div class="col-sm-2 col-4 text-right">
-				<input type="text" class="form-control text-right rfq-qty" style="margin-top: 5px;display: inline-block"
+				<input type="text" class="form-control text-right rfq-qty" 
+					style="margin-top: 5px;display: inline-block"
 					value="{{ d.get_formatted('qty') }}"
 					data-idx="{{ d.idx }}">
 				<p class="text-muted small" style="margin-top: 10px;">
@@ -24,7 +19,8 @@
 
 			<div class="col-sm-2 col-4 text-right">
 				<input type="text" class="form-control text-right rfq-rate"
-					style="margin-top: 5px;display: inline-block" value="0.00"
+					style="margin-top: 5px;display: inline-block" 
+					value="0.00"
 					data-idx="{{ d.idx }}">
 			</div>
 
@@ -33,5 +29,4 @@
 			</div>
 		</div>
 	</div>
-	{% set _ = item_shown_map.update({d.item_code: true}) %}
 {% endfor %}
