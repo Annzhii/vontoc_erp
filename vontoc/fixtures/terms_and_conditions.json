@@ -48,10 +48,10 @@
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Terms and Conditions",
-  "modified": "2025-08-04 00:55:09.760759",
+  "modified": "2025-09-23 07:01:59.753179",
   "name": "TAC-PROFORMA-001",
   "selling": 1,
-  "terms": "<div class=\"ql-editor read-mode\"><p><strong>2. Design Changes</strong></p><p>Changes after tooling begins may result in extra cost and delay.</p><p><strong>3. Validity</strong></p><p>This quotation is valid for 14 days from the date of issue.</p></div>",
+  "terms": "<div class=\"ql-editor read-mode\"><p><strong>Notes</strong></p><p>- INCOTERM: {{ incoterm }} - {{ named_place }}.</p><p>- Changes after tooling begins may result in extra cost and delay.</p><p>- Please indicate the invoice number on your check.</p></div>",
   "title": "TAC-PROFORMA-001"
  }
 ]
