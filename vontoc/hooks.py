@@ -168,13 +168,17 @@ override_doctype_class = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
+doc_events = {
 # 	"*": {
 # 		"on_update": "method",
 # 		"on_cancel": "method",
 # 		"on_trash": "method"
 # 	}
-# }
+    "Item": {
+        "before_save": "vontoc.event.item.auto_rename_on_group_change",
+        "before_insert": "vontoc.event.item.validate_sales_temporary_item",
+    }
+}
 
 # Scheduled Tasks
 # ---------------
