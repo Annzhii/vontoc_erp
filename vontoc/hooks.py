@@ -49,6 +49,7 @@ doctype_js = {
 # app_include_css = "/assets/vontoc/css/vontoc.css"
 # app_include_js = "/assets/vontoc/js/vontoc.js"
 
+
 # include js, css files in header of web template
 # web_include_css = "/assets/vontoc/css/vontoc.css"
 # web_include_js = "/assets/vontoc/js/vontoc.js"
@@ -177,6 +178,9 @@ doc_events = {
     "Item": {
         "before_save": "vontoc.event.item.auto_rename_on_group_change",
         "before_insert": "vontoc.event.item.validate_sales_temporary_item",
+    },
+    "Communication": {
+        "after_insert": "vontoc.event.communication.communication_after_insert"
     }
 }
 
