@@ -186,6 +186,13 @@ doc_events = {
 
 # Scheduled Tasks
 # ---------------
+scheduler_events = {
+    "cron": {
+        "0/1 * * * *": [
+            "frappe.email.doctype.email_account.email_account.pull"
+        ]
+    }
+}
 
 # scheduler_events = {
 # 	"all": [

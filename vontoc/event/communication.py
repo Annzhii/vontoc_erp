@@ -1,6 +1,7 @@
 import frappe
 from frappe.utils import get_url
 from pushweb.api.push import send_push_to_user
+from crm.fcrm.doctype.crm_notification.crm_notification import notify_user
 import re
 
 def html_to_text_preserve_newlines(html: str) -> str:
@@ -39,32 +40,20 @@ def communication_after_insert(doc, method=None):
             "CRM Lead": "leads",
             "CRM Deal": "deals",
         }
-
         for user in users:
-            try:
-                if doc.reference_doctype and doc.reference_name:
-                    route = doctype_route_map.get(doc.reference_doctype)
-                    if route:
-                        url = get_url(f"/crm/{route}/{doc.reference_name}#emails")
-                    else:
-                        url = get_url(f"/app/communication/{doc.name}")
-                else:
-                    url = get_url(f"/app/communication/{doc.name}")
+            if doc.reference_doctype and doc.reference_name:
+                route = doctype_route_map.get(doc.reference_doctype)
+                if route:
+                    url = get_url(f"/crm/{route}/{doc.reference_name}#emails")
+                    print(url)
 
-                send_push_to_user(
-                    user=user,
-                    title=(doc.subject or "New Communication")[:100],
-                    body=body_text[:400],  # 防止超过 Web Push 限制
-                    url=url
-                )
-                frappe.logger().info(f"[PUSH] Sent to {user} for Communication {doc.name}")
-            except Exception as e:
-                frappe.log_error(
-                    title=f"Push failed for {user}",
-                    message=str(e)[:140],
-                    reference_doctype="Communication",
-                    reference_name=doc.name
-                )
+            send_push_to_user(
+                user=user,
+                title=(doc.subject or "New Communication")[:100],
+                body=body_text[:400],  # 防止超过 Web Push 限制
+                url=url
+            )
+
     except Exception as e:
         frappe.log_error(
             title=f"communication_after_insert failed for {doc.name}",
