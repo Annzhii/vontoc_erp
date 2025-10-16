@@ -48,11 +48,14 @@ def communication_after_insert(doc, method=None):
                     print(url)
 
             send_push_to_user(
+                to_app="crm",
                 user=user,
                 title=(doc.subject or "New Communication")[:100],
                 body=body_text[:400],  # 防止超过 Web Push 限制
                 url=url
             )
+            notify_user({"owner": "sales@vontoc.com", "assigned_to": "Administrator", "notification_type": "Task", "message": "You have been assigned a new task.", "notification_text": "A new task has been assigned to you.", "reference_doctype": "Task", "reference_docname":
+            "TASK-2025-00014", "redirect_to_doctype": "Task", "redirect_to_docname": "TASK-2025-00014"})
 
     except Exception as e:
         frappe.log_error(

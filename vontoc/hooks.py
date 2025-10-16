@@ -24,6 +24,7 @@ fixtures = ["Print Format",
 doctype_js = {
     "Request for Quotation": "public/js/request_for_quotation.js",
     "Delivery Note": "public/js/delivery_note.js",
+    "Sales Order": "public/js/sales_order.js",
 }
 
 # Apps
@@ -181,6 +182,9 @@ doc_events = {
     },
     "Communication": {
         "after_insert": "vontoc.event.communication.communication_after_insert"
+    },
+    "ToDo":{
+        "after_insert": "vontoc.event.todo.todo_after_insert"
     }
 }
 
