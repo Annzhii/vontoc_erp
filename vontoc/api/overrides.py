@@ -268,12 +268,10 @@ class VONTOCPaymentEntry(PaymentEntry):
 	def on_submit(self):
 		if self.difference_amount:
 			frappe.throw(_("Difference Amount must be zero"))
+		self.update_payment_requests()
+		self.update_payment_schedule()
 		self.make_gl_entries()
 		self.update_outstanding_amounts()
-		self.update_payment_schedule()
-		self.update_payment_requests()
-		self.make_advance_payment_ledger_entries()
-		self.update_advance_paid()  # advance_paid_status depends on the payment request amount
 		self.set_status()
 		payment_entry_verified(self)
 
