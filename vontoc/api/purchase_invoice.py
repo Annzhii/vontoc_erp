@@ -11,6 +11,7 @@ def submmit_pi(self):
             mr.add(item.material_request)
     _reference = list(mr)[0]
     pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
+    
 
     to_close = [{
         "doctype": "Purchase Invoice",
@@ -73,4 +74,14 @@ def validate_pr(docname):
         "ref_docname": docname,
         "todo_name": None
     }
+    doc = frappe.get_doc("Purchase Invoice", docname)
+
+    mr = set()
+    for item in doc.items:
+        if item.purchase_order:
+            mr.add(item.purchase_order)
+    _reference = list(mr)[0]
+    print (_reference)
+    pf_name = get_process_flow_trace_id_by_reference("Purchase Order", _reference)
+    
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
