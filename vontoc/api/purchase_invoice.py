@@ -4,7 +4,7 @@ from frappe.utils import flt
 from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
 from erpnext.accounts.doctype.payment_request.payment_request import make_payment_request
 
-def submmit_pi(self):
+def submit_pi(self):
     mr = set()
     for item in self.items:
         if item.material_request:
@@ -55,6 +55,15 @@ def submmit_pi(self):
 
 @frappe.whitelist()
 def validate_pr(docname):
+    doc = frappe.get_doc("Purchase Invoice", docname)
+    mr = set()
+    for item in doc.items:
+        if item.purchase_order:
+            mr.add(item.purchase_order)
+    _reference = list(mr)[0]
+    print (_reference)
+    pf_name = get_process_flow_trace_id_by_reference("Purchase Order", _reference)
+
     to_close = [{
         "doctype": "Purchase Invoice",
         'docname': docname
@@ -65,7 +74,6 @@ def validate_pr(docname):
         "user": "Accounts",
         "description": "验证采购发票的金额和供应商提供发票金额是否一致，如一致，提交采购发票",
     }]
-    pf_name = get_process_flow_trace_id_by_reference("Purchase Invoice", docname)
 
     process_flow_info = {
         "trace": "add",
@@ -74,14 +82,5 @@ def validate_pr(docname):
         "ref_docname": docname,
         "todo_name": None
     }
-    doc = frappe.get_doc("Purchase Invoice", docname)
-
-    mr = set()
-    for item in doc.items:
-        if item.purchase_order:
-            mr.add(item.purchase_order)
-    _reference = list(mr)[0]
-    print (_reference)
-    pf_name = get_process_flow_trace_id_by_reference("Purchase Order", _reference)
     
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)

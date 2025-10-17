@@ -32,7 +32,7 @@ from vontoc.api.payment_entry import payment_entry_verified
 from vontoc.api.request_for_quotation import check_supplier
 from vontoc.api.sales_order import create_sales_invoice_or_payment_request
 from vontoc.api.sales_invoice import sales_invoice_submitted
-from vontoc.api.purchase_invoice import submmit_pi
+from vontoc.api.purchase_invoice import submit_pi
 from vontoc.api.payment_request import payment_request_submitted
 from vontoc.api.delivery_note import delivery_note_submitted
 from erpnext.setup.doctype.company.company import update_company_current_month_sales
@@ -233,7 +233,7 @@ class VONTOCPurchaseInvoice(PurchaseInvoice):
 
 		self.process_common_party_accounting()
 
-		submmit_pi(self)
+		submit_pi(self)
 
 class VONTOCPaymentRequest(PaymentRequest):
 	def on_submit(self):
