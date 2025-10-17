@@ -17,7 +17,6 @@ def submit_pi(self):
         "doctype": "Purchase Invoice",
         'docname': self.name
     }]
-
     if flt(self.outstanding_amount) > 0:
         payment_request = make_payment_request(
             dt=self.doctype,
