@@ -161,3 +161,19 @@ def create_purchase_invoice_from_pr(self):
         "todo_name": None
     }
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
+
+def close_process_from_pr(self):
+    to_close = [{
+        "doctype": "Purchase Receipt",
+        'docname': self.name
+    }]
+    _reference = get_linked_material_request(self.name)
+    pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
+    process_flow_info = {
+        "trace": "close",
+        "pf_name": pf_name,
+        "ref_doctype": None,
+        "ref_docname": None,
+        "todo_name": None
+    }
+    process_flow_engine(to_close=to_close, process_flow_trace_info=process_flow_info)

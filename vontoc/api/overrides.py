@@ -26,7 +26,7 @@ from erpnext.accounts.doctype.sales_invoice.sales_invoice import (
 from vontoc.utils.process_engine import process_flow_engine
 from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
 from erpnext.accounts.doctype.payment_request.payment_request import make_payment_entry
-from vontoc.api.purchase_receipt import create_new_pr_for_shortfall, create_purchase_invoice_from_pr
+from vontoc.api.purchase_receipt import create_new_pr_for_shortfall, create_purchase_invoice_from_pr, close_process_from_pr
 from vontoc.api.purchase_order import create_invoice_or_receipt_based_on_terms, check_payment_schedule
 from vontoc.api.payment_entry import payment_entry_verified
 from vontoc.api.request_for_quotation import check_supplier
@@ -161,9 +161,6 @@ class VONTOCPurchaseReceipt(PurchaseReceipt):
 					return item.qty
 			return 0
 
-		def function_c(pr_name):
-			frappe.msgprint(f"{pr_name}：已收货并付款结清。无需进一步操作。")
-
 		has_shortfall = False
 		shortfall_items = []
 
@@ -186,8 +183,7 @@ class VONTOCPurchaseReceipt(PurchaseReceipt):
 		elif not is_linked_po_fully_billed(self):
 			create_purchase_invoice_from_pr(self)
 		else:
-			# 调用函数 C
-			function_c(self.name)
+			close_process_from_pr(self)
 
 class VONTOCPurchaseInvoice(PurchaseInvoice):
 	def on_submit(self):
