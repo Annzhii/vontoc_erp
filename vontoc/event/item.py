@@ -16,8 +16,8 @@ def get_series_from_naming_rule(doctype, doc):
     rules = sorted(rules, key=lambda x: x.priority or 0, reverse=True)
 
     for r in rules:
-        # 如果有条件，可以在这里扩展逻辑
-        return f"{r.prefix}.{'#'*r.prefix_digits}"
+        if check_rule_conditions_match(r["name"], doc.item_group):
+            return f"{r.prefix}.{'#'*r.prefix_digits}"
 
     return None
 
@@ -42,17 +42,23 @@ def auto_rename_on_group_change(doc, method):
         doc.name = new_code
         frappe.msgprint(f"Item Group 从 {old_group} 改为 {doc.item_group}，系统自动更新编码为 {new_code}")
 
-import frappe
 
-def validate_sales_temporary_item(doc, method):
-    """Sales 角色只能创建临时物料"""
-    user = frappe.session.user
-    if user == "Administrator":
-        return  # 管理员不受限制
-
-    # 检查当前用户角色
-    roles = frappe.get_roles(user)
-    if "Sales User" in roles or "Sales Representative" in roles:
-        # 校验 item group
-        if doc.item_group != "临时物料":
-            frappe.throw("销售人员只能创建属于『Temporary』分组的物料，请调整 Item Group 后再保存。")
+def check_rule_conditions_match(rule_name, item_group):
+    """检查命名规则的 conditions 表中是否有匹配的 value"""
+    # 查询 Document Naming Rule 的 conditions 子表
+    conditions = frappe.get_all("Document Naming Rule Condition",
+        filters={"parent": rule_name},
+        fields=["field", "condition", "value"]
+    )
+    
+    # 如果没有条件，则默认匹配
+    if not conditions:
+        return True
+    
+    # 检查所有条件是否匹配
+    for condition in conditions:
+        if condition.field == "item_group" and condition.condition == "=":
+            if condition.value == item_group:
+                return True
+    
+    return False

@@ -178,7 +178,6 @@ doc_events = {
 # 	}
     "Item": {
         "before_save": "vontoc.event.item.auto_rename_on_group_change",
-        "before_insert": "vontoc.event.item.validate_sales_temporary_item",
     },
     "Communication": {
         "after_insert": "vontoc.event.communication.communication_after_insert"
