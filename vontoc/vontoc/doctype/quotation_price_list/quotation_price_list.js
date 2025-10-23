@@ -1,10 +1,10 @@
 // Copyright (c) 2025, anzhi and contributors
 // For license information, please see license.txt
 erpnext.sales_common.setup_selling_controller();
-frappe.ui.form.on("Quotation Pricing Tier", {
+frappe.ui.form.on("Quotation Price List", {
 	on_submit: function (frm) {
         frappe.call({
-            method: "vontoc.vontoc.doctype.quotation_pricing_tier.quotation_pricing_tier.create_pricing_rules_from_tier",
+            method: "vontoc.vontoc.doctype.quotation_price_list.quotation_price_list.create_pricing_rules_from_tier",
             args: {
                 pricing_tier_name: frm.doc.name
             },

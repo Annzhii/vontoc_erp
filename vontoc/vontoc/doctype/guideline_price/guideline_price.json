@@ -5,8 +5,6 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "rfq",
-  "supplier_quotation",
   "section_break_iomc",
   "items",
   "amended_from"
@@ -23,12 +21,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "supplier_quotation",
-   "fieldtype": "Link",
-   "label": "Supplier Quotation",
-   "options": "Supplier Quotation"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -37,20 +29,13 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
-  },
-  {
-   "fieldname": "rfq",
-   "fieldtype": "Link",
-   "label": "RFQ",
-   "options": "Request for Quotation",
-   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-31 21:53:46.389963",
+ "modified": "2025-10-18 07:23:03.541298",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Guideline Price",
@@ -70,6 +55,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

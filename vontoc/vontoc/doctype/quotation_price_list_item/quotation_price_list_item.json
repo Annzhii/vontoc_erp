@@ -698,7 +698,7 @@
  "modified": "2025-06-14 18:42:06.761396",
  "modified_by": "Administrator",
  "module": "VONTOC",
- "name": "Quotation Pricing Tier Item",
+ "name": "Quotation Price List Item",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",

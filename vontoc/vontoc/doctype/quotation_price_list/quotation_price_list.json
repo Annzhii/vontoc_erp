@@ -255,7 +255,7 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Quotation Pricing Tier",
+   "options": "Quotation Price List",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
@@ -347,7 +347,7 @@
    "label": "Items",
    "oldfieldname": "quotation_details",
    "oldfieldtype": "Table",
-   "options": "Quotation Pricing Tier Item",
+   "options": "Quotation Price List Item",
    "reqd": 1,
    "width": "40px"
   },
@@ -1074,7 +1074,7 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Quotation Pricing Tier",
+   "options": "Quotation Price List",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
@@ -1101,10 +1101,10 @@
  "icon": "fa fa-shopping-cart",
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-05 08:08:34.108368",
+ "modified": "2025-10-18 06:44:23.073722",
  "modified_by": "Administrator",
  "module": "VONTOC",
- "name": "Quotation Pricing Tier",
+ "name": "Quotation Price List",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
@@ -1193,6 +1193,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "search_fields": "status,transaction_date,party_name,order_type",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

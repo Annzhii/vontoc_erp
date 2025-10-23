@@ -19,7 +19,6 @@ def todo_after_insert(doc, method=None):
             # 根据 reference_type 构造不同的 URL
             route = doc.reference_type.replace(" ", "-").lower()  
             url = get_url(f"/app/{route}/{doc.reference_name}")
-            print(url)
         else:
             url = None
 
@@ -27,11 +26,10 @@ def todo_after_insert(doc, method=None):
         send_push_to_user(
             to_app="erp",
             user=user,
-            title= "You have a new ToDo",
+            title= "You have a new ToDo!",
             body=re.sub(r"<[^>]+>", "", body),  # 任务通知内容
             url=url
         )
-        print(user)
     except Exception as e:
         frappe.log_error(
             title=f"todo_after_insert failed for {doc.name}",

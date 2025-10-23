@@ -7,10 +7,10 @@
  "engine": "InnoDB",
  "field_order": [
   "item_code",
+  "notes",
   "quantity",
-  "standard_selling_price",
   "uom",
-  "supplier_price"
+  "standard_selling_price"
  ],
  "fields": [
   {
@@ -35,28 +35,28 @@
    "reqd": 1
   },
   {
-   "fieldname": "supplier_price",
-   "fieldtype": "Currency",
-   "label": "Supplier Price",
-   "read_only": 1
-  },
-  {
    "fieldname": "standard_selling_price",
    "fieldtype": "Currency",
    "label": "Standard Selling Price"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-06-13 05:29:14.732673",
+ "modified": "2025-10-18 07:59:04.587769",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Guideline Price Item",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

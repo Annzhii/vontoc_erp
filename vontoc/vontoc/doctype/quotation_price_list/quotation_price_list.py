@@ -5,17 +5,19 @@ import frappe
 from frappe.model.document import Document
 from erpnext.controllers.selling_controller import SellingController
 
-class QuotationPricingTier(SellingController):
-	def calculate_taxes_and_totals(self):
-		pass
-	def abs(self):
-		pass
-
+class QuotationPriceList(SellingController):
+    def calculate_taxes_and_totals(self):
+        pass
+    def abs(self):
+        pass
+    def validate(self):
+        pass
+     
 from frappe.utils import nowdate
 
 @frappe.whitelist()
 def create_pricing_rules_from_tier(pricing_tier_name):
-    pricing_tier = frappe.get_doc("Quotation Pricing Tier", pricing_tier_name)
+    pricing_tier = frappe.get_doc("Quotation Price List", pricing_tier_name)
 
     # 按 item_code 分组
     from collections import defaultdict

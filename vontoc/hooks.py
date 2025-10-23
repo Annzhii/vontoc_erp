@@ -162,8 +162,8 @@ override_doctype_class = {
     "Request for Quotation": "vontoc.api.overrides.VONTOCRequestforQuotation",
     "Sales Order": "vontoc.api.overrides.VONTOCSalesOrder",
     "Sales Invoice": "vontoc.api.overrides.VONTOCSalesInvoice",
-    "Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote"
-# 	"ToDo": "custom_app.overrides.CustomToDo"
+    "Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote",   
+ 	#"ToDo": "custom_app.overrides.CustomToDo"
 }
 
 # Document Events
@@ -180,7 +180,8 @@ doc_events = {
         "before_save": "vontoc.event.item.auto_rename_on_group_change",
     },
     "Communication": {
-        "after_insert": "vontoc.event.communication.communication_after_insert"
+        # event 负责推送push notification， api负责内部 notify_user
+        "after_insert": ["vontoc.event.communication.communication_after_insert", "vontoc.api.communication.after_insert_communication"]
     },
     "ToDo":{
         "after_insert": "vontoc.event.todo.todo_after_insert"

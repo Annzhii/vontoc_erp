@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestQuotationPricingTier(FrappeTestCase):
+class TestAssignment(FrappeTestCase):
 	pass
