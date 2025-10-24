@@ -82,5 +82,12 @@
   "modified": "2025-05-30 21:33:09.442543",
   "name": "Send",
   "workflow_action_name": "Send"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2025-10-18 06:38:36.272543",
+  "name": "Send For Approval",
+  "workflow_action_name": "Send For Approval"
  }
 ]

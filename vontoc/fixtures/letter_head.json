@@ -20,7 +20,7 @@
   "letter_head_name": "Proforma Invoice",
   "modified": "2025-09-29 07:30:00.099696",
   "name": "Proforma Invoice",
-  "source": "HTML"
+  "source": "Image"
  },
  {
   "align": "Left",
@@ -43,7 +43,7 @@
   "letter_head_name": "Quotation",
   "modified": "2025-09-29 07:30:17.325509",
   "name": "Quotation",
-  "source": "HTML"
+  "source": "Image"
  },
  {
   "align": "Left",
@@ -66,7 +66,7 @@
   "letter_head_name": "Invoice",
   "modified": "2025-09-29 07:30:11.110662",
   "name": "Invoice",
-  "source": "HTML"
+  "source": "Image"
  },
  {
   "align": "Left",
