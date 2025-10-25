@@ -18,6 +18,11 @@ def notify_communication_creation(doc):
     """
     通知分配给用户，告知 Communication 创建的内容
     """
+    email_id = frappe.db.get_value("Email Account", doc.email_account, "email_id")
+    if email_id:
+        email_user = frappe.db.get_value("User", {"email": email_id}, "name")
+
+    assigned_to = email_user or "Administrator"
     owner = frappe.get_cached_value("User", frappe.session.user, "full_name")
     message = _("You received a new mail")
 
@@ -28,7 +33,7 @@ def notify_communication_creation(doc):
     notify_user(
         {
             "owner": frappe.session.user,
-            "assigned_to": doc.email_account,
+            "assigned_to": assigned_to,
             "notification_type": "Task",
             "message": message,
             "notification_text": notification_text,
