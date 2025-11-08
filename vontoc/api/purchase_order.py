@@ -7,12 +7,22 @@ from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_i
 from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_receipt
 from erpnext.accounts.doctype.payment_request.payment_request import make_payment_request
 
+def is_material_request_fully_ordered(mr_name):
+    """判断 Material Request 是否所有项目都已生成 PO"""
+    mr_doc = frappe.get_doc("Material Request", mr_name)
+    total_items = len(mr_doc.items)
+
+    # 获取所有已经引用了该 MR 的 PO Item
+    ordered_items = frappe.db.get_all(
+        "Purchase Order Item",
+        filters={"material_request": mr_name},
+        fields=["distinct material_request_item"]
+    )
+
+    ordered_count = len(ordered_items)
+    return ordered_count >= total_items
 @frappe.whitelist()
 def sent_po_for_approval(docname):
-    to_close = [{
-        "doctype": "Purchase Order",
-        'docname': docname
-    }]
 
     to_open = [{
         "doctype": "Purchase Order",
@@ -20,27 +30,31 @@ def sent_po_for_approval(docname):
         "user": "approver",
         "description": "审批采购单",
     }]
+    po = frappe.get_doc("Purchase Order", docname)
+    references = set()
+    for item in po.items:
+        if item.material_request:
+            references.add(item.material_request)
 
-    def get_first_material_request(po_name):
-        po = frappe.get_doc("Purchase Order", po_name)
-        for item in po.items:
-            if item.material_request:
-                return item.material_request
-        return None
+    for mr in references:
+        pf_name = get_process_flow_trace_id_by_reference("Material Request", mr)
+        if is_material_request_fully_ordered(mr):
+            to_close = [{
+                "doctype": " Material Request",
+                'docname': mr
+            }]
+        else:
+            to_close = []
 
-    _reference = get_first_material_request(docname)
-    doctype = "Material Request"
-    pf_name = get_process_flow_trace_id_by_reference(doctype, _reference)
+        process_flow_info = {
+            "trace": "add",
+            "pf_name": pf_name,
+            "ref_doctype": "Purchase Order",
+            "ref_docname": docname,
+            "todo_name": None
+        }
 
-    process_flow_info = {
-        "trace": "add",
-        "pf_name": pf_name,
-        "ref_doctype": "Purchase Order",
-        "ref_docname": docname,
-        "todo_name": None
-    }
-
-    process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
+        process_flow_engine(to_close=to_close if to_close else None, to_open=to_open, process_flow_trace_info= process_flow_info)
 
 def create_invoice_or_receipt_based_on_terms(self):
     if not self.payment_schedule:

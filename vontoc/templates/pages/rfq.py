@@ -20,7 +20,6 @@ def get_context(context):
 	update_supplier_details(context)
 	context["title"] = frappe.form_dict.name
 
-
 def get_supplier():
 	doctype = frappe.form_dict.doctype
 	parties_doctype = "Request for Quotation Supplier" if doctype == "Request for Quotation" else doctype

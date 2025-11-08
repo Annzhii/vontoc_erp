@@ -1,9 +1,9 @@
 import frappe
 from vontoc.utils.process_engine import process_flow_engine
 from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
-from vontoc.utils.utils import mark_inspection_confirmed, get_linked_material_request
+from vontoc.utils.utils import mark_inspection_confirmed, get_linked_po
 from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_invoice
-
+from frappe.utils import flt
 
 @frappe.whitelist()
 def item_quality_inspection_or_not(docname, has_inspection_required):
@@ -25,9 +25,14 @@ def item_quality_inspection_or_not(docname, has_inspection_required):
         "user": assigned_user,
         "description": description,
     }]
+    doc = frappe.get_doc("Purchase Receipt", docname)
+    po = set()
+    for item in doc.items:
+        if item.purchase_order:
+            po.add(item.purchase_order)
+    _reference = list(po)[0]
 
-    _reference = get_linked_material_request(docname)
-    pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
+    pf_name = get_process_flow_trace_id_by_reference("Purchase Order", _reference)
 
     process_flow_info = {
         "trace": "add",
@@ -73,7 +78,7 @@ def quality_inspection_finished(docname):
     if not qi_names:
         frappe.throw("找不到关联的 Quality Inspection")
 
-    _reference = get_linked_material_request(docname)
+    _reference = get_linked_po(docname)
     pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
 
     process_flow_info = {
@@ -121,7 +126,7 @@ def create_new_pr_for_shortfall(original_doc, shortfall_items):
         "description": "提交收货单"
     }]
 
-    _reference = get_linked_material_request(original_doc.name)
+    _reference = get_linked_po(original_doc.name)
     pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
 
     process_flow_info = {
@@ -151,7 +156,7 @@ def create_purchase_invoice_from_pr(self):
         "description": "审核采购发票上面的金额,并让供应商开具相应金额发票"
     }]
 
-    _reference = get_linked_material_request(self.name)
+    _reference = get_linked_po(self.name)
     pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
     process_flow_info = {
         "trace": "add",
@@ -162,18 +167,38 @@ def create_purchase_invoice_from_pr(self):
     }
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
 
-def close_process_from_pr(self):
+def close_process_from_pr(self, close = None):
     to_close = [{
         "doctype": "Purchase Receipt",
         'docname': self.name
     }]
-    _reference = get_linked_material_request(self.name)
-    pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
+    _reference = get_linked_po(self.name)
+    pf_name = get_process_flow_trace_id_by_reference("Purchase Order", _reference)
     process_flow_info = {
-        "trace": "close",
+        "trace": close,
         "pf_name": pf_name,
         "ref_doctype": None,
         "ref_docname": None,
         "todo_name": None
     }
     process_flow_engine(to_close=to_close, process_flow_trace_info=process_flow_info)
+
+def is_material_request_fully_received(mr):
+    doc_mr = frappe.get_doc("Material Request", mr)
+    prs = frappe.get_all(
+        "Purchase Receipt Item", 
+        filters={
+            "material_request": mr, 
+        }, 
+        fields=["item_code", "received_qty"],
+        #distinct=True  # 添加distinct参数
+    )
+    for item in doc_mr.items:
+        mr_qty = item.qty
+        item_fully_bought = False
+        for pr in prs:
+            if pr["item_code"] == item.item_code:								
+                if flt(pr["received_qty"]) >= flt(mr_qty):
+                    item_fully_bought = True
+                    break
+    return item_fully_bought

@@ -1,4 +1,5 @@
 import frappe
+from erpnext.stock.doctype.material_request.material_request import MaterialRequest
 from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry
 from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder
 from erpnext.stock.doctype.purchase_receipt.purchase_receipt import PurchaseReceipt
@@ -18,7 +19,7 @@ from erpnext.manufacturing.doctype.blanket_order.blanket_order import (
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import (
 	validate_inter_company_party,
 )
-from vontoc.utils.utils import get_received_qty, is_linked_po_fully_billed
+from vontoc.utils.utils import get_received_qty, get_po_item_qty, get_mr_item_qty, get_pr_item_qty, is_linked_po_fully_billed
 from frappe import _
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import (
 	update_linked_doc,
@@ -26,7 +27,7 @@ from erpnext.accounts.doctype.sales_invoice.sales_invoice import (
 from vontoc.utils.process_engine import process_flow_engine
 from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
 from erpnext.accounts.doctype.payment_request.payment_request import make_payment_entry
-from vontoc.api.purchase_receipt import create_new_pr_for_shortfall, create_purchase_invoice_from_pr, close_process_from_pr
+from vontoc.api.purchase_receipt import create_new_pr_for_shortfall, create_purchase_invoice_from_pr, close_process_from_pr, is_material_request_fully_received
 from vontoc.api.purchase_order import create_invoice_or_receipt_based_on_terms, check_payment_schedule
 from vontoc.api.payment_entry import payment_entry_verified
 from vontoc.api.request_for_quotation import check_supplier
@@ -36,6 +37,7 @@ from vontoc.api.purchase_invoice import submit_pi
 from vontoc.api.payment_request import payment_request_submitted
 from vontoc.api.delivery_note import delivery_note_submitted
 from erpnext.setup.doctype.company.company import update_company_current_month_sales
+from vontoc.api.material_request import material_request_submitted
 
 class VONTOCPaymentEntry(PaymentEntry):
 	def validate(self):
@@ -152,15 +154,6 @@ class VONTOCPurchaseReceipt(PurchaseReceipt):
 		self.reserve_stock_for_sales_order()
 
 		# ✅ 追加你的自定义逻辑
-		def get_po_item_qty(po_name, item_code):
-			if not po_name:
-				return 0
-			po = frappe.get_doc("Purchase Order", po_name)
-			for item in po.items:
-				if item.item_code == item_code:
-					return item.qty
-			return 0
-
 		has_shortfall = False
 		shortfall_items = []
 
@@ -183,7 +176,14 @@ class VONTOCPurchaseReceipt(PurchaseReceipt):
 		elif not is_linked_po_fully_billed(self):
 			create_purchase_invoice_from_pr(self)
 		else:
-			close_process_from_pr(self)
+			mrs = set()
+			for item in self.items:
+				mrs.add(item.material_request)
+			for mr in mrs:
+				fully_received = is_material_request_fully_received(mr)
+				if fully_received:
+					close_process_from_pr(self, close = "close")
+				else:close_process_from_pr(self)
 
 class VONTOCPurchaseInvoice(PurchaseInvoice):
 	def on_submit(self):
@@ -415,3 +415,14 @@ class VONTOCDeliveryNote(DeliveryNote):
 		self.make_gl_entries()
 		self.repost_future_sle_and_gle()
 		delivery_note_submitted(self)
+
+class VONTOCMaterialRequest(MaterialRequest):
+	def on_submit(self):
+		self.update_requested_qty_in_production_plan()
+		self.update_requested_qty()
+		if self.material_request_type == "Purchase" and frappe.db.exists(
+			"Budget", {"applicable_on_material_request": 1, "docstatus": 1}
+		):
+			self.validate_budget()
+		#自定义的函数
+		material_request_submitted(self.name)

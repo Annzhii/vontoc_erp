@@ -75,24 +75,41 @@ rfq = class rfq {
 	submit_rfq(){
 		$('.btn-sm').click(function(){
 			frappe.freeze();
+			
+			// 先检查供应商是否已报价
 			frappe.call({
-				type: "POST",
-				method: "erpnext.buying.doctype.request_for_quotation.request_for_quotation.create_supplier_quotation",
+				method: "vontoc.api.request_for_quotation.check_supplier_quotation_exists",
 				args: {
-					doc: doc
+					supplier: doc.supplier,
+					rfq: doc.name
 				},
-				btn: this,
-				callback: function(r){
-					frappe.unfreeze();
-					if(r.message){
-						$('.btn-sm').hide()
-						window.location.href = "/supplier-quotations/" + encodeURIComponent(r.message);
+				callback: function(response) {
+					if (response.message.exists) {
+						frappe.unfreeze();
+						frappe.msgprint(__('已创建过报价，无法重复创建。'));
+						return;
 					}
+					frappe.call({
+						type: "POST",
+						method: "erpnext.buying.doctype.request_for_quotation.request_for_quotation.create_supplier_quotation",
+						args: {
+							doc: doc
+						},
+						btn: this,
+						callback: function(r){
+							frappe.unfreeze();
+							if(r.message){
+								$('.btn-sm').hide()
+								//window.location.href = "/supplier-quotations/" + encodeURIComponent(r.message);
+							}
+						}
+					});
 				}
-			})
-		})
+			});
+		});
 	}
-
+	
+	
 	navigate_quotations() {
 		$('.quotations').click(function(){
 			name = $(this).attr('idx')

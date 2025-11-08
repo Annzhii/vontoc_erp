@@ -54,14 +54,14 @@ def mark_inspection_confirmed(docname):
     doc = frappe.get_doc("Purchase Receipt", docname)
     doc.db_set("custom_inspection_confirmed", 1)  # ✅ 强制写入数据库，不依赖 save()
 
-def get_linked_material_request(purchase_receipt_name):
-    pr = frappe.get_doc("Purchase Receipt", purchase_receipt_name)
-
-    for item in pr.items:
-        if item.material_request:
-            return item.material_request
-
-    return None
+def get_linked_po(purchase_receipt_name):
+    doc = frappe.get_doc("Purchase Receipt", purchase_receipt_name)
+    po = set()
+    for item in doc.items:
+        if item.purchase_order:
+            po.add(item.purchase_order)
+    _reference = list(po)[0]
+    return _reference
 
 def get_received_qty(po_name, item_code):
     total_received = frappe.db.sql("""
@@ -73,6 +73,15 @@ def get_received_qty(po_name, item_code):
 
     return flt(total_received or 0)
 
+def get_po_item_qty(po_name, item_code):
+    if not po_name:
+        return 0
+    po = frappe.get_doc("Purchase Order", po_name)
+    for item in po.items:
+        if item.item_code == item_code:
+            return item.qty
+    return 0
+
 def is_linked_po_fully_billed(self):
     """检查是否有任何关联的 PO 的 per_billed 小于 100"""
     for item in self.items:
@@ -82,3 +91,21 @@ def is_linked_po_fully_billed(self):
             if flt(po.per_billed) < 100:
                 return False
     return True
+
+def get_mr_item_qty(mr_name, item_code):
+    if not mr_name:
+        return 0
+    mr = frappe.get_doc("Material Request", mr_name)
+    for item in mr.items:
+        if item.item_code == item_code:
+            return item.qty
+    return 0
+
+def get_pr_item_qty(pr, item_code):
+    pr = frappe.get_doc("Purchase Receipt", pr["name"])
+    for item in pr.items:
+        if item.item_code == item_code:
+            frappe.msgprint("pipei")
+            return item.qty
+        frappe.msgprint("wei pipei")
+        return 0

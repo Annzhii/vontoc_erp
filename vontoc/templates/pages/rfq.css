@@ -26,7 +26,7 @@ h1 {
 
 /* RFQ items 头部样式 */
 .cart-item-header {
-	background-color: #f8f9fa;
+	/* background-color: #f8f9fa; */
 	padding: 10px 0;
 	font-weight: 500;
 	border-top: 1px solid #dee2e6;
@@ -76,14 +76,15 @@ h1 {
 }
 
 /* Quotation 列表 */
-.transaction-list-item {
+.transaction-list-item  {
 	padding: 12px 15px;
 	margin-bottom: 10px;
-	border: 1px solid #e0e0e0;
+    border: 1px solid #e0e0e0 !important;
 	border-radius: 8px;
 	background-color: #ffffff;
 	transition: box-shadow 0.2s ease;
 }
+
 .transaction-list-item:hover {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
@@ -102,8 +103,9 @@ h1 {
 /* Make Quotation 按钮 */
 .btn-primary.btn-sm {
 	font-size: 14px;
-	padding: 6px 14px;
+	padding: 15px 14px;
 	border-radius: 6px;
 	margin-top: 12px;
+	margin-bottom: 12px;
 }
 </style>

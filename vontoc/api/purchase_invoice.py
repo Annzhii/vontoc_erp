@@ -5,13 +5,12 @@ from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
 from erpnext.accounts.doctype.payment_request.payment_request import make_payment_request
 
 def submit_pi(self):
-    mr = set()
+    po = set()
     for item in self.items:
-        if item.material_request:
-            mr.add(item.material_request)
-    _reference = list(mr)[0]
-    pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
-    
+        if item.purchase_order:
+            po.add(item.purchase_order)
+    _reference = list(po)[0]
+    pf_name = get_process_flow_trace_id_by_reference("Purchase Order", _reference)
 
     to_close = [{
         "doctype": "Purchase Invoice",
@@ -60,7 +59,6 @@ def validate_pr(docname):
         if item.purchase_order:
             mr.add(item.purchase_order)
     _reference = list(mr)[0]
-    print (_reference)
     pf_name = get_process_flow_trace_id_by_reference("Purchase Order", _reference)
 
     to_close = [{

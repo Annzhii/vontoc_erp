@@ -12,21 +12,21 @@ def material_request_submitted (docname):
     }
     pf_name = process_flow_engine(process_flow_trace_info=process_flow_trace_info)
 
-    po_doc = make_purchase_order(docname)
-    po_doc.insert()
+    #po_doc = make_purchase_order(docname)
+    #po_doc.insert()
 
     to_open= [{
-        "doctype": "Purchase Order",
-        "docname": po_doc.name,
+        "doctype": "Material Request",
+        "docname": docname,
         "user": "Purchase",
-        "description": "提交采购单，需要补充供应商和付款条例。",
+        "description": "在系统中生成并发布正式的采购订单。确保包括物料、数量、价格、供应商、交付日期等关键信息与申请及采购协议一致。",
     }]
 
     _process_flow_trace_info = {
         "trace": "add",
         "pf_name": pf_name,
-        "ref_doctype": "Purchase Order",
-        "ref_docname": po_doc.name,
+        "ref_doctype": "Material Request",
+        "ref_docname": docname,
         "todo_name": None
     }
     process_flow_engine(to_open = to_open, process_flow_trace_info=_process_flow_trace_info)

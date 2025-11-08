@@ -118,3 +118,26 @@ def check_supplier(self):
     empty_suppliers = [s for s in self.suppliers if not s.supplier]
     if empty_suppliers:
         frappe.throw(_("在发送RFQ之前，需要填入供应商。"))
+
+@frappe.whitelist()
+def check_supplier_quotation_exists(supplier, rfq):
+    # 查找该供应商的所有供应商报价单
+    existing_quotation = frappe.get_all('Supplier Quotation', filters={'supplier': supplier}, fields=['name'])
+
+    rfq_exists = False
+    # 遍历每个供应商报价单
+    for sq in existing_quotation:
+        # 查找该供应商报价单中的所有子表条目
+        items = frappe.get_all('Supplier Quotation Item', filters={'parent': sq.name}, fields=['request_for_quotation'])
+        
+        # 检查子表中的条目是否匹配目标的 RFQ
+        for item in items:
+            if item.request_for_quotation == rfq:
+                rfq_exists = True
+                break
+        
+        # 如果已经找到匹配的 RFQ，终止遍历
+        if rfq_exists:
+            break
+
+    return {'exists': rfq_exists}

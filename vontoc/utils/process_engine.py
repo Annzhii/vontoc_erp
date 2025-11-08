@@ -18,7 +18,6 @@ def process_flow_engine(to_close=None, to_open=None, process_flow_trace_info=Non
             docname = item.get("docname")
             if docname:
                 close_todo(docname)
-        frappe.msgprint(f"任务完成")
 
     # 设置 ToDo：to_setup 是 list，每项应为 dict：{"doctype": ..., "docname": ..., "user": ..., "description": ...}
     if to_open:
@@ -45,5 +44,5 @@ def process_flow_engine(to_close=None, to_open=None, process_flow_trace_info=Non
         add_pf_trace(process_flow_trace_info)
     elif trace_action == "close":
         close_pf_trace(process_flow_trace_info)
-    else:
-        frappe.throw(f"Invalid trace action: {trace_action}")
+    #else:
+    #    frappe.throw(f"Invalid trace action: {trace_action}")
