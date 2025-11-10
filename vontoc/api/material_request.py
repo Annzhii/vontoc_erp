@@ -3,30 +3,29 @@ from erpnext.stock.doctype.material_request.material_request import make_purchas
 from vontoc.utils.process_engine import process_flow_engine
 
 @frappe.whitelist()
-def material_request_submitted (docname):
-    process_flow_trace_info={
-        "trace": "setup",
-        "pf_type": "Purchase",
-        "ref_doctype": "Material Request",
-        "ref_docname": docname
-    }
-    pf_name = process_flow_engine(process_flow_trace_info=process_flow_trace_info)
+def material_request_submitted (doc):
+    if doc.material_request_type == "Purchase":
+        process_flow_trace_info={
+            "trace": "setup",
+            "pf_type": "Purchase",
+            "ref_doctype": "Material Request",
+            "ref_docname": doc.name
+        }
+        #if trace is set_up，process_flow_engine returns pf_name
+        pf_name = process_flow_engine(process_flow_trace_info=process_flow_trace_info)
+        #流程第二个任务启动
 
-    po_doc = make_purchase_order(docname)
-    po_doc.insert()
+        process_flow_trace_info={
+            "pf_name": pf_name,
+            "trace": "add",
+            "pf_type": "Purchase",
+        }
+        to_open = [{
+            "doctype": "Material Request",
+            "docname": doc.name,
+            "user": "purchase",
+            "description": "审核收到的物料申请（Material Request），确认物料种类、数量和预算是否合理。如符合要求，生成采购订单；如有问题，反馈相关部门并处理。",
+        }]
+        process_flow_engine(to_open=to_open, process_flow_trace_info=process_flow_trace_info)
 
-    to_open= [{
-        "doctype": "Purchase Order",
-        "docname": po_doc.name,
-        "user": "Purchase",
-        "description": "提交采购单，需要补充供应商和付款条例。",
-    }]
 
-    _process_flow_trace_info = {
-        "trace": "add",
-        "pf_name": pf_name,
-        "ref_doctype": "Purchase Order",
-        "ref_docname": po_doc.name,
-        "todo_name": None
-    }
-    process_flow_engine(to_open = to_open, process_flow_trace_info=_process_flow_trace_info)

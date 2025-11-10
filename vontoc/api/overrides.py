@@ -1,4 +1,5 @@
 import frappe
+from erpnext.stock.doctype.material_request.material_request import MaterialRequest
 from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry
 from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder
 from erpnext.stock.doctype.purchase_receipt.purchase_receipt import PurchaseReceipt
@@ -10,7 +11,6 @@ from erpnext.selling.doctype.sales_order.sales_order import SalesOrder
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import SalesInvoice
 from frappe.utils import flt, cint
 from erpnext.accounts.doctype.payment_request.payment_request import make_payment_request
-from erpnext.accounts.doctype.purchase_invoice.purchase_invoice import PurchaseInvoice
 from erpnext.buying.utils import validate_for_items
 from erpnext.manufacturing.doctype.blanket_order.blanket_order import (
 	validate_against_blanket_order,
@@ -36,6 +36,7 @@ from vontoc.api.purchase_invoice import submit_pi
 from vontoc.api.payment_request import payment_request_submitted
 from vontoc.api.delivery_note import delivery_note_submitted
 from erpnext.setup.doctype.company.company import update_company_current_month_sales
+from vontoc.api.material_request import material_request_submitted
 
 class VONTOCPaymentEntry(PaymentEntry):
 	def validate(self):
@@ -415,3 +416,14 @@ class VONTOCDeliveryNote(DeliveryNote):
 		self.make_gl_entries()
 		self.repost_future_sle_and_gle()
 		delivery_note_submitted(self)
+
+class VONTOCMaterialRequest(MaterialRequest):
+	def on_submit(self):
+		self.update_requested_qty_in_production_plan()
+		self.update_requested_qty()
+		if self.material_request_type == "Purchase" and frappe.db.exists(
+			"Budget", {"applicable_on_material_request": 1, "docstatus": 1}
+		):
+			self.validate_budget()
+		#自定义逻辑
+		material_request_submitted(self)

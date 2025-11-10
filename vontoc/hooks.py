@@ -163,6 +163,7 @@ override_doctype_class = {
     "Sales Order": "vontoc.api.overrides.VONTOCSalesOrder",
     "Sales Invoice": "vontoc.api.overrides.VONTOCSalesInvoice",
     "Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote",   
+    "Material Request": "vontoc.api.overrides.VONTOCMaterialRequest", 
  	#"ToDo": "custom_app.overrides.CustomToDo"
 }
 

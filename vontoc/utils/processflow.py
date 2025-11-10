@@ -7,7 +7,6 @@ def setup_pf_trace(process_flow_trace_info):
     ref_doctype = process_flow_trace_info.get("ref_doctype")
     ref_docname = process_flow_trace_info.get("ref_docname")
 
-    # 创建 Process Flow Trace 主文档
     pf_trace = frappe.new_doc("Process Flow Trace")
     pf_trace.process_flow_type = pf_type
     
@@ -18,7 +17,7 @@ def setup_pf_trace(process_flow_trace_info):
         "Delivery": "业务员提交发货通知"
     }
     description = pf_type_map.get(pf_type, pf_type)
-    # 添加子表：Process Flow Trace Item
+
     current_time = now_datetime()
     pf_trace.append("process_flow_trace_step", {
         "start_time": current_time,
@@ -121,17 +120,19 @@ def update_process_flow_trace(todo):
     if todo.status != "Closed":
         return
 
-    step_name = frappe.db.get_value(
+    step_names = frappe.get_all(
         "Process Flow Trace Steps",
-        {"linked_todo": todo.name},
-        "name"
+        filter= {"linked_todo": todo.name},
+        fields = {"name"}
     )
-
-    if step_name:
-        frappe.db.set_value(
-            "Process Flow Trace Steps",
-            step_name,
-            "end_time",
-            todo.modified
-        )
-        frappe.db.commit()
+    for step_name in step_names:
+        if step_name:
+            frappe.db.set_value(
+                "Process Flow Trace Steps",
+                step_name,
+                {
+                    "end_time": todo.modified,
+                    "finished_by": "Administrator"
+                }
+            )
+            frappe.db.commit()

@@ -10,7 +10,7 @@ from erpnext.accounts.doctype.payment_request.payment_request import make_paymen
 @frappe.whitelist()
 def sent_po_for_approval(docname):
     to_close = [{
-        "doctype": "Purchase Order",
+        "doctype": "Material Request",
         'docname': docname
     }]
 
@@ -18,18 +18,12 @@ def sent_po_for_approval(docname):
         "doctype": "Purchase Order",
         "docname": docname,
         "user": "approver",
-        "description": "审批采购单",
+        "description": "审核并审批采购订单（Purchase Order），确认物料、数量、价格及供应商信息是否符合公司采购政策和预算要求。",
     }]
 
-    def get_first_material_request(po_name):
-        po = frappe.get_doc("Purchase Order", po_name)
-        for item in po.items:
-            if item.material_request:
-                return item.material_request
-        return None
-
-    _reference = get_first_material_request(docname)
-    doctype = "Material Request"
+    mr = set()
+    for 
+    
     pf_name = get_process_flow_trace_id_by_reference(doctype, _reference)
 
     process_flow_info = {
