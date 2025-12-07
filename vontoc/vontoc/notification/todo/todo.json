@@ -1,0 +1,28 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2025-10-03 21:49:04.207949",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "ToDo",
+ "enabled": 1,
+ "event": "New",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<p>Add your message here</p>\n",
+ "message_type": "Markdown",
+ "modified": "2025-11-29 22:12:26.115230",
+ "modified_by": "Administrator",
+ "module": "VONTOC",
+ "name": "TODO",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "allocated_to"
+  }
+ ],
+ "send_system_notification": 1,
+ "send_to_all_assignees": 0,
+ "subject": "[\u65b0\u5f85\u529e]-{{ doc.description }}"
+}

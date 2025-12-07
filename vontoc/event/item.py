@@ -40,8 +40,12 @@ def auto_rename_on_group_change(doc, method):
         frappe.rename_doc("Item", doc.name, new_code, force=True, merge=False)
         doc.item_code = new_code
         doc.name = new_code
-        frappe.msgprint(f"Item Group 从 {old_group} 改为 {doc.item_group}，系统自动更新编码为 {new_code}")
-
+        frappe.msgprint(
+            f"""Item Group 从 {old_group} 改为 {doc.item_group}，系统自动更新编码为 
+            <a href="/app/item/{new_code}"><b>{new_code}</b></a>""",
+            title="物料编码已更新",
+            indicator="green",
+        )
 
 def check_rule_conditions_match(rule_name, item_group):
     """检查命名规则的 conditions 表中是否有匹配的 value"""

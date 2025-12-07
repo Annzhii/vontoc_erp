@@ -5,27 +5,23 @@ app_description = "Vontoc"
 app_email = "info@vontoc.com"
 app_license = "mit"
 
-fixtures = ["Print Format",
+fixtures = [
 "Client Script",
 "Workflow",
 "Workflow State",
 "Property Setter",
 "Document Naming Rule",
 "Report",
-"Payment Term",
 "Letter Head",
-"Payment Terms Template",
-"Terms and Conditions",
 "Print Settings",
 "Workflow Action Master",
 "CRM Form Script"]
 
 # 把Supplier Quotation Comparison 报告的的python文件替换为custom app里面python文件
-doctype_js = {
-    "Request for Quotation": "public/js/request_for_quotation.js",
-    "Delivery Note": "public/js/delivery_note.js",
-    "Sales Order": "public/js/sales_order.js",
-}
+#doctype_js = {
+    #"Delivery Note": "public/js/delivery_note.js",
+    #"Sales Order": "public/js/sales_order.js",
+#}
 
 # Apps
 # ------------------
@@ -153,18 +149,22 @@ permission_query_conditions = {
 # Override standard doctype classes
 
 override_doctype_class = {
-    "Payment Entry": "vontoc.api.overrides.VONTOCPaymentEntry",
+    #"Payment Entry": "vontoc.api.overrides.VONTOCPaymentEntry",
     "Purchase Order": "vontoc.api.overrides.VONTOCPurchaseOrder",
     "Purchase Receipt": "vontoc.api.overrides.VONTOCPurchaseReceipt",
-    "Purchase Invoice": "vontoc.api.overrides.VONTOCPurchaseInvoice",
-    "Payment Request": "vontoc.api.overrides.VONTOCPaymentRequest",
-    "Payment Entry": "vontoc.api.overrides.VONTOCPaymentEntry",
-    "Request for Quotation": "vontoc.api.overrides.VONTOCRequestforQuotation",
-    "Sales Order": "vontoc.api.overrides.VONTOCSalesOrder",
-    "Sales Invoice": "vontoc.api.overrides.VONTOCSalesInvoice",
-    "Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote",   
+    #"Purchase Invoice": "vontoc.api.overrides.VONTOCPurchaseInvoice",
+    #"Payment Request": "vontoc.api.overrides.VONTOCPaymentRequest",
+    #"Payment Entry": "vontoc.api.overrides.VONTOCPaymentEntry",
+    #"Sales Order": "vontoc.api.overrides.VONTOCSalesOrder",
+    #"Sales Invoice": "vontoc.api.overrides.VONTOCSalesInvoice",
+    #"Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote",   
     "Material Request": "vontoc.api.overrides.VONTOCMaterialRequest", 
+    "Subcontracting Receipt": "vontoc.api.overrides.VONTOCSubcontractingReceipt",
+    "Subcontracting Order": "vontoc.api.overrides.VONTOCSubcontractingOrder",
  	#"ToDo": "custom_app.overrides.CustomToDo"
+    "Item": "vontoc.api.overrides.VONTOCItem",
+    "Supplier Quotation": "vontoc.api.overrides.VONTOCSupplierQuotation",
+    "Guideline Price": "vontoc.api.overrides.VONTOCGuidelinePrice"
 }
 
 # Document Events
@@ -183,9 +183,6 @@ doc_events = {
     "Communication": {
         # event 负责推送push notification， api负责内部 notify_user
         "after_insert": ["vontoc.event.communication.communication_after_insert", "vontoc.api.communication.after_insert_communication"]
-    },
-    "ToDo":{
-        "after_insert": "vontoc.event.todo.todo_after_insert"
     }
 }
 
@@ -225,9 +222,10 @@ scheduler_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "vontoc.event.get_events"
-# }
+override_whitelisted_methods = {
+    #"frappe.desk.doctype.event.event.get_events": "vontoc.event.get_events"
+    "frappe.desk.form.assign_to.add": "vontoc.api.overrides_whitelist.add"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,

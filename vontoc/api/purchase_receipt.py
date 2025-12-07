@@ -1,179 +1,99 @@
 import frappe
 from vontoc.utils.process_engine import process_flow_engine
 from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
-from vontoc.utils.utils import mark_inspection_confirmed, get_linked_material_request
-from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_invoice
-
-
-@frappe.whitelist()
-def item_quality_inspection_or_not(docname, has_inspection_required):
-
-    if isinstance(has_inspection_required, str):
-        has_inspection_required = has_inspection_required.lower() == 'true'
-
-    assigned_user = "quality" if has_inspection_required else "stock"
-    description = "完成质检" if has_inspection_required else "确认入库"
-
-    to_close = [{
-        "doctype": "Purchase Receipt",
-        'docname': docname
-    }]
-
-    to_open = [{
-        "doctype": "Purchase Receipt",
-        "docname": docname,
-        "user": assigned_user,
-        "description": description,
-    }]
-
-    _reference = get_linked_material_request(docname)
-    pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
-
-    process_flow_info = {
-        "trace": "add",
-        "pf_name": pf_name,
-        "ref_doctype": "Purchase Receipt",
-        "ref_docname": docname,
-        "todo_name": None
-    }
-
-    process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
+from vontoc.utils.utils import is_source_fully_generated, get_suppliers_warehouse_name, if_full_received
+from frappe.workflow.doctype.workflow_action.workflow_action import apply_workflow
 
 @frappe.whitelist()
-def quality_inspection_finished(docname):
-    mark_inspection_confirmed(docname)
-    assigned_user = "stock"
-    description = "确认入库"
+def confirm_purchase_receipt(docname):
+    pr = frappe.get_doc("Purchase Receipt", docname)
+    pos = set()
+    item_types = set()
+    for item in pr.items:
+        pos.add(item.purchase_order)
+        item_doc = frappe.get_doc("Item", item.item_code)
+        item_types.add(item_doc.is_stock_item)
 
-    to_close = [{
-        "doctype": "Purchase Receipt",
-        "docname": docname
-    }]
+    if len(item_types) > 1:
+        frappe.msgprint(
+            "这张收货单包含<b>追踪库存</b>和<b>不追踪库存</b>的物料。<br>"
+            "请将这两种类型的物料分开到不同的收货单中处理。",
+            title="物料类型混合",
+            indicator="red"
+        )
 
-    to_open = [{
-        "doctype": "Purchase Receipt",
-        "docname": docname,
-        "user": assigned_user,
-        "description": description
-    }]
+    to_close = [
+        {
+            "doctype": "Purchase Order",
+            "docname": po,
+        }
+        for po in pos if is_source_fully_generated(
+            {
+                "source_doc": {"doctype": "Purchase Order", "docname": po},
+                "generated_doc": {"doctype": "Purchase Receipt", "field": "purchase_order"}
+            })
+    ]
 
-    # 获取所有关联的 Quality Inspection 名字（去重）
-    def get_linked_quality_inspections(pr_name):
-        pr = frappe.get_doc("Purchase Receipt", pr_name)
-        qi_names = set()
+    suppliers_group_warehouse = get_suppliers_warehouse_name(pr.company)
+    supplier_warehouse = frappe.get_doc("Warehouse", pr.set_warehouse)
 
-        for item in pr.items:
-            if item.quality_inspection:
-                qi_names.add(item.quality_inspection)
-
-        return list(qi_names)
-
-    qi_names = get_linked_quality_inspections(docname)
-
-    if not qi_names:
-        frappe.throw("找不到关联的 Quality Inspection")
-
-    _reference = get_linked_material_request(docname)
-    pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
-
-    process_flow_info = {
-        "trace": "add",
-        "pf_name": pf_name,
-        "ref_doctype": "Quality Inspection",
-        "ref_docname": qi_names[0],
-        "todo_name": None
-    }
-
-    process_flow_engine(
-        to_close=to_close,
-        to_open=to_open,
-        process_flow_trace_info=process_flow_info
-    )
-
-def create_new_pr_for_shortfall(original_doc, shortfall_items):
-    pr = frappe.new_doc("Purchase Receipt")
-    pr.supplier = original_doc.supplier
-    pr.set_posting_time = 1
-    pr.posting_date = frappe.utils.nowdate()
-    pr.set_warehouse = original_doc.set_warehouse
-
-    for item in shortfall_items:
-        pr.append("items", {
-            "item_code": item["item_code"],
-            "qty": item["qty"],
-            "purchase_order": item["po"],
-            "material_request":item["rfq"],
-            "schedule_date": frappe.utils.nowdate(),
-            "warehouse": original_doc.set_warehouse
-        })
-
-    pr.insert()
-
-    to_close = [{
-        "doctype": "Purchase Receipt",
-        "docname": original_doc.name
-    }]
+    if (0 in item_types or supplier_warehouse.parent_warehouse == suppliers_group_warehouse):
+        user = "Robot"
+        auto_stock = True
+    else:
+        user = "Stock Manager"
+        auto_stock = False
 
     to_open = [{
         "doctype": "Purchase Receipt",
         "docname": pr.name,
-        "user": "purchase",
-        "description": "提交收货单"
+        "user": user,
+        "description": "收到货物后，核对到货数量与收货单（Purchase Receipt）中记录的数量是否一致。确认无误后，完成入库操作，并更新库存记录。",
     }]
+    
+    pf_name = get_process_flow_trace_id_by_reference("Purchase Order", pos)
 
-    _reference = get_linked_material_request(original_doc.name)
-    pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
-
-    process_flow_info = {
+    process_flow_trace_info = {
         "trace": "add",
         "pf_name": pf_name,
         "ref_doctype": "Purchase Receipt",
         "ref_docname": pr.name,
         "todo_name": None
     }
-    process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
 
-def create_purchase_invoice_from_pr(self):
-    linked_pos = list({item.purchase_order for item in self.items if item.purchase_order})
-    for po in linked_pos:
-        inv = make_purchase_invoice(po)
-        inv.insert()
+    if not pf_name:
+        return
+    process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_trace_info)
+    if auto_stock:
+        apply_workflow(pr, "Stock")
+
+def stock_purchase_receipt(docname):
+
+    pr = frappe.get_doc("Purchase Receipt", docname)
 
     to_close = [{
         "doctype": "Purchase Receipt",
-        "docname": self.name
+        "docname": docname,
     }]
 
-    to_open = [{
-        "doctype": "Purchase Invoice",
-        "docname": inv.name,
-        "user": "purchase",
-        "description": "审核采购发票上面的金额,并让供应商开具相应金额发票"
-    }]
+    mrs = set()
+    for item in pr.items:
+        mrs.add(item.material_request)
 
-    _reference = get_linked_material_request(self.name)
-    pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
-    process_flow_info = {
-        "trace": "add",
-        "pf_name": pf_name,
-        "ref_doctype": "Purchase Invoice",
-        "ref_docname": inv.name,
-        "todo_name": None
-    }
-    process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
+    for mr in mrs:
+        full_received = if_full_received(mr)
+        if full_received == False:
+            trace = ""
+        else:
+            trace = "close"
+        pf_name = get_process_flow_trace_id_by_reference("Material Request", [mr])
 
-def close_process_from_pr(self):
-    to_close = [{
-        "doctype": "Purchase Receipt",
-        'docname': self.name
-    }]
-    _reference = get_linked_material_request(self.name)
-    pf_name = get_process_flow_trace_id_by_reference("Material Request", _reference)
-    process_flow_info = {
-        "trace": "close",
-        "pf_name": pf_name,
-        "ref_doctype": None,
-        "ref_docname": None,
-        "todo_name": None
-    }
-    process_flow_engine(to_close=to_close, process_flow_trace_info=process_flow_info)
+        process_flow_trace_info = {
+            "trace": trace,
+            "pf_name": pf_name,
+            "todo_name": None
+        }
+
+        if not pf_name:
+            return
+        process_flow_engine(to_close=to_close, process_flow_trace_info=process_flow_trace_info)

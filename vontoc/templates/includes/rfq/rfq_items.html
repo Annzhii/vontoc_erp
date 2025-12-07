@@ -2,8 +2,8 @@
 
 {% for d in doc.items %}
 	<div class="rfq-item">
-		<div class="row">
-			<div class="col-sm-5 col-12" style="margin-bottom: 10px;margin-top: 5px;">
+		<div class="row" >
+			<div class="col-sm-5 col-12" style="margin-bottom: 5px;margin-top: 5px;">
 				{{ item_name_and_description(d, doc) }}
 			</div>
 
@@ -12,7 +12,7 @@
 					style="margin-top: 5px;display: inline-block"
 					value="{{ d.get_formatted('qty') }}"
 					data-idx="{{ d.idx }}">
-				<p class="text-muted small" style="margin-top: 10px;">
+				<p class="text-muted small" style="margin-top: 5px;">
 					{{ _("UOM") + ":" + d.uom }}
 				</p>
 			</div>
@@ -29,4 +29,5 @@
 			</div>
 		</div>
 	</div>
+	<hr style="margin-top: 0; margin-bottom: 0;">
 {% endfor %}

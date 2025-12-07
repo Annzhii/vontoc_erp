@@ -21,7 +21,7 @@
    "fieldname": "process_flow_type",
    "fieldtype": "Select",
    "label": "Process Flow Type",
-   "options": "RFQ\nAdvance\nPurchase\nDelivery"
+   "options": "RFQ\nGuideline Price\nPurchase\nDelivery\nItem"
   },
   {
    "fieldname": "process_flow_trace_step",
@@ -46,7 +46,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-19 06:41:32.679124",
+ "modified": "2025-12-05 05:57:09.052528",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Process Flow Trace",
@@ -66,6 +66,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

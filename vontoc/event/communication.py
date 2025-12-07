@@ -3,22 +3,38 @@ from frappe.utils import get_url
 from pushweb.api.push import send_push_to_user
 from crm.fcrm.doctype.crm_notification.crm_notification import notify_user
 import re
+from bs4 import BeautifulSoup
 
 def html_to_text_preserve_newlines(html: str) -> str:
-    """将 HTML 转为纯文本，保留换行"""
+    """HTML 转纯文本、保留换行、自动去除引用旧邮件（blockquotes / Gmail / Outlook）"""
     if not html:
         return ""
-    
-    # 替换 <br> 或 <p> 为换行
-    html = re.sub(r"(?i)<br\s*/?>", "\n", html)
-    html = re.sub(r"(?i)</p>", "\n", html)
-    
-    # 去掉其他 HTML 标签
-    text = re.sub(r"<[^>]+>", "", html)
-    
-    # 去掉多余空白行
-    lines = [line.rstrip() for line in text.splitlines()]
-    return "\n".join([line for line in lines if line.strip()])
+
+    soup = BeautifulSoup(html, "html.parser")
+
+    # 删除不需要的标签
+    for tag in soup(["style", "script"]):
+        tag.decompose()
+
+    # 删除所有 blockquote
+    for quote in soup.find_all("blockquote"):
+        quote.decompose()
+
+    text = soup.get_text(separator="\n")
+
+    # 删除 Gmail 的 "On xxx wrote:"
+    text = re.sub(r"(?im)^On .* wrote:$", "", text)
+
+    # Outlook
+    text = re.sub(r"(?im)^(From|Sent|To|Subject): .*", "", text)
+
+    # Apple Mail
+    text = re.sub(r"(?im)^-----Original Message-----$", "", text)
+
+    # 去除多余换行
+    text = re.sub(r"\n{2,}", "\n", text)
+
+    return text.strip()
 
 @frappe.whitelist()
 def communication_after_insert(doc, method=None):

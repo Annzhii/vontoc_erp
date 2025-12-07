@@ -1,7 +1,7 @@
 {% extends "templates/web.html" %}
 
 {% block header %}
-<h1 style="margin-top: 10px;">{{ doc.name }}</h1>
+<h1 style="margin-top: 10px;">询价单 - {{ doc.name }}</h1>
 {% endblock %}
 
 {% block script %}
@@ -52,7 +52,6 @@
             </div>
             {% endif %}
 		</div>
-		<hr>
 		{#
         {% if doc.items %}
 		<div class="row grand-total-row">
@@ -64,15 +63,26 @@
         {% endif %}
 		#}
 		<div class="row terms">
+			<!-- 左边：供应商填写 Notes -->
 			<div class="col-6">
 				<br><br>
-				<p class="text-muted small">{{ _("Notes: ") }}</p>
-				<textarea class="form-control terms-feedback" style="height: 100px;"></textarea>
+				<p class="text-muted small";>{{ _("Notes: ") }}</p>
+				<textarea class="form-control terms-feedback" style="height: 180px;"></textarea>
+			</div>
+
+			<!-- 右边：系统 Terms 条款 -->
+			<div class="col-6">
+				<br><br>
+				<p class="text-muted small" >{{ _("条例: ") }}</p>
+				<div class="form-control" style="height: 180px; overflow-y: auto; background:#fafafa;">
+					{{ doc.terms or "" }}
+				</div>
 			</div>
 		</div>
 		<div class="row mt-5">
 			<div class="col-12">
-				<p class="text-muted small">{{ _("Quotations: ") }}</p>
+				<p class="text-muted small">{{ _("关联报价单: ") }}</p>
+				<hr style="margin-top: 0; margin-bottom: 0;">
 				{% if doc.rfq_links %}
 					<div class="result">
 						{% for d in doc.rfq_links %}

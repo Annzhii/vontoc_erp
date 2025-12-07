@@ -7,10 +7,11 @@
  "engine": "InnoDB",
  "field_order": [
   "item_code",
-  "notes",
+  "description",
   "quantity",
   "uom",
-  "standard_selling_price"
+  "currency",
+  "guideline_price"
  ],
  "fields": [
   {
@@ -28,6 +29,7 @@
    "reqd": 1
   },
   {
+   "default": "Nos",
    "fieldname": "uom",
    "fieldtype": "Link",
    "label": "UOM",
@@ -35,21 +37,31 @@
    "reqd": 1
   },
   {
-   "fieldname": "standard_selling_price",
-   "fieldtype": "Currency",
-   "label": "Standard Selling Price"
+   "default": "USD",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
   },
   {
-   "fieldname": "notes",
+   "fetch_from": "item_code.description",
+   "fieldname": "description",
    "fieldtype": "Small Text",
-   "label": "Notes"
+   "label": "Description"
+  },
+  {
+   "fieldname": "guideline_price",
+   "fieldtype": "Currency",
+   "label": "Guideline Price",
+   "options": "currency",
+   "permlevel": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-18 07:59:04.587769",
+ "modified": "2025-12-06 20:52:44.932771",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Guideline Price Item",

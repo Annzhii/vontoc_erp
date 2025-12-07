@@ -45,7 +45,7 @@ def notify_communication_creation(doc):
     )
 
 
-def get_notification_text_for_communication(owner, doc):
+def get_notification_text_for_communication(doc):
     """
     提取 Communication 的首行内容，自动去除引用（兼容 Gmail / Outlook / Apple Mail）。
     """
@@ -73,7 +73,7 @@ def get_notification_text_for_communication(owner, doc):
     first_line = next((line.strip() for line in text.splitlines() if line.strip()), "")
 
     if len(first_line) > 120:
-        first_line = first_line[:120] + "..."
+        first_line = first_line[:100] + "..."
 
     if not first_line:
         first_line = _("No content available")

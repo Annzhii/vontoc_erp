@@ -30,10 +30,10 @@ def close_todo(doc_name):
         filters={"reference_name": doc_name, "status": ["!=", "Closed"]},
         fields=["name"]
     )
-
     for todo in todos:
         todo_doc = frappe.get_doc("ToDo", todo.name)
         todo_doc.status = "Closed"
         todo_doc.save(ignore_permissions=True)
         update_process_flow_trace(todo_doc)
+        frappe.msgprint(f"任务完成")
     frappe.db.commit()

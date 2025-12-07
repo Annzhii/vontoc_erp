@@ -20,24 +20,17 @@ h1 {
 	font-size: 16px;
 }
 
-.text-muted {
-	color: #6c757d !important;
+.text-muted.small{
+	color: black !important;
+	font-weight: 500;
 }
 
 /* RFQ items 头部样式 */
 .cart-item-header {
-	background-color: #f8f9fa;
 	padding: 10px 0;
 	font-weight: 500;
 	border-top: 1px solid #dee2e6;
 	border-bottom: 1px solid #dee2e6;
-}
-
-/* 每一项卡片样式 */
-.rfq-items > .row {
-	padding: 12px 0;
-	border-bottom: 1px solid #e9ecef;
-	align-items: center;
 }
 
 /* 输入框美化 */
@@ -45,8 +38,7 @@ h1 {
 	width: 100%;
 	text-align: right;
 	padding: 6px 10px;
-	border: 1px solid #ced4da;
-	border-radius: 4px;
+	background-color: #F5F5F5;
 }
 
 /* 金额显示 */
@@ -71,32 +63,13 @@ h1 {
 	margin-top: 10px;
 	resize: vertical;
 	border-radius: 6px;
-	border: 1px solid #ced4da;
 	padding: 8px 10px;
+	background-color: #fafafa;
 }
 
 /* Quotation 列表 */
-.transaction-list-item {
-	padding: 12px 15px;
-	margin-bottom: 10px;
-	border: 1px solid #e0e0e0;
-	border-radius: 8px;
-	background-color: #ffffff;
-	transition: box-shadow 0.2s ease;
-}
 .transaction-list-item:hover {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.transaction-item-link {
-	display: inline-block;
-	margin-top: 6px;
-	font-size: 13px;
-	color: #0d6efd;
-	text-decoration: none;
-}
-.transaction-item-link:hover {
-	text-decoration: underline;
 }
 
 /* Make Quotation 按钮 */
@@ -106,4 +79,5 @@ h1 {
 	border-radius: 6px;
 	margin-top: 12px;
 }
+
 </style>
