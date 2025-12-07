@@ -71,9 +71,9 @@
   "dt": "CRM Deal",
   "enabled": 1,
   "is_standard": 0,
-  "modified": "2025-10-23 17:43:01.041343",
+  "modified": "2025-11-18 03:47:31.272537",
   "name": "CRM Deal Quotation Price List Query",
-  "script": "async function setupForm({ doc, call, $dialog, updateField, toast }) {\n    let actions = [];\n\n    // Previous Quotation 按钮\n    actions.push({\n        label: \"Previous Tiered Pricing\",\n        onClick: () => {\n            const url = `/app/quotation-price-list?party_name=${encodeURIComponent(doc.name)}`;\n            window.open(url, \"_blank\");\n        }\n    });\n\n    return { actions };\n}\n",
+  "script": "async function setupForm({ doc, call, $dialog, updateField, toast }) {\n    let actions = [];\n\n    // Previous Quotation 按钮\n    actions.push({\n        label: \"Previous Quotation Pricing\",\n        onClick: () => {\n            const url = `/app/quotation-price-list?party_name=${encodeURIComponent(doc.name)}`;\n            window.open(url, \"_blank\");\n        }\n    });\n\n    return { actions };\n}\n",
   "view": "Form"
  }
 ]

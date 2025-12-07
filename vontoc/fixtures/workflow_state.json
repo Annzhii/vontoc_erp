@@ -133,5 +133,32 @@
   "name": "Draft",
   "style": "",
   "workflow_state_name": "Draft"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-11-13 18:21:59.845855",
+  "name": "Stocked",
+  "style": "",
+  "workflow_state_name": "Stocked"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-11-23 07:15:42.984827",
+  "name": "Temporary",
+  "style": "",
+  "workflow_state_name": "Temporary"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-11-23 07:16:21.166388",
+  "name": "Enabled",
+  "style": "",
+  "workflow_state_name": "Enabled"
  }
 ]
