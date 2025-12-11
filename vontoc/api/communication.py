@@ -26,7 +26,7 @@ def notify_communication_creation(doc):
     owner = frappe.get_cached_value("User", frappe.session.user, "full_name")
     message = _("You received a new mail")
 
-    notification_text = get_notification_text_for_communication(owner, doc)
+    notification_text = get_notification_text_for_communication(doc)
 
     redirect_to_doctype, redirect_to_name = get_redirect_to_doc(doc)
 
