@@ -37,8 +37,8 @@
   "doctype": "CRM Form Script",
   "dt": "CRM Deal",
   "enabled": 1,
-  "is_standard": 1,
-  "modified": "2025-07-29 00:53:41.474253",
+  "is_standard": 0,
+  "modified": "2025-12-10 05:52:14.699939",
   "name": "Create Quotation from CRM Deal",
   "script": "\nasync function setupForm({ doc, call, $dialog, updateField, toast }) {\n\tlet actions = [];\n\tlet is_erpnext_integration_enabled = await call(\"frappe.client.get_single_value\", {doctype: \"ERPNext CRM Settings\", field: \"enabled\"});\n\tif (![\"Lost\", \"Won\"].includes(doc?.status) && is_erpnext_integration_enabled) {\n\t\tactions.push({\n\t\t\tlabel: __(\"Create Quotation\"),\n\t\t\tonClick: async () => {\n\t\t\t\tlet quotation_url = await call(\n\t\t\t\t\t\"crm.fcrm.doctype.erpnext_crm_settings.erpnext_crm_settings.get_quotation_url\", \n\t\t\t\t\t{\n\t\t\t\t\t\tcrm_deal: doc.name,\n\t\t\t\t\t\torganization: doc.organization\n\t\t\t\t\t}\n\t\t\t\t);\n\n\t\t\t\tif (quotation_url) {\n\t\t\t\t\twindow.open(quotation_url, '_blank');\n\t\t\t\t}\n\t\t\t}\n\t\t})\n\t}\n\tif (is_erpnext_integration_enabled) {\n\t\tlet customer_url = await call(\"crm.fcrm.doctype.erpnext_crm_settings.erpnext_crm_settings.get_customer_link\", {\n\t\t\tcrm_deal: doc.name\n\t\t});\n\t\tif (customer_url) {\n\t\t\tactions.push({\n\t\t\t\tlabel: __(\"View Customer\"),\n\t\t\t\tonClick: () => window.open(customer_url, '_blank')\n\t\t\t});\n\t\t}\n\t}\n\treturn {\n\t\tactions: actions,\n\t};\n}\n",
   "view": "Form"
@@ -59,8 +59,8 @@
   "doctype": "CRM Form Script",
   "dt": "CRM Deal",
   "enabled": 1,
-  "is_standard": 1,
-  "modified": "2025-10-18 07:10:45.219754",
+  "is_standard": 0,
+  "modified": "2025-12-10 05:54:49.204637",
   "name": "Create Quotation Price List",
   "script": "async function setupForm({ doc }) {\n    let actions = [];\n\n    // 仅当状态不是 \"Won\" 时显示按钮\n    if (doc.status !== \"Won\") {\n        actions.push({\n            label: \"Create Price List\",\n            onClick: () => {\n                // 构造 URL，带上默认字段值\n                const url = `/app/quotation-price-list/new`\n                    + `?quotation_to=${encodeURIComponent(\"CRM Deal\")}`\n                    + `&party_name=${encodeURIComponent(doc.name)}`;\n\n                window.open(url, \"_blank\");\n            }\n        });\n    }\n\n    return { actions };\n}\n\n",
   "view": "Form"
@@ -71,9 +71,9 @@
   "dt": "CRM Deal",
   "enabled": 1,
   "is_standard": 0,
-  "modified": "2025-11-18 03:47:31.272537",
+  "modified": "2025-12-10 06:01:39.224556",
   "name": "CRM Deal Quotation Price List Query",
-  "script": "async function setupForm({ doc, call, $dialog, updateField, toast }) {\n    let actions = [];\n\n    // Previous Quotation 按钮\n    actions.push({\n        label: \"Previous Quotation Pricing\",\n        onClick: () => {\n            const url = `/app/quotation-price-list?party_name=${encodeURIComponent(doc.name)}`;\n            window.open(url, \"_blank\");\n        }\n    });\n\n    return { actions };\n}\n",
+  "script": "async function setupForm({ doc, call, $dialog, updateField, toast }) {\n    let actions = [];\n\n    // Previous Quotation 按钮\n    actions.push({\n        label: \"Previous Price List\",\n        onClick: () => {\n            const url = `/app/quotation-price-list?party_name=${encodeURIComponent(doc.name)}`;\n            window.open(url, \"_blank\");\n        }\n    });\n\n    return { actions };\n}\n",
   "view": "Form"
  }
 ]

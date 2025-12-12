@@ -1,7 +1,7 @@
 [
  {
   "align": "Left",
-  "content": "<table style=\"width: 100%; font-size: 9pt;\">\n  <tbody><tr>\n    <!-- 左边：Logo + 地址 -->\n    <td style=\"width: 50%; vertical-align: top;\">\n      <img src=\"/files/LOGO VONTOC.png\" style=\"height: 40px;\"><br>\n      <div>{{ doc.company_address_display or '' }}</div>\n    </td>\n\n    <!-- 右边：表单名称（自动识别） + 日期字段 -->\n    <td style=\"text-align: right; vertical-align: top;\">\n      <div class=\"doc-type-title\">PROFORMA INVOICE</div>\n      <div class=\"doc-name\"> {{_(doc.name)}}</div>\n      <br>\n      <div>\n        <b>Date:</b> {{ doc.date or doc.transaction_date or '' }}<br>\n        <b>Valid Till:</b> {{ doc.valid_till or '' }} <br>\n        <b>Prepared By:</b> {{frappe.session.user}}\n      </div>\n    </td>\n  </tr>\n</tbody></table>",
+  "content": "<table style=\"width: 100%; font-size: 9pt;\">\n  <tbody><tr>\n    <!-- 左边：Logo + 地址 -->\n    <td style=\"width: 50%; vertical-align: top;\">\n      <img src=\"/files/LOGO VONTOC.png\" style=\"height: 40px;\"><br>\n      <div>{{ doc.company_address_display or '' }}</div>\n    </td>\n\n    <!-- 右边：表单名称（自动识别） + 日期字段 -->\n    <td style=\"text-align: right; vertical-align: top;\">\n      <div class=\"doc-type-title\">PROFORMA INVOICE</div>\n      <div class=\"doc-name\"> {{_(doc.name)}}</div>\n      <br>\n      <div>\n        <b>Date:</b> {{ doc.date or doc.transaction_date or '' }}<br>\n        <b>Valid Till:</b> {{ doc.valid_till or '' }} <br>\n        <b>Prepared By:</b> {{ frappe.db.get_value(\"User\", frappe.session.user, \"full_name\") }}\n      </div>\n    </td>\n  </tr>\n</tbody></table>",
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Letter Head",
@@ -18,7 +18,7 @@
   "image_width": 0.0,
   "is_default": 0,
   "letter_head_name": "Proforma Invoice",
-  "modified": "2025-11-17 08:06:41.630866",
+  "modified": "2025-12-11 18:45:41.784393",
   "name": "Proforma Invoice",
   "source": "HTML"
  },
@@ -47,7 +47,7 @@
  },
  {
   "align": "Left",
-  "content": "<table style=\"width: 100%; font-size: 9pt;\">\n  <tbody><tr>\n    <!-- 左边：Logo + 地址 -->\n    <td style=\"width: 50%; vertical-align: top;\">\n      <img src=\"{{ frappe.utils.get_url() }}/files/LOGO VONTOC.png\" style=\"height:50px;\">\n      <div>{{ doc.company_address_display or '' }}</div>\n    </td>\n\n    <!-- 右边：表单名称（自动识别） + 日期字段 -->\n    <td style=\"text-align: right; vertical-align: top;\">\n      <div class=\"doc-type-title\">INVOICE</div>\n      <div class=\"doc-name\"> {{_(doc.name)}}</div>\n      <br>\n      <div>\n        <b>Date:</b> {{ doc.posting_date or doc.transaction_date or '' }}<br>\n        <b>Prepared By:</b> {{frappe.session.user}}\n      </div>\n    </td>\n    \n  </tr>\n</tbody></table>",
+  "content": "<table style=\"width: 100%; font-size: 9pt;\">\n  <tbody><tr>\n    <!-- 左边：Logo + 地址 -->\n    <td style=\"width: 50%; vertical-align: top;\">\n      <img src=\"{{ frappe.utils.get_url() }}/files/LOGO VONTOC.png\" style=\"height:50px;\">\n      <div>{{ doc.company_address_display or '' }}</div>\n    </td>\n\n    <!-- 右边：表单名称（自动识别） + 日期字段 -->\n    <td style=\"text-align: right; vertical-align: top;\">\n      <div class=\"doc-type-title\">INVOICE</div>\n      <div class=\"doc-name\"> {{_(doc.name)}}</div>\n      <br>\n      <div>\n        <b>Date:</b> {{ doc.posting_date or doc.transaction_date or '' }}<br>\n        <b>Prepared By:</b> {{ frappe.db.get_value(\"User\", frappe.session.user, \"full_name\") }}\n      </div>\n    </td>\n    \n  </tr>\n</tbody></table>",
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Letter Head",
@@ -64,9 +64,9 @@
   "image_width": 0.0,
   "is_default": 0,
   "letter_head_name": "Invoice",
-  "modified": "2025-11-22 08:20:19.603521",
+  "modified": "2025-12-11 18:46:00.834594",
   "name": "Invoice",
-  "source": "Image"
+  "source": "HTML"
  },
  {
   "align": "Left",
