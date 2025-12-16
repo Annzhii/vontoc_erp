@@ -84,6 +84,9 @@ def approve_po(self):
         approve_subcontracting_order(self)
 
 def approve_purchase_order(self):
+
+    if self.is_internal_supplier == 1:
+        return
         
     to_close = [
         {
