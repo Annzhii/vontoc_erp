@@ -1,0 +1,31 @@
+{
+ "content": null,
+ "creation": "2025-12-19 18:38:17.494163",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2025-12-19 18:38:17.494163",
+ "modified_by": "Administrator",
+ "module": "VONTOC",
+ "name": "\u64cd\u4f5c\u6307\u5bfc",
+ "owner": "Administrator",
+ "page_name": "\u64cd\u4f5c\u6307\u5bfc",
+ "roles": [
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Purchase User"
+  },
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "Accounts User"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0
+}

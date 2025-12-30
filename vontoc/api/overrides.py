@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from erpnext.stock.doctype.shipment.shipment import Shipment
 from erpnext.stock.doctype.material_request.material_request import MaterialRequest
 from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder
 from erpnext.stock.doctype.purchase_receipt.purchase_receipt import PurchaseReceipt
@@ -7,25 +8,24 @@ from erpnext.subcontracting.doctype.subcontracting_receipt.subcontracting_receip
 from erpnext.subcontracting.doctype.subcontracting_order.subcontracting_order import SubcontractingOrder
 from erpnext.stock.doctype.item.item import Item
 from erpnext.buying.doctype.supplier_quotation.supplier_quotation import SupplierQuotation
+from erpnext.accounts.doctype.sales_invoice.sales_invoice import SalesInvoice
+from erpnext.stock.doctype.delivery_note.delivery_note import DeliveryNote
+
 from vontoc.vontoc.doctype.guideline_price.guideline_price import GuidelinePrice, submit_guideline_price
-
 from frappe.utils import flt, strip_html, cstr
-
-from frappe.desk.doctype.notification_log.notification_log import (
-	enqueue_create_notification)
+from frappe.desk.doctype.notification_log.notification_log import (enqueue_create_notification)
 from erpnext.buying.utils import validate_for_items
-from erpnext.manufacturing.doctype.blanket_order.blanket_order import (
-	validate_against_blanket_order,
-)
-from erpnext.accounts.doctype.sales_invoice.sales_invoice import (
-	validate_inter_company_party, update_linked_doc,
-)
+from erpnext.manufacturing.doctype.blanket_order.blanket_order import (validate_against_blanket_order)
+from erpnext.accounts.doctype.sales_invoice.sales_invoice import (validate_inter_company_party, update_linked_doc)
 
 from vontoc.api.purchase_receipt import stock_purchase_receipt
 from vontoc.api.subcontracting_receipt import stock_subcontracting_receipt
 from vontoc.api.purchase_order import approve_po
 from vontoc.api.material_request import material_request_submitted
 from vontoc.api.item import validate_sales_temporary_item
+from vontoc.api.shipment import check_delivery_notes_submitted
+from vontoc.api.sales_invoice import sync_sales_invoice_to_delivery_note, check_allocated_amount
+from vontoc.api.delivery_note import check_allow_shipment
 
 class VONTOCPurchaseOrder(PurchaseOrder):
 	def validate(self):
@@ -91,26 +91,6 @@ class VONTOCPurchaseOrder(PurchaseOrder):
 class VONTOCPurchaseReceipt(PurchaseReceipt):
 	def on_submit(self):
 		super().on_submit()
-
-		# 保留原始逻辑
-		frappe.get_doc("Authorization Control").validate_approving_authority(
-			self.doctype, self.company, self.base_grand_total
-		)
-
-		self.update_prevdoc_status()
-		if flt(self.per_billed) < 100:
-			self.update_billing_status()
-		else:
-			self.db_set("status", "Completed")
-
-		self.make_bundle_for_sales_purchase_return()
-		self.make_bundle_using_old_serial_batch_fields()
-		self.update_stock_ledger()
-		self.make_gl_entries()
-		self.repost_future_sle_and_gle()
-		self.set_consumed_qty_in_subcontract_order()
-		self.reserve_stock_for_sales_order()
-
 		# ✅ 追加你的自定义逻辑
 		stock_purchase_receipt(self.name)
 
@@ -239,3 +219,26 @@ class VONTOCSupplierQuotation(SupplierQuotation):
 class VONTOCGuidelinePrice(GuidelinePrice):
 	def on_submit(self):
 		submit_guideline_price(self)
+
+class VONTOCShipment(Shipment):
+	def validate(self):
+		self.validate_weight()
+		self.validate_pickup_time()
+		self.set_value_of_goods()
+		self.set_total_weight()
+		if self.docstatus == 0:
+			self.status = "Draft"
+		#自定义
+		if self.workflow_state == "Ready For Dispatch":
+			check_delivery_notes_submitted(self)
+
+class VONTOCSalesInvoice(SalesInvoice):
+	def on_update_after_submit(self):
+		check_allocated_amount(self)
+		sync_sales_invoice_to_delivery_note(self)
+
+class VONTOCDeliveryNote(DeliveryNote):
+	def on_submit(self):
+		super().on_submit()
+		check_allow_shipment(self)
+	

@@ -14,8 +14,8 @@ def setup_pf_trace(process_flow_trace_info):
     pf_type_map = {
         "RFQ": "申请人提交RFQ",
         "Purchase": "申请人提交物料申请单",
-        "Delivery": "业务员提交发货通知",
-        "Item": "申请人提交新物料创建申请"
+        "Shipment": "业务员提交出运单",
+        "Item": "申请人提交新物料创建申请",
     }
     description = pf_type_map.get(pf_type, pf_type)
 

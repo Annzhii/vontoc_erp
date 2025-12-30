@@ -160,5 +160,32 @@
   "name": "Enabled",
   "style": "",
   "workflow_state_name": "Enabled"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-12-22 04:52:00.506985",
+  "name": "Payment Under Review",
+  "style": "",
+  "workflow_state_name": "Payment Under Review"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-12-22 05:03:02.173185",
+  "name": "Booking In Progress",
+  "style": "",
+  "workflow_state_name": "Booking In Progress"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-12-22 05:53:45.303697",
+  "name": "Ready For Outbound",
+  "style": "",
+  "workflow_state_name": "Ready For Outbound"
  }
 ]

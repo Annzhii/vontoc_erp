@@ -75,7 +75,6 @@ def reject_po(docname):
     }
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_trace_info)
 
-
 def approve_po(self):
 
     if not self.is_subcontracted:
@@ -116,7 +115,7 @@ def approve_subcontracting_order(self):
 
     sub_po = make_subcontracting_order(self.name, notify=True)
     sub_po.supplier_warehouse = "Suppliers - VTCD"
-    sub_po.submit()
+    #sub_po.submit()
     to_close = [
         {
             "doctype": "Purchase Order",

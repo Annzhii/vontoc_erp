@@ -18,10 +18,11 @@ fixtures = [
 "CRM Form Script"]
 
 # 把Supplier Quotation Comparison 报告的的python文件替换为custom app里面python文件
-#doctype_js = {
+doctype_js = {
     #"Delivery Note": "public/js/delivery_note.js",
     #"Sales Order": "public/js/sales_order.js",
-#}
+    "Shipment": "public/js/shipment.js"
+}
 
 # Apps
 # ------------------
@@ -156,15 +157,16 @@ override_doctype_class = {
     #"Payment Request": "vontoc.api.overrides.VONTOCPaymentRequest",
     #"Payment Entry": "vontoc.api.overrides.VONTOCPaymentEntry",
     #"Sales Order": "vontoc.api.overrides.VONTOCSalesOrder",
-    #"Sales Invoice": "vontoc.api.overrides.VONTOCSalesInvoice",
-    #"Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote",   
+    "Sales Invoice": "vontoc.api.overrides.VONTOCSalesInvoice",
+    "Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote",   
     "Material Request": "vontoc.api.overrides.VONTOCMaterialRequest", 
     "Subcontracting Receipt": "vontoc.api.overrides.VONTOCSubcontractingReceipt",
     "Subcontracting Order": "vontoc.api.overrides.VONTOCSubcontractingOrder",
  	#"ToDo": "custom_app.overrides.CustomToDo"
     "Item": "vontoc.api.overrides.VONTOCItem",
     "Supplier Quotation": "vontoc.api.overrides.VONTOCSupplierQuotation",
-    "Guideline Price": "vontoc.api.overrides.VONTOCGuidelinePrice"
+    "Guideline Price": "vontoc.api.overrides.VONTOCGuidelinePrice",
+    "Shipment": "vontoc.api.overrides.VONTOCShipment",
 }
 
 # Document Events

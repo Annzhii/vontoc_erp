@@ -86,5 +86,93 @@
   "name": "Reject Item",
   "script": "frappe.ui.form.on('Item', {\n    after_workflow_action: function(frm) {\n        if (frm.doc.workflow_state == 'Temporary') {\n            frappe.call({\n                method: \"vontoc.api.item.reject_item\",\n                args: {\n                    docname: frm.doc.name,\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                    }\n                }\n            });\n        }\n    }\n});",
   "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Shipment",
+  "enabled": 1,
+  "modified": "2025-12-22 05:23:21.442597",
+  "module": "VONTOC",
+  "name": "Send Shipment",
+  "script": "frappe.ui.form.on('Shipment', {\n    after_workflow_action: function(frm) {\n        if (frm.doc.workflow_state == 'Booking In Progress') {\n            frappe.call({\n                method: \"vontoc.api.shipment.send_shipment\",\n                args: {\n                    docname: frm.doc.name,\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                    }\n                }\n            });\n        }\n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Shipment",
+  "enabled": 1,
+  "modified": "2025-12-22 05:41:44.222448",
+  "module": "VONTOC",
+  "name": "Confirm Booking Of Shipment",
+  "script": "frappe.ui.form.on('Shipment', {\n    after_workflow_action: function(frm) {\n        if (frm.doc.workflow_state == 'Payment Under Review') {\n            frappe.call({\n                method: \"vontoc.api.shipment.confirm_booking_of_shipment\",\n                args: {\n                    docname: frm.doc.name,\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                    }\n                }\n            });\n        }\n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Shipment",
+  "enabled": 1,
+  "modified": "2025-12-27 20:57:41.259195",
+  "module": "VONTOC",
+  "name": "Payment Collected in Full",
+  "script": "frappe.ui.form.on('Shipment', {\n    after_workflow_action: function(frm) {\n        if (frm.doc.workflow_state == 'Ready For Outbound') {\n            frappe.call({\n                method: \"vontoc.api.shipment.payment_collected_in_full_or_approved\",\n                args: {\n                    docname: frm.doc.name,\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                    }\n                }\n            });\n        }\n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Shipment",
+  "enabled": 1,
+  "modified": "2025-12-22 06:03:45.647053",
+  "module": "VONTOC",
+  "name": "Payment Partially Collected",
+  "script": "frappe.ui.form.on('Shipment', {\n    after_workflow_action: function(frm) {\n        if (frm.doc.workflow_state == 'Sent For Approval') {\n            frappe.call({\n                method: \"vontoc.api.shipment.payment_partially_collected\",\n                args: {\n                    docname: frm.doc.name,\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                    }\n                }\n            });\n        }\n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Shipment",
+  "enabled": 1,
+  "modified": "2025-12-23 06:20:18.056128",
+  "module": "VONTOC",
+  "name": "Outbound",
+  "script": "frappe.ui.form.on('Shipment', {\n    after_workflow_action: function(frm) {\n        if (frm.doc.workflow_state == 'Ready For Dispatch') {\n            frappe.call({\n                method: \"vontoc.api.shipment.outbound\",\n                args: {\n                    docname: frm.doc.name,\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                    }\n                }\n            });\n        }\n\t},\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Shipment",
+  "enabled": 1,
+  "modified": "2025-12-22 06:13:58.955019",
+  "module": "VONTOC",
+  "name": "Dispatch",
+  "script": "frappe.ui.form.on('Shipment', {\n    after_workflow_action: function(frm) {\n        if (frm.doc.workflow_state == 'Dispatched') {\n            frappe.call({\n                method: \"vontoc.api.shipment.dispatch\",\n                args: {\n                    docname: frm.doc.name,\n                },\n                callback: function(r) {\n                    if (r.message) {\n                        frappe.msgprint(__(r.message));\n                    }\n                }\n            });\n        }\n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sales Invoice",
+  "enabled": 1,
+  "modified": "2025-12-26 21:38:15.596302",
+  "module": "VONTOC",
+  "name": "Calculate Allocated Amount",
+  "script": "frappe.ui.form.on('Sales Invoice DN', {\n    allocated_amount: function (frm) {\n        let total = 0;\n\n        (frm.doc.custom_details || []).forEach(row => {\n            total += flt(row.allocated_amount);\n        });\n\n        frm.set_value('custom_total_allocated_amount', total);\n        frm.set_value(\n            'custom_unallocated_amount',\n            frm.doc.total - total\n        );\n    },\n\n    custom_details_remove: function (frm) {\n        let total = 0;\n\n        (frm.doc.custom_details || []).forEach(row => {\n            total += flt(row.allocated_amount);\n        });\n\n        frm.set_value('custom_total_allocated_amount', total);\n        frm.set_value(\n            'custom_unallocated_amount',\n            frm.doc.total - total\n        );\n    }\n});\n\n\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sales Invoice",
+  "enabled": 1,
+  "modified": "2025-12-28 05:46:38.539440",
+  "module": "VONTOC",
+  "name": "Delivery Note Filter",
+  "script": "frappe.ui.form.on('Sales Invoice', {\n    onload: function (frm) {\n        frm.set_query('delivery_note', 'custom_details', function () {\n\n            // 1️⃣ 收集当前 SI 中所有 SO\n            let sales_orders = [];\n            (frm.doc.items || []).forEach(item => {\n                if (item.sales_order && !sales_orders.includes(item.sales_order)) {\n                    sales_orders.push(item.sales_order);\n                }\n            });\n\n            // 2️⃣ 如果没有 SO，直接不让选\n            if (!sales_orders.length) {\n                return {\n                    filters: {\n                        name: ['=', '']\n                    }\n                };\n            }\n\n            // 3️⃣ 返回 DN 的筛选条件\n            return {\n                filters: [\n                    ['Delivery Note Item', 'against_sales_order', 'in', sales_orders],\n                    ['Delivery Note', 'docstatus', '=', 0]\n                ]\n            };\n        });\n    }\n});",
+  "view": "Form"
  }
 ]

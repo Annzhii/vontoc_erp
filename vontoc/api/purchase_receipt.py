@@ -6,7 +6,9 @@ from frappe.workflow.doctype.workflow_action.workflow_action import apply_workfl
 
 @frappe.whitelist()
 def confirm_purchase_receipt(docname):
+
     pr = frappe.get_doc("Purchase Receipt", docname)
+    
     pos = set()
     item_types = set()
     for item in pr.items:
@@ -70,6 +72,8 @@ def confirm_purchase_receipt(docname):
 def stock_purchase_receipt(docname):
 
     pr = frappe.get_doc("Purchase Receipt", docname)
+    if pr.is_internal_supplier == 1:
+        return
 
     to_close = [{
         "doctype": "Purchase Receipt",

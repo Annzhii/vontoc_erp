@@ -88,7 +88,6 @@ def reject_item(docname):
     pf_name = get_process_flow_trace_id_by_reference("Item", [docname])
     # pf_name列表中元素只会有1个
     user = get_marked_user (pf_name[0], mark = "1")
-    frappe.msgprint(str(user))
     to_close = [
         {
             "doctype": "Item",
