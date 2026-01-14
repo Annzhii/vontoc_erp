@@ -1,9 +1,8 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
-console.log("Loaded JS from vontoc");
 
 window.doc={{ doc.as_json() }};
-
+window.rfq_links = {{ rfq_links | json }};
 $(document).ready(function() {
 	new rfq();
 	doc.supplier = "{{ doc.supplier }}"
@@ -74,22 +73,62 @@ rfq = class rfq {
 
 	submit_rfq(){
 		$('.btn-sm').click(function(){
-			frappe.freeze();
-			frappe.call({
-				type: "POST",
-				method: "erpnext.buying.doctype.request_for_quotation.request_for_quotation.create_supplier_quotation",
-				args: {
-					doc: doc
-				},
-				btn: this,
-				callback: function(r){
-					frappe.unfreeze();
-					if(r.message){
-						$('.btn-sm').hide()
-						window.location.href = "/supplier-quotations/" + encodeURIComponent(r.message);
-					}
+			if (rfq_links && rfq_links.length > 0) {
+				frappe.msgprint({
+					title: __("Not Allowed"),
+					message: __("已经有关联的供应商报价单，如需重新创建，请联系采购员。"),
+				});
+				return;
+			}
+
+			doc.items.forEach(item => {
+				let rateInput = document.querySelector(`.rfq-rate[data-idx='${item.idx}']`);
+				if(rateInput){
+					item.rate = parseFloat(rateInput.value) || 0;
 				}
-			})
+			});
+
+			// 检查零单价
+			let zeroRateItems = doc.items.filter(i => i.rate === 0);
+
+			if (zeroRateItems.length > 0) {
+                let itemNames = zeroRateItems.map(i => i.item_name || i.name).join("<br>");
+                frappe.confirm(
+                    __("以下产品的单价为0，确定提交供应商报价吗？<br>{0}", [itemNames]),
+                    function() {
+                        // 用户点击确认，继续提交
+                        createSQ();
+                    },
+                    function() {
+                        // 用户取消
+                        console.log("Submission cancelled due to zero rate");
+                    }
+                );
+            } else {
+                // 没有零单价，直接提交
+                createSQ();
+            }
+			function createSQ() {
+				console.log(doc.terms)
+				const notes = document.querySelector('.rfq-notes')?.value || "";
+				doc.custom_notes = notes;
+				frappe.freeze();
+				frappe.call({
+					type: "POST",
+					method: "erpnext.buying.doctype.request_for_quotation.request_for_quotation.create_supplier_quotation",
+					args: {
+						doc: doc
+					},
+					btn: this,
+					callback: function(r){
+						frappe.unfreeze();
+						if(r.message){
+							$('.btn-sm').hide()
+							//window.location.href = "/supplier-quotations/" + encodeURIComponent(r.message);
+						}
+					}
+				})
+			}
 		})
 	}
 

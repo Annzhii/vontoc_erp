@@ -29,6 +29,14 @@
         {{ doc.get_formatted("transaction_date") }}
     </div>
 </div>
+<div class="row mt-2">
+    <div class="col-12">
+        <div class="alert alert-info py-2 mb-2 small">
+            <i class="fa fa-info-circle mr-1"></i>
+            {{ _("提示：请报含税价格，不含运费。") }}
+        </div>
+    </div>
+</div>
 <div class="rfq-content" style="margin-top:15px">
 	<div id="order-container">
 			<div id="rfq-items">
@@ -67,14 +75,22 @@
 			<div class="col-6">
 				<br><br>
 				<p class="text-muted small";>{{ _("Notes: ") }}</p>
-				<textarea class="form-control terms-feedback" style="height: 180px;"></textarea>
+				<textarea class="form-control rfq-notes" style="height: 180px;"></textarea>
+				<div class="row mt-2">
+					<div class="col-12">
+						<div class="alert alert-info py-2 mb-2 small">
+							<i class="fa fa-info-circle mr-1"></i>
+							{{ _("提示：请在备注栏补充交货期和付款方式。") }}
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<!-- 右边：系统 Terms 条款 -->
 			<div class="col-6">
 				<br><br>
 				<p class="text-muted small" >{{ _("条例: ") }}</p>
-				<div class="form-control" style="height: 180px; overflow-y: auto; background:#fafafa;">
+				<div class="form-control terms-feedback" style="height: 180px; overflow-y: auto; background:#fafafa;">
 					{{ doc.terms or "" }}
 				</div>
 			</div>
@@ -82,7 +98,7 @@
 		<div class="row mt-5">
 			<div class="col-12">
 				<p class="text-muted small">{{ _("关联报价单: ") }}</p>
-				<hr style="margin-top: 0; margin-bottom: 0;">
+
 				{% if doc.rfq_links %}
 					<div class="result">
 						{% for d in doc.rfq_links %}

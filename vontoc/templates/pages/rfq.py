@@ -15,6 +15,7 @@ def get_context(context):
 	context.doc = frappe.get_doc(frappe.form_dict.doctype, frappe.form_dict.name)
 	context.parents = frappe.form_dict.parents
 	context.doc.supplier = get_supplier()
+	context.rfq_links = get_link_quotation(context.doc.supplier, context.doc.name)
 	context.doc.rfq_links = get_link_quotation(context.doc.supplier, context.doc.name)
 	unauthorized_user(context.doc.supplier)
 	update_supplier_details(context)

@@ -226,7 +226,8 @@ scheduler_events = {
 #
 override_whitelisted_methods = {
     #"frappe.desk.doctype.event.event.get_events": "vontoc.event.get_events"
-    "frappe.desk.form.assign_to.add": "vontoc.api.overrides_whitelist.add"
+    "frappe.desk.form.assign_to.add": "vontoc.api.overrides_whitelist.add",
+    "erpnext.buying.doctype.request_for_quotation.request_for_quotation.create_supplier_quotation": "vontoc.api.overrides_whitelist.create_supplier_quotation"
 }
 #
 # each overriding function accepts a `data` argument;

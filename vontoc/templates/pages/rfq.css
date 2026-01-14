@@ -72,6 +72,13 @@ h1 {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.transaction-list-item {
+	border: 1px solid #adb5bd !important;
+	border-radius: 6px;
+	padding-left: 15px;
+	margin-bottom: 5px;
+}
+
 /* Make Quotation 按钮 */
 .btn-primary.btn-sm {
 	font-size: 14px;
