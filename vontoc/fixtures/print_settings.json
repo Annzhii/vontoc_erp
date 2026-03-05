@@ -11,15 +11,16 @@
   "enable_raw_printing": 0,
   "font": "Arial",
   "font_size": 0.0,
-  "modified": "2025-11-17 08:12:32.107764",
+  "modified": "2026-03-05 20:22:41.385403",
   "name": "Print Settings",
+  "pdf_generator": null,
   "pdf_page_height": 0.0,
   "pdf_page_size": "A4",
   "pdf_page_width": 0.0,
   "print_style": "Monochrome",
   "print_taxes_with_zero_amount": 0,
   "print_uom_after_quantity": 1,
-  "repeat_header_footer": 0,
+  "repeat_header_footer": 1,
   "send_print_as_pdf": 0,
   "with_letterhead": 1
  }

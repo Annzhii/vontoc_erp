@@ -10,6 +10,7 @@ from erpnext.stock.doctype.item.item import Item
 from erpnext.buying.doctype.supplier_quotation.supplier_quotation import SupplierQuotation
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import SalesInvoice
 from erpnext.stock.doctype.delivery_note.delivery_note import DeliveryNote
+from erpnext.selling.doctype.sales_order.sales_order import SalesOrder
 
 from vontoc.vontoc.doctype.guideline_price.guideline_price import GuidelinePrice, submit_guideline_price
 from frappe.utils import flt, strip_html, cstr
@@ -18,74 +19,21 @@ from erpnext.buying.utils import validate_for_items
 from erpnext.manufacturing.doctype.blanket_order.blanket_order import (validate_against_blanket_order)
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import (validate_inter_company_party, update_linked_doc)
 
-from vontoc.api.purchase_receipt import stock_purchase_receipt
+from vontoc.api.purchase_receipt import stock_purchase_receipt, mirror_internal_pr
 from vontoc.api.subcontracting_receipt import stock_subcontracting_receipt
+from vontoc.api.subcontracting_order import subcontracting_order_submitted
 from vontoc.api.purchase_order import approve_po
 from vontoc.api.material_request import material_request_submitted
+from vontoc.api.sales_order import sales_order_submitted
+
 from vontoc.api.item import validate_sales_temporary_item
 from vontoc.api.shipment import check_delivery_notes_submitted
 from vontoc.api.sales_invoice import sync_sales_invoice_to_delivery_note, check_allocated_amount
 from vontoc.api.delivery_note import check_allow_shipment
 
 class VONTOCPurchaseOrder(PurchaseOrder):
-	def validate(self):
-		super().validate()
-		if self.docstatus == 1 and not self.supplier:
-			frappe.throw(_("Supplier is mandatory before submitting the Purchase Order"))
-		self.set_status()
-
-		# apply tax withholding only if checked and applicable
-		self.set_tax_withholding()
-
-		self.validate_supplier()
-		self.validate_schedule_date()
-		validate_for_items(self)
-		self.check_on_hold_or_closed_status()
-
-		self.validate_uom_is_integer("uom", "qty")
-		self.validate_uom_is_integer("stock_uom", "stock_qty")
-
-		self.validate_with_previous_doc()
-		self.validate_for_subcontracting()
-		self.validate_minimum_order_qty()
-		validate_against_blanket_order(self)
-
-		if self.is_old_subcontracting_flow:
-			self.validate_bom_for_subcontracting_items()
-			self.create_raw_materials_supplied()
-
-		self.validate_fg_item_for_subcontracting()
-		self.set_received_qty_for_drop_ship_items()
-		validate_inter_company_party(
-			self.doctype, self.supplier, self.company, self.inter_company_order_reference
-		)
-		self.reset_default_field_value("set_warehouse", "items", "warehouse")
-
 	def on_submit(self):
 		super().on_submit()
-
-		if self.is_against_so():
-			self.update_status_updater()
-
-		self.update_prevdoc_status()
-		if not self.is_subcontracted or self.is_old_subcontracting_flow:
-			self.update_requested_qty()
-
-		self.update_ordered_qty()
-		self.validate_budget()
-		self.update_reserved_qty_for_subcontract()
-
-		frappe.get_doc("Authorization Control").validate_approving_authority(
-			self.doctype, self.company, self.base_grand_total
-		)
-
-		self.update_blanket_order()
-
-		update_linked_doc(self.doctype, self.name, self.inter_company_order_reference)
-
-		self.auto_create_subcontracting_order()
-
-		#额外添加的流程逻辑，在approve之后（即表单提交之后）
 		approve_po(self)
 
 class VONTOCPurchaseReceipt(PurchaseReceipt):
@@ -93,34 +41,22 @@ class VONTOCPurchaseReceipt(PurchaseReceipt):
 		super().on_submit()
 		# ✅ 追加你的自定义逻辑
 		stock_purchase_receipt(self.name)
+		mirror_internal_pr(self)
 
 class VONTOCMaterialRequest(MaterialRequest):
 	def on_submit(self):
 		self.update_requested_qty_in_production_plan()
 		self.update_requested_qty()
-		if self.material_request_type == "Purchase" and frappe.db.exists(
-			"Budget", {"applicable_on_material_request": 1, "docstatus": 1}
-		):
-			self.validate_budget()
-		#自定义逻辑
+		if self.material_request_type == "Purchase":
+			self.update_prevdoc_status()
+			if frappe.db.exists("Budget", {"applicable_on_material_request": 1, "docstatus": 1}):
+				self.validate_budget()
+				
 		material_request_submitted(self)
 
 class VONTOCSubcontractingReceipt(SubcontractingReceipt):
 	def on_submit(self):
-		self.validate_closed_subcontracting_order()
-		self.validate_available_qty_for_consumption()
-		self.update_status_updater_args()
-		self.update_prevdoc_status()
-		self.set_subcontracting_order_status(update_bin=False)
-		self.set_consumed_qty_in_subcontract_order()
-
-		for table_name in ["items", "supplied_items"]:
-			self.make_bundle_using_old_serial_batch_fields(table_name)
-		self.update_stock_ledger()
-		self.make_gl_entries()
-		self.repost_future_sle_and_gle()
-		self.update_status()
-		self.auto_create_purchase_receipt()
+		super().on_submit()
 		#自定义逻辑
 		stock_subcontracting_receipt(self.name)
 
@@ -241,4 +177,8 @@ class VONTOCDeliveryNote(DeliveryNote):
 	def on_submit(self):
 		super().on_submit()
 		check_allow_shipment(self)
-	
+
+class VONTOCSalesOrder(SalesOrder):
+	def on_submit(self):
+		super().on_submit()
+		sales_order_submitted(self)

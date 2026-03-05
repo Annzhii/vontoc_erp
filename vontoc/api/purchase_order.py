@@ -4,7 +4,7 @@ from vontoc.utils.process_engine import process_flow_engine
 from vontoc.utils.processflow import get_process_flow_trace_id_by_reference 
 from vontoc.utils.utils import is_source_fully_generated
 from frappe import _
-
+from vontoc.api.overrides_whitelist import make_inter_company_transaction
 
 @frappe.whitelist()
 def sent_po_for_approval(docname):
@@ -80,13 +80,33 @@ def approve_po(self):
     if not self.is_subcontracted:
         approve_purchase_order(self)
     else:
-        approve_subcontracting_order(self)
+        approve_subcontracted_order(self)
 
 def approve_purchase_order(self):
 
     if self.is_internal_supplier == 1:
+        SO = make_inter_company_transaction("Purchase Order", self.name)
+        finished_warehouse = frappe.db.get_value(
+            "Company",
+            SO.company,
+            "default_fg_warehouse"
+        )
+        if not finished_warehouse:
+            frappe.throw(_("Default finished goods warehouse does not exist. Please create it first."))
+        contact_person = frappe.db.get_value(
+            "Customer",
+            SO.customer,
+            "customer_primary_contact"
+        )
+        if not contact_person:
+            frappe.throw(_("Customer Primary Contact does not exist. Please create it first."))
+        SO.contact_person = contact_person
+        SO.delivery_date = self.schedule_date
+        SO.set_warehouse = finished_warehouse
+        SO.insert(ignore_permissions=True)
+        SO.submit()
         return
-        
+    
     to_close = [
         {
             "doctype": "Purchae Order",
@@ -111,11 +131,15 @@ def approve_purchase_order(self):
 
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info= process_flow_info)
 
-def approve_subcontracting_order(self):
+def approve_subcontracted_order(self):
 
     sub_po = make_subcontracting_order(self.name, notify=True)
-    sub_po.supplier_warehouse = "Suppliers - VTCD"
-    #sub_po.submit()
+    company_abbr = frappe.get_value("Company", self.company, "abbr")
+    supplier_warehouse = f"{self.supplier} - {company_abbr}"
+    if not supplier_warehouse:
+        frappe.throw(_("Supplier Warehouse does not exist. Please create it first."))
+    sub_po.supplier_warehouse = supplier_warehouse
+    sub_po.submit()
     to_close = [
         {
             "doctype": "Purchase Order",

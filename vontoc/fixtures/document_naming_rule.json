@@ -4,9 +4,329 @@
    {
     "condition": "=",
     "field": "item_group",
-    "parent": "lltj4oq0ke",
-    "parentfield": "conditions",
-    "parenttype": "Document Naming Rule",
+    "value": "注塑产品"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.544267",
+  "name": "gd9vj03197",
+  "prefix": "101",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "复模产品"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.626225",
+  "name": "gda6tcf9tl",
+  "prefix": "105",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "CNC产品"
+   }
+  ],
+  "counter": 3,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2026-01-13 13:55:57.775755",
+  "name": "gda5adnf49",
+  "prefix": "106",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "压铸产品"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.639192",
+  "name": "gdatfi7ej1",
+  "prefix": "107",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "镶件"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.645191",
+  "name": "gdauqkpgoo",
+  "prefix": "201",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "塑料颗粒"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.650778",
+  "name": "gda5qgiqlv",
+  "prefix": "202",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "注塑成型"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.657132",
+  "name": "gdat9vcfbl",
+  "prefix": "301",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "复模成型"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.663842",
+  "name": "gda80casfi",
+  "prefix": "305",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "CNC加工"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.671830",
+  "name": "gdalutap8f",
+  "prefix": "306",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "印刷"
+   }
+  ],
+  "counter": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:42:11.636508",
+  "name": "gdakhh7sjt",
+  "prefix": "308",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "注塑模具"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.687474",
+  "name": "gdao167nfd",
+  "prefix": "401",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "压铸模具"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.695547",
+  "name": "gda1gdd5v2",
+  "prefix": "405",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "检具"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.702876",
+  "name": "gdbejk85sc",
+  "prefix": "406",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "辅助工具"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.710997",
+  "name": "gdba1oma1n",
+  "prefix": "407",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "纸箱"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.718291",
+  "name": "gdbnh96ba8",
+  "prefix": "501",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "托盘"
+   }
+  ],
+  "counter": 0,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2025-12-07 23:41:30.725603",
+  "name": "gdbpdo9tf5",
+  "prefix": "505",
+  "prefix_digits": 3,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
+    "value": "临时物料"
+   }
+  ],
+  "counter": 11,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Document Naming Rule",
+  "document_type": "Item",
+  "modified": "2026-01-13 14:05:27.925433",
+  "name": "gdbk93q822",
+  "prefix": "9",
+  "prefix_digits": 5,
+  "priority": 0
+ },
+ {
+  "conditions": [
+   {
+    "condition": "=",
+    "field": "item_group",
     "value": "注塑产品"
    }
   ],

@@ -156,9 +156,9 @@ override_doctype_class = {
     #"Purchase Invoice": "vontoc.api.overrides.VONTOCPurchaseInvoice",
     #"Payment Request": "vontoc.api.overrides.VONTOCPaymentRequest",
     #"Payment Entry": "vontoc.api.overrides.VONTOCPaymentEntry",
-    #"Sales Order": "vontoc.api.overrides.VONTOCSalesOrder",
+    "Sales Order": "vontoc.api.overrides.VONTOCSalesOrder",
     "Sales Invoice": "vontoc.api.overrides.VONTOCSalesInvoice",
-    "Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote",   
+    "Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote",
     "Material Request": "vontoc.api.overrides.VONTOCMaterialRequest", 
     "Subcontracting Receipt": "vontoc.api.overrides.VONTOCSubcontractingReceipt",
     "Subcontracting Order": "vontoc.api.overrides.VONTOCSubcontractingOrder",
@@ -227,7 +227,9 @@ scheduler_events = {
 override_whitelisted_methods = {
     #"frappe.desk.doctype.event.event.get_events": "vontoc.event.get_events"
     "frappe.desk.form.assign_to.add": "vontoc.api.overrides_whitelist.add",
-    "erpnext.buying.doctype.request_for_quotation.request_for_quotation.create_supplier_quotation": "vontoc.api.overrides_whitelist.create_supplier_quotation"
+    "erpnext.buying.doctype.request_for_quotation.request_for_quotation.create_supplier_quotation": "vontoc.api.overrides_whitelist.create_supplier_quotation",
+    #覆盖MR到PO的创建方式，取消Rate 和 Price List的map，避免PO中Items的价格混乱
+    "erpnext.stock.doctype.material_request.material_request.make_purchase_order": "vontoc.api.material_request.make_purchase_order"
 }
 #
 # each overriding function accepts a `data` argument;
