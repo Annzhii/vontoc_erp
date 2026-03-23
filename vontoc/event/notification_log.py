@@ -2,7 +2,7 @@ import frappe
 from pushweb.api.push import send_push_to_user
 
 @frappe.whitelist()
-def notification_after_insert(doc):
+def notification_after_insert(doc, method=None):
     try:
         url = frappe.utils.get_url(f"/app/{frappe.scrub(doc.document_type)}/{doc.document_name}")
         
