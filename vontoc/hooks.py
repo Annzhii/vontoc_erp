@@ -185,6 +185,9 @@ doc_events = {
     "Communication": {
         # event 负责推送push notification， api负责内部 notify_user
         "after_insert": ["vontoc.event.communication.communication_after_insert", "vontoc.api.communication.after_insert_communication"]
+    },
+    "Notification Log":{
+        "after_insert": "vontoc.event.notification_log.notification_after_insert",
     }
 }
 
@@ -229,7 +232,7 @@ override_whitelisted_methods = {
     "frappe.desk.form.assign_to.add": "vontoc.api.overrides_whitelist.add",
     "erpnext.buying.doctype.request_for_quotation.request_for_quotation.create_supplier_quotation": "vontoc.api.overrides_whitelist.create_supplier_quotation",
     #覆盖MR到PO的创建方式，取消Rate 和 Price List的map，避免PO中Items的价格混乱
-    "erpnext.stock.doctype.material_request.material_request.make_purchase_order": "vontoc.api.material_request.make_purchase_order"
+    "erpnext.stock.doctype.material_request.material_request.make_purchase_order": "vontoc.api.material_request.make_purchase_order",
 }
 #
 # each overriding function accepts a `data` argument;

@@ -1,6 +1,7 @@
 {
  "attach_print": 0,
  "channel": "Email",
+ "condition_type": "Python",
  "creation": "2025-10-03 21:49:04.207949",
  "days_in_advance": 0,
  "docstatus": 0,
@@ -12,17 +13,21 @@
  "is_standard": 1,
  "message": "<p>Add your message here</p>\n",
  "message_type": "Markdown",
- "modified": "2025-11-29 22:12:26.115230",
+ "minutes_offset": 0,
+ "modified": "2026-03-22 16:44:18.511959",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "TODO",
  "owner": "Administrator",
  "recipients": [
   {
-   "receiver_by_document_field": "allocated_to"
+   "receiver_by_document_field": "allocated_to",
+   "receiver_by_role": ""
   }
  ],
  "send_system_notification": 1,
  "send_to_all_assignees": 0,
+ "sender": "",
+ "sender_email": "",
  "subject": "[\u65b0\u5f85\u529e]-{{ doc.description }}"
 }

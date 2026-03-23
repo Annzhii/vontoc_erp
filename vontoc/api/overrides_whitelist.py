@@ -5,7 +5,6 @@ from frappe.desk.form.document_follow import follow_document
 from frappe.utils.data import strip_html
 from erpnext.accounts.party import get_party_account_currency
 
-
 @frappe.whitelist()
 def add(args=None, *, ignore_permissions=False):
 	"""add in someone's to do list
