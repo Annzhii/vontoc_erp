@@ -134,7 +134,7 @@ def payment_collected_in_full_or_approved(docname):
             dn_doc.custom_verified = 1
             if dn_doc.custom_payment_status != "Full Allocated":
                 dn_doc.custom_allow_shipment_before_full_payment = 1
-        dn_doc.save()
+        dn_doc.save(ignore_permissions=True)
 
 @frappe.whitelist()
 def payment_partially_collected(docname):

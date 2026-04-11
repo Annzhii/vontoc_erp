@@ -30,15 +30,15 @@ def sync_sales_invoice_to_delivery_note(self):
 
         # 新增或更新
         if matched_row:
-            if dn.docstatus == 1:
-                frappe.throw(
-                    f"Delivery Note {dn.name} 已提交，不能修改关联的 Sales Invoice {self.name}"
-                )
-            if dn.custom_verified == 1:
-                frappe.throw(
-                    f"Delivery Note {dn.name} 已被审核，不能修改关联的 Sales Invoice {self.name}"
-                )
             if matched_row.allocated_amount != si_map[dn_name]:
+                if dn.custom_verified == 1:
+                    frappe.throw(
+                        f"Delivery Note {dn.name} 已被审核，不能修改关联的 Sales Invoice {self.name}"
+                    )
+                if dn.docstatus == 1:
+                    frappe.throw(
+                        f"Delivery Note {dn.name} 已提交，不能修改关联的 Sales Invoice {self.name}"
+                    )
                 matched_row.allocated_amount = si_map[dn_name]
         else:
             dn.append("custom_details", {
@@ -63,13 +63,13 @@ def sync_sales_invoice_to_delivery_note(self):
     for row in orphan_rows:
         if row.dn_name not in si_map:
             dn = frappe.get_doc("Delivery Note", row.dn_name)
-            if dn.docstatus == 1:
-                frappe.throw(
-                    f"Delivery Note {dn.name} 已提交，不能移除关联的 Sales Invoice {self.name}"
-                )
             if dn.custom_verified == 1:
                 frappe.throw(
                     f"Delivery Note {dn.name} 已被审核，不能移除关联的 Sales Invoice {self.name}"
+                )
+            if dn.docstatus == 1:
+                frappe.throw(
+                    f"Delivery Note {dn.name} 已提交，不能移除关联的 Sales Invoice {self.name}"
                 )
             dn.custom_details = [
                 r for r in dn.custom_details

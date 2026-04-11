@@ -25,13 +25,13 @@ def communication_after_insert(doc, method=None):
             if doc.reference_doctype and doc.reference_name:
                 route = doctype_route_map.get(doc.reference_doctype)
                 if route:
-                    url = get_url(f"/crm/{frappe.scrub(doc.reference_doctype)}/{doc.reference_name}#emails")
+                    url = get_url(f"/crm/{route}/{doc.reference_name}#emails")
 
             send_push_to_user(
                 to_app="crm",
                 user=user,
                 title=(doc.subject or "New Communication")[:100],
-                body="\u200B",  # 防止超过 Web Push 限制
+                body="New Email Received",
                 url=url
             )
 
