@@ -12,7 +12,6 @@ fixtures = [
 "Property Setter",
 "Document Naming Rule",
 "Report",
-"Letter Head",
 "Print Settings",
 "Workflow Action Master",
 "CRM Form Script"]

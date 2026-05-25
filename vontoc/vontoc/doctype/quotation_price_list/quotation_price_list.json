@@ -1029,7 +1029,7 @@
    "label": "Source",
    "oldfieldname": "source",
    "oldfieldtype": "Select",
-   "options": "Lead Source",
+   "options": "Lead",
    "print_hide": 1
   },
   {
@@ -1101,7 +1101,7 @@
  "icon": "fa fa-shopping-cart",
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-18 06:44:23.073722",
+ "modified": "2026-04-27 09:33:46.768603",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Quotation Price List",

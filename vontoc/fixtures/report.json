@@ -1,5 +1,37 @@
 [
  {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [],
+  "is_standard": "Yes",
+  "javascript": null,
+  "json": null,
+  "letter_head": null,
+  "modified": "2025-03-02 12:51:43.563449",
+  "module": "Frappe Whatsapp",
+  "name": "Bulk WhatsApp Status",
+  "prepared_report": 0,
+  "query": null,
+  "ref_doctype": "Bulk WhatsApp Message",
+  "reference_report": null,
+  "report_name": "Bulk WhatsApp Status",
+  "report_script": null,
+  "report_type": "Script Report",
+  "roles": [
+   {
+    "role": "System Manager"
+   },
+   {
+    "role": "WhatsApp Manager"
+   }
+  ],
+  "timeout": 0
+ },
+ {
   "add_total_row": 1,
   "add_translate_data": 0,
   "columns": [],
@@ -10,7 +42,7 @@
   "is_standard": "Yes",
   "javascript": null,
   "json": null,
-  "letter_head": "ALYF GmbH",
+  "letter_head": null,
   "modified": "2023-10-11 00:58:30.639078",
   "module": "Projects",
   "name": "Timesheet Billing Summary",
@@ -68,38 +100,6 @@
   "roles": [
    {
     "role": "System Manager"
-   }
-  ],
-  "timeout": 0
- },
- {
-  "add_total_row": 0,
-  "add_translate_data": 0,
-  "columns": [],
-  "disabled": 0,
-  "docstatus": 0,
-  "doctype": "Report",
-  "filters": [],
-  "is_standard": "Yes",
-  "javascript": null,
-  "json": null,
-  "letter_head": null,
-  "modified": "2024-12-11 18:58:14.479423",
-  "module": "Wiki",
-  "name": "Wiki Broken Links",
-  "prepared_report": 1,
-  "query": null,
-  "ref_doctype": "Wiki Page",
-  "reference_report": null,
-  "report_name": "Wiki Broken Links",
-  "report_script": null,
-  "report_type": "Script Report",
-  "roles": [
-   {
-    "role": "System Manager"
-   },
-   {
-    "role": "Wiki Approver"
    }
   ],
   "timeout": 0
@@ -5693,7 +5693,7 @@
   "timeout": 0
  },
  {
-  "add_total_row": 1,
+  "add_total_row": 0,
   "add_translate_data": 0,
   "columns": [],
   "disabled": 0,
@@ -5731,7 +5731,7 @@
   "timeout": 0
  },
  {
-  "add_total_row": 1,
+  "add_total_row": 0,
   "add_translate_data": 0,
   "columns": [],
   "disabled": 0,
@@ -5769,7 +5769,7 @@
   "timeout": 0
  },
  {
-  "add_total_row": 1,
+  "add_total_row": 0,
   "add_translate_data": 0,
   "columns": [],
   "disabled": 0,
@@ -5810,7 +5810,7 @@
   "timeout": 0
  },
  {
-  "add_total_row": 1,
+  "add_total_row": 0,
   "add_translate_data": 0,
   "columns": [],
   "disabled": 0,
@@ -5842,7 +5842,7 @@
   "timeout": 0
  },
  {
-  "add_total_row": 1,
+  "add_total_row": 0,
   "add_translate_data": 0,
   "columns": [],
   "disabled": 0,
@@ -5877,7 +5877,7 @@
   "timeout": 0
  },
  {
-  "add_total_row": 1,
+  "add_total_row": 0,
   "add_translate_data": 0,
   "columns": [],
   "disabled": 0,
@@ -5915,7 +5915,7 @@
   "timeout": 0
  },
  {
-  "add_total_row": 1,
+  "add_total_row": 0,
   "add_translate_data": 0,
   "columns": [],
   "disabled": 0,
@@ -6683,7 +6683,7 @@
   "timeout": 0
  },
  {
-  "add_total_row": 1,
+  "add_total_row": 0,
   "add_translate_data": 0,
   "columns": [],
   "disabled": 0,
