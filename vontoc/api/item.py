@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from vontoc.utils.process_engine import process_flow_engine
 from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
 from vontoc.utils.utils import get_marked_user
@@ -66,6 +67,10 @@ def send_item_for_approval(docname):
 
 @frappe.whitelist()
 def approve_item(docname):
+    item = frappe.get_doc("Item", docname)
+    item.item_group = item.custom_requested_item_group
+    item.save()
+
     to_close = [
         {
             "doctype": "Item",
@@ -111,3 +116,37 @@ def reject_item(docname):
     }
 
     process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info=process_flow_trace_info)
+
+def build_item_description(doc):
+	fields = [
+		("材料", "Material", "custom_material"),
+		("材料牌号", "Material Grade", "custom_material_grade"),
+		("腔数", "Cavities", "custom_mold_cavity"),
+		("颜色", "Color", "custom_color"),
+		("重量(g)", "Weight(g)", "custom_weightg"),
+		("尺寸(mm)", "Size(mm)", "custom_sizemm"),
+		("表面处理", "Surface Finish", "custom_surface_finish"),
+		("规格", "Specification", "custom_specification"),
+		("塑料牌号", "Plastic Type", "custom_plastic_type"),
+		("塑料类型", "Plastic Grade", "custom_plastic_grade"),
+		("品牌或厂家", "Brand / Manufacturer", "custom_plastic_brand"),
+		("制件", "Molded Part", "custom_molded_part"),
+		("客供料", "Customer Supplied Material", "custom_customer_supplied_material"),
+		("组成部分", "Component", "custom_component"),
+	]
+
+	zh_parts = []
+	en_parts = []
+	zh_title = doc.custom_item_name_inter or doc.item_name
+	en_title = doc.item_name or ""
+    
+	for zh_label, en_label, fieldname in fields:
+		value = doc.get(fieldname)
+
+		if value:
+			zh_parts.append(f"{zh_label}: {value}")
+			en_parts.append(f"{en_label}: {value}")
+
+	doc.custom_description_zh = zh_title + "<br>" + " | ".join(zh_parts)
+	doc.description = en_title + "<br>" + " | ".join(en_parts)
+     

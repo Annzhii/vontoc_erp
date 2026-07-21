@@ -20,7 +20,8 @@ fixtures = [
 doctype_js = {
     #"Delivery Note": "public/js/delivery_note.js",
     #"Sales Order": "public/js/sales_order.js",
-    "Shipment": "public/js/shipment.js"
+    "Shipment": "public/js/shipment.js",
+    #"Quotation": "public/js/quotation.js"
 }
 
 # Apps
@@ -44,7 +45,7 @@ doctype_js = {
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/vontoc/css/vontoc.css"
-# app_include_js = "/assets/vontoc/js/vontoc.js"
+app_include_js = "/assets/vontoc/js/custom.js"
 
 
 # include js, css files in header of web template

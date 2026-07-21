@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "naming_series:",
+ "autoname": "VQPL-.YY.#####",
  "creation": "2025-06-14 18:28:48.117184",
  "doctype": "DocType",
  "document_type": "Document",
@@ -1101,7 +1101,7 @@
  "icon": "fa fa-shopping-cart",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-27 09:33:46.768603",
+ "modified": "2026-07-21 09:49:43.798150",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Quotation Price List",

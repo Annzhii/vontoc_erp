@@ -17,6 +17,7 @@
   {
    "fieldname": "item_code",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Item Code",
    "options": "Item"
   },
@@ -32,6 +33,7 @@
    "default": "Nos",
    "fieldname": "uom",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "UOM",
    "options": "UOM",
    "reqd": 1
@@ -40,18 +42,22 @@
    "default": "USD",
    "fieldname": "currency",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Currency",
    "options": "Currency"
   },
   {
-   "fetch_from": "item_code.description",
+   "columns": 12,
+   "fetch_from": "item_code.custom_description_zh",
    "fieldname": "description",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
    "label": "Description"
   },
   {
    "fieldname": "guideline_price",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Guideline Price",
    "options": "currency",
    "permlevel": 1
@@ -61,7 +67,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-12-06 20:52:44.932771",
+ "modified": "2026-05-31 09:50:04.212841",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Guideline Price Item",

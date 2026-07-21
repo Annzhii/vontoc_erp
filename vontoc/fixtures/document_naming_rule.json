@@ -311,12 +311,12 @@
     "value": "临时物料"
    }
   ],
-  "counter": 11,
+  "counter": 15,
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Document Naming Rule",
   "document_type": "Item",
-  "modified": "2026-01-13 14:05:27.925433",
+  "modified": "2026-07-19 16:58:09.933342",
   "name": "gdbk93q822",
   "prefix": "9",
   "prefix_digits": 5,
@@ -327,15 +327,15 @@
    {
     "condition": "=",
     "field": "item_group",
-    "value": "注塑产品"
+    "value": "注塑制件"
    }
   ],
-  "counter": 0,
+  "counter": 1,
   "disabled": 0,
   "docstatus": 0,
   "doctype": "Document Naming Rule",
   "document_type": "Item",
-  "modified": "2025-11-22 22:52:26.441536",
+  "modified": "2026-07-18 16:03:56.267957",
   "name": "lltj4oq0ke",
   "prefix": "TEST",
   "prefix_digits": 5,

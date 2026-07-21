@@ -257,10 +257,10 @@
   "doctype": "Client Script",
   "dt": "Sales Invoice",
   "enabled": 1,
-  "modified": "2025-12-26 21:38:15.596302",
+  "modified": "2026-07-14 00:21:54.604891",
   "module": "VONTOC",
   "name": "Calculate Allocated Amount",
-  "script": "frappe.ui.form.on('Sales Invoice DN', {\n    allocated_amount: function (frm) {\n        let total = 0;\n\n        (frm.doc.custom_details || []).forEach(row => {\n            total += flt(row.allocated_amount);\n        });\n\n        frm.set_value('custom_total_allocated_amount', total);\n        frm.set_value(\n            'custom_unallocated_amount',\n            frm.doc.total - total\n        );\n    },\n\n    custom_details_remove: function (frm) {\n        let total = 0;\n\n        (frm.doc.custom_details || []).forEach(row => {\n            total += flt(row.allocated_amount);\n        });\n\n        frm.set_value('custom_total_allocated_amount', total);\n        frm.set_value(\n            'custom_unallocated_amount',\n            frm.doc.total - total\n        );\n    }\n});\n\n\n",
+  "script": "frappe.ui.form.on('Sales Invoice DN', {\n    allocated_amount: function (frm) {\n        const available_amount =\n            flt(frm.doc.grand_total) - flt(frm.doc.outstanding_amount);\n    \n        frm.set_value(\n            \"custom_available_amount\",\n            available_amount\n        );\n        \n        let total = 0;\n\n        (frm.doc.custom_details || []).forEach(row => {\n            total += flt(row.allocated_amount);\n        });\n\n        frm.set_value('custom_total_allocated_amount', total);\n        frm.set_value(\n            'custom_unallocated_amount',\n            frm.doc.custom_available_amount - total\n        );\n    },\n\n    custom_details_remove: function (frm) {\n        let total = 0;\n\n        (frm.doc.custom_details || []).forEach(row => {\n            total += flt(row.allocated_amount);\n        });\n\n        frm.set_value('custom_total_allocated_amount', total);\n        frm.set_value(\n            'custom_unallocated_amount',\n            frm.doc.custom_available_amount - total\n        );\n    }\n});\n\n\n",
   "view": "Form"
  },
  {
@@ -272,6 +272,17 @@
   "module": "VONTOC",
   "name": "Delivery Note Filter",
   "script": "frappe.ui.form.on('Sales Invoice', {\n    onload: function (frm) {\n        frm.set_query('delivery_note', 'custom_details', function () {\n\n            // 1️⃣ 收集当前 SI 中所有 SO\n            let sales_orders = [];\n            (frm.doc.items || []).forEach(item => {\n                if (item.sales_order && !sales_orders.includes(item.sales_order)) {\n                    sales_orders.push(item.sales_order);\n                }\n            });\n\n            // 2️⃣ 如果没有 SO，直接不让选\n            if (!sales_orders.length) {\n                return {\n                    filters: {\n                        name: ['=', '']\n                    }\n                };\n            }\n\n            // 3️⃣ 返回 DN 的筛选条件\n            return {\n                filters: [\n                    ['Delivery Note Item', 'against_sales_order', 'in', sales_orders],\n                    ['Delivery Note', 'docstatus', '=', 0]\n                ]\n            };\n        });\n    }\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Item",
+  "enabled": 1,
+  "modified": "2026-07-19 16:27:28.360382",
+  "module": "VONTOC",
+  "name": "Calculate Size",
+  "script": "frappe.ui.form.on(\"Item\", {\n\tcustom_diametermm(frm) {\n\t\tupdate_size(frm);\n\t},\n\n\tcustom_lengthmm(frm) {\n\t\tupdate_size(frm);\n\t},\n\n\tcustom_widthmm(frm) {\n\t\tupdate_size(frm);\n\t},\n\n\tcustom_highmm(frm) {\n\t\tupdate_size(frm);\n\t}\n});\n\n\nfunction update_size(frm) {\n\tconst d = frm.doc.custom_diametermm;\n\tconst l = frm.doc.custom_lengthmm;\n\tconst w = frm.doc.custom_widthmm;\n\tconst h = frm.doc.custom_highmm;\n\n\tlet size = \"\";\n\n\t// 优先使用直径 + 高度\n\tif (d && h) {\n\t\tsize = `${d}X${h}`;\n\t}\n\t// 否则使用 长宽高\n\telse if (l && w && h) {\n\t\tsize = `${l}X${w}X${h}`;\n\t}\n\n\tfrm.set_value(\"custom_sizemm\", size);\n}",
   "view": "Form"
  }
 ]

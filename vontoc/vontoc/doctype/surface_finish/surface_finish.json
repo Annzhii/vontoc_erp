@@ -1,38 +1,33 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:material_type",
- "creation": "2026-05-27 19:04:11.231193",
+ "creation": "2026-07-19 17:02:27.049718",
  "doctype": "DocType",
- "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "material_type",
+  "surface_finish_type",
   "item_group"
  ],
  "fields": [
   {
-   "fieldname": "material_type",
+   "fieldname": "surface_finish_type",
    "fieldtype": "Data",
-   "label": "Material Type",
-   "unique": 1
+   "label": "Surface Finish Type"
   },
   {
    "fieldname": "item_group",
    "fieldtype": "Link",
    "label": "Item Group",
-   "link_filters": "[[\"Item Group\",\"is_group\",\"=\",0]]",
    "options": "Item Group"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-19 15:53:51.757917",
+ "modified": "2026-07-19 17:02:58.872574",
  "modified_by": "Administrator",
  "module": "VONTOC",
- "name": "Part Material",
- "naming_rule": "By fieldname",
+ "name": "Surface Finish",
  "owner": "Administrator",
  "permissions": [
   {

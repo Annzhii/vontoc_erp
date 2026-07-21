@@ -95,9 +95,13 @@ def update_dn_total_allocated(dn):
 
 def check_allocated_amount(self):
     total_allocated = self.custom_total_allocated_amount or 0
-    total_amount = self.total or 0
+    total_amount = self.custom_available_amount or 0
 
     if total_allocated > total_amount:
         frappe.throw(
-            f"核销金额 {total_allocated} 不能大于发票总金额 {total_amount}"
+            f"核销金额 {total_allocated} 不能大于可用核销总金额 {total_amount}"
         )
+
+def Initialize_unalocated_amount(self):
+    available_amount = self.grand_total - self.outstanding_amount
+    self.custom_unallocated_amount = available_amount
