@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:material_type",
+ "autoname": "hash",
  "creation": "2026-05-27 19:04:11.231193",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -28,11 +28,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-21 10:20:36.557304",
+ "modified": "2026-07-21 10:30:05.619443",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Part Material",
- "naming_rule": "By fieldname",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [
   {
@@ -52,5 +52,6 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "material_type"
 }
