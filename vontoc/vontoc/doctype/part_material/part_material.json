@@ -14,8 +14,7 @@
   {
    "fieldname": "material_type",
    "fieldtype": "Data",
-   "label": "Material Type",
-   "unique": 1
+   "label": "Material Type"
   },
   {
    "fieldname": "item_group",
@@ -28,7 +27,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-21 10:30:05.619443",
+ "modified": "2026-07-21 10:32:16.227227",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Part Material",
