@@ -50,7 +50,7 @@ def money_in_words(
 	if number_format.string == "#,##,###.##":
 		in_million = False
 	def fraction_in_words() -> str:
-		return in_words(float(f"0.{fraction}") * fraction_units, in_million, main_currency).title()
+		return in_words(float(f"0.{fraction}") * fraction_units, in_million).title()
 
 	# 0.00
 	if main == "0" and fraction in ["0", "00", "000"]:
@@ -61,7 +61,7 @@ def money_in_words(
 	elif main == "0":
 		out = f"{fraction_in_words()} {fraction_currency}"
 	else:
-		out = _(main_currency, context="Currency") + " " + in_words(main, in_million, main_currency).title()
+		out = _(main_currency, context="Currency") + " " + in_words(main, in_million).title()
 		if cint(fraction):
 			out = out + " " + _("and") + " " + fraction_in_words() + " " + fraction_currency
 
