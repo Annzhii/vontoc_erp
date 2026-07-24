@@ -284,5 +284,16 @@
   "name": "Calculate Size",
   "script": "frappe.ui.form.on(\"Item\", {\n\tcustom_diametermm(frm) {\n\t\tupdate_size(frm);\n\t},\n\n\tcustom_lengthmm(frm) {\n\t\tupdate_size(frm);\n\t},\n\n\tcustom_widthmm(frm) {\n\t\tupdate_size(frm);\n\t},\n\n\tcustom_highmm(frm) {\n\t\tupdate_size(frm);\n\t}\n});\n\n\nfunction update_size(frm) {\n\tconst d = frm.doc.custom_diametermm;\n\tconst l = frm.doc.custom_lengthmm;\n\tconst w = frm.doc.custom_widthmm;\n\tconst h = frm.doc.custom_highmm;\n\n\tlet size = \"\";\n\n\t// 优先使用直径 + 高度\n\tif (d && h) {\n\t\tsize = `${d}X${h}`;\n\t}\n\t// 否则使用 长宽高\n\telse if (l && w && h) {\n\t\tsize = `${l}X${w}X${h}`;\n\t}\n\n\tfrm.set_value(\"custom_sizemm\", size);\n}",
   "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Quotation",
+  "enabled": 1,
+  "modified": "2026-07-24 16:45:15.249655",
+  "module": "VONTOC",
+  "name": "Convert To PI",
+  "script": "frappe.ui.form.on('Quotation', {\n    refresh(frm) {\n        if (frm.doc.custom_custom_status) {\n            frm.page.set_indicator(frm.doc.custom_custom_status, \"blue\", \"custom-status-indicator\");\n        }\n\n        // 只要提交了、不是 PI、不是 Ordered，就显示按钮\n        if (frm.doc.docstatus === 1 && frm.doc.custom_custom_status !== \"PI\") {\n\n            frm.add_custom_button(\"Convert To PI\", () => {\n\n                frappe.call({\n                    method: \"frappe.client.set_value\",\n                    args: {\n                        doctype: frm.doc.doctype,\n                        name: frm.doc.name,\n                        fieldname: \"custom_custom_status\",\n                        value: \"PI\"\n                    },\n                    callback: function () {\n                        frappe.show_alert({\n                            message: \"Quotation 已转换为 PI 状态\",\n                            indicator: \"green\"\n                        });\n                        frm.reload_doc();\n                    }\n                });\n\n            });\n        }\n    }\n});",
+  "view": "Form"
  }
 ]
