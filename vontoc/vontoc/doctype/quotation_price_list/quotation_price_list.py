@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.model.mapper import get_mapped_doc
 from erpnext.controllers.selling_controller import SellingController
 
 class QuotationPriceList(SellingController):
@@ -67,3 +68,54 @@ def create_pricing_rules_from_tier(pricing_tier_name):
 
     return "Pricing Rules Created"
 
+@frappe.whitelist()
+def make_rfq(source_name, target_doc=None):
+
+    def set_missing_values(source, target):
+
+        # 设置 RFQ 默认值
+        target.transaction_date = frappe.utils.nowdate()
+
+        target.run_method("set_missing_values")
+
+    def update_item(source, target, source_parent):
+
+        # 如果有自定义字段，可以这里处理
+        target.qty = source.qty or 1
+
+        if source.uom:
+            target.uom = source.uom
+
+
+    doclist = get_mapped_doc(
+        "Quotation Price List",
+        source_name,
+        {
+
+            # Parent
+            "Quotation Price List": {
+                "doctype": "Request for Quotation",
+                "validation": {
+                    "docstatus": ["=", 0]
+                }
+            },
+
+
+            # Items
+            "Quotation Price List Item": {
+                "doctype": "Request for Quotation Item",
+
+                "field_map": {
+                    "name": "quotation_price_list_item"
+                },
+
+                "postprocess": update_item
+            }
+
+        },
+        target_doc,
+        set_missing_values
+    )
+
+
+    return doclist

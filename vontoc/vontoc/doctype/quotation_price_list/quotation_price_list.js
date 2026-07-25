@@ -13,6 +13,26 @@ frappe.ui.form.on("Quotation Price List", {
             }
         });        
     },
+
+    refresh(frm) {
+
+        if (!frm.is_new()) {
+
+            frm.add_custom_button(
+                __("Request for Quotation"),
+                function () {
+
+                    frappe.model.open_mapped_doc({
+                        method: "vontoc.vontoc.doctype.quotation_price_list.quotation_price_list.make_rfq",
+                        frm: frm
+                    });
+
+                },
+                __("Create")
+            );
+
+        }
+    }
 });
 
 erpnext.selling.QuotationPricingTierController = class QuotationPricingTierController extends erpnext.selling.SellingController {
