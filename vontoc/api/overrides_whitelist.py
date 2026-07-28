@@ -542,10 +542,6 @@ def make_delivery_note(source_name, target_doc=None, kwargs=None):
 	so = frappe.get_doc("Sales Order", source_name)
 	target_doc = get_mapped_doc("Sales Order", so.name, mapper, target_doc)
 
-	if so.ignore_pricing_rule:
-		target_doc.flags.ignore_permissions = True
-		target_doc.ignore_pricing_rule = 1
-
 	if not kwargs.skip_item_mapping and kwargs.for_reserved_stock:
 		sre_list = get_sre_details_for_voucher("Sales Order", source_name)
 
