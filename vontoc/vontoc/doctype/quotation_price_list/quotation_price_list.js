@@ -32,7 +32,36 @@ frappe.ui.form.on("Quotation Price List", {
             );
 
         }
-    }
+    },
+
+	after_workflow_action: function(frm) {
+		if (frm.doc.workflow_state == 'Sent For Quotation') {
+			frappe.call({
+				method: "vontoc.vontoc.doctype.quotation_price_list.quotation_price_list.send_quotation_price_list",
+				args: {
+					docname: frm.doc.name,
+				},
+				callback: function(r) {
+					if (r.message) {
+						frappe.msgprint(__(r.message));
+					}
+				}
+			});
+		}
+		if (frm.doc.workflow_state == 'Quotation Received') {
+			frappe.call({
+				method: "vontoc.vontoc.doctype.guideline_price.guideline_price.quotation_received",
+				args: {
+					docname: frm.doc.name,
+				},
+				callback: function(r) {
+					if (r.message) {
+						frappe.msgprint(__(r.message));
+					}
+				}
+			});
+		}
+	}
 });
 
 erpnext.selling.QuotationPricingTierController = class QuotationPricingTierController extends erpnext.selling.SellingController {

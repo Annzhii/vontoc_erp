@@ -233,6 +233,8 @@ override_whitelisted_methods = {
     "erpnext.buying.doctype.request_for_quotation.request_for_quotation.create_supplier_quotation": "vontoc.api.overrides_whitelist.create_supplier_quotation",
     #覆盖MR到PO的创建方式，取消Rate 和 Price List的map，避免PO中Items的价格混乱
     "erpnext.stock.doctype.material_request.material_request.make_purchase_order": "vontoc.api.material_request.make_purchase_order",
+    #覆盖从SO常见DN的方法，DN的ignore pricing rule 和SO同步；禁止非库存物料进入DN
+    "erpnext.selling.doctype.sales_order.sales_order.make_delivery_note":"vontoc.api.overrides_whitelist.make_delivery_note",
 }
 #
 # each overriding function accepts a `data` argument;

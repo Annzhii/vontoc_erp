@@ -9,19 +9,20 @@
  "engine": "InnoDB",
  "field_order": [
   "customer_section",
+  "column_break1",
+  "order_type",
+  "company",
+  "column_break_7",
+  "transaction_date",
+  "valid_till",
+  "column_break_yqup",
   "title",
   "naming_series",
   "quotation_to",
   "party_name",
   "customer_name",
-  "column_break_7",
-  "transaction_date",
-  "valid_till",
-  "column_break1",
-  "order_type",
-  "company",
-  "currency_and_price_list",
   "currency",
+  "currency_and_price_list",
   "conversion_rate",
   "column_break2",
   "selling_price_list",
@@ -29,7 +30,6 @@
   "plc_conversion_rate",
   "ignore_pricing_rule",
   "items_section",
-  "scan_barcode",
   "items",
   "sec_break23",
   "total_qty",
@@ -171,6 +171,7 @@
    "oldfieldname": "quotation_to",
    "oldfieldtype": "Select",
    "options": "DocType",
+   "permlevel": 3,
    "print_hide": 1,
    "reqd": 1
   },
@@ -184,6 +185,7 @@
    "oldfieldname": "customer",
    "oldfieldtype": "Link",
    "options": "quotation_to",
+   "permlevel": 3,
    "print_hide": 1,
    "search_index": 1
   },
@@ -264,6 +266,7 @@
    "collapsible": 1,
    "fieldname": "currency_and_price_list",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Currency and Price List",
    "options": "fa fa-tag"
   },
@@ -296,6 +299,7 @@
   {
    "fieldname": "selling_price_list",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Price List",
    "oldfieldname": "price_list_name",
    "oldfieldtype": "Select",
@@ -323,6 +327,7 @@
    "default": "0",
    "fieldname": "ignore_pricing_rule",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Ignore Pricing Rule",
    "permlevel": 1,
    "print_hide": 1
@@ -333,12 +338,6 @@
    "hide_border": 1,
    "oldfieldtype": "Section Break",
    "options": "fa fa-shopping-cart"
-  },
-  {
-   "fieldname": "scan_barcode",
-   "fieldtype": "Data",
-   "label": "Scan Barcode",
-   "options": "Barcode"
   },
   {
    "allow_bulk_edit": 1,
@@ -727,6 +726,7 @@
    "fieldtype": "Link",
    "label": "Customer Address",
    "options": "Address",
+   "permlevel": 3,
    "print_hide": 1
   },
   {
@@ -750,6 +750,7 @@
    "oldfieldname": "contact_person",
    "oldfieldtype": "Link",
    "options": "Contact",
+   "permlevel": 3,
    "print_hide": 1
   },
   {
@@ -785,6 +786,7 @@
    "fieldtype": "Link",
    "label": "Shipping Address",
    "options": "Address",
+   "permlevel": 3,
    "print_hide": 1
   },
   {
@@ -795,6 +797,7 @@
    "fieldname": "shipping_address",
    "fieldtype": "Small Text",
    "label": "Shipping Address",
+   "permlevel": 3,
    "print_hide": 1,
    "read_only": 1
   },
@@ -861,6 +864,7 @@
   {
    "fieldname": "more_info_tab",
    "fieldtype": "Tab Break",
+   "hidden": 1,
    "label": "More Info"
   },
   {
@@ -892,9 +896,9 @@
   },
   {
    "allow_on_submit": 1,
-   "default": "Quotation",
    "fieldname": "letter_head",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Letter Head",
    "oldfieldname": "letter_head",
    "oldfieldtype": "Select",
@@ -1096,12 +1100,16 @@
   {
    "fieldname": "column_break_iefd",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_yqup",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-shopping-cart",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-21 09:49:43.798150",
+ "modified": "2026-07-25 22:56:11.608058",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Quotation Price List",

@@ -5,6 +5,9 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from erpnext.controllers.selling_controller import SellingController
+from vontoc.utils.processflow import get_process_flow_trace_id_by_reference
+from vontoc.utils.process_engine import process_flow_engine
+from vontoc.utils.utils import get_marked_user
 
 class QuotationPriceList(SellingController):
     def calculate_taxes_and_totals(self):
@@ -119,3 +122,96 @@ def make_rfq(source_name, target_doc=None):
 
 
     return doclist
+
+@frappe.whitelist()
+def send_quotation_price_list(docname):
+    pf_name = get_process_flow_trace_id_by_reference("Quotation Price List", [docname])
+
+    to_open = [{
+        "doctype": "Quotation Price List",
+        "docname": docname,
+        "user": "Product Pricelist",
+        "description": (
+            "审核所申请物料的信息是否完整，如果完整，报指导销售价。"
+        ),
+    }]
+
+    if not pf_name:
+        setup_info={
+            "trace": "setup",
+            "pf_type": "Guideline Price",
+            "ref_doctype": "Quotation Price List",
+            "ref_docname": docname,
+            "mark": "1"
+        }
+        pf_name = process_flow_engine(process_flow_trace_info=setup_info)
+
+        process_flow_trace_info = {
+            "pf_name": [pf_name],
+            "trace": "add",
+            "todo_name": None,
+        }
+
+        process_flow_engine(to_open=to_open, process_flow_trace_info=process_flow_trace_info)
+        return
+    
+    process_flow_trace_info = {
+        "pf_name": pf_name,
+        "trace": "add",
+        "todo_name": None,
+    }
+
+    to_close = [{"doctype": "Quotation Price List", "docname": docname}]
+
+    process_flow_engine(
+        to_close=to_close,
+        to_open=to_open,
+        process_flow_trace_info=process_flow_trace_info,
+    )
+
+def submit_guideline_price(self):
+    to_close = [
+        {
+            "doctype": "Quotation Price List",
+            "docname": self.name
+        }
+    ]
+    
+    pf_name = get_process_flow_trace_id_by_reference("Quotation Price List", [self.name])
+
+    process_flow_trace_info={
+        "pf_name": pf_name,
+        "trace": "close",
+        "todo_name": None
+    }
+
+    process_flow_engine(to_close=to_close, process_flow_trace_info=process_flow_trace_info)
+
+@frappe.whitelist()
+def quotation_received(docname):
+    pf_name = get_process_flow_trace_id_by_reference("Quotation Price List", [docname])
+    # pf_name列表中元素只会有1个
+    user = get_marked_user (pf_name[0], mark = "1")
+    to_close = [
+        {
+            "doctype": "Quotation Price List",
+            "docname": docname
+        }
+    ]
+    
+    to_open = [
+        {
+            "doctype": "Quotation Price List",
+            "docname": docname,
+            "user": user,
+            "description": "业务员根据指导价格报价。",
+        }
+    ]
+
+    process_flow_trace_info={
+        "pf_name": pf_name,
+        "trace": "add",
+        "todo_name": None
+    }
+
+    process_flow_engine(to_close=to_close, to_open=to_open, process_flow_trace_info=process_flow_trace_info)
