@@ -281,6 +281,7 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False, a
 			target.set_advances()
 
 	def set_missing_values(source, target):
+		target.selling_price_list = "Cost Price"
 		target.flags.ignore_permissions = True
 		target.run_method("set_missing_values")
 		target.run_method("set_po_nos")
@@ -297,7 +298,6 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False, a
 			target.update(get_fetch_values("Sales Invoice", "company_address", target.company_address))
 
 		target.debit_to = get_party_account("Customer", source.supplier, source.company)
-		target.selling_price_list = "Cost Price"
 
 	def update_item(source, target, source_parent):
 		def get_billed_qty(sr_item_name):

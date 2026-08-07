@@ -21,7 +21,7 @@ def create_customer_from_supplier(supplier_name, company):
 
     customer.append("accounts", {
         "company": company,
-        "account": f"Debtors - CNY - {company_abbr}"
+        "account": f"1311 - Debtors - CNY - {company_abbr}"
     })
 
     auto_map_addresses(supplier, customer)
