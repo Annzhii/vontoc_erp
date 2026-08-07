@@ -151,13 +151,7 @@ def approve_subcontracted_order(self):
         "doctype": "Subcontracting Order",
         "docname": sub_po.name,
         "user": "Purchase Manager",
-        "description": "按需为分包采购合同调度原料。跟进供应商的货物交期，确认发货数量后，在系统中提交采购收货单（Purchase Receipt））。",
-    },
-    {
-        "doctype": "Purchase Order",
-        "docname": self.name,
-        "user": "Purchase Manager",
-        "description": "跟进并核实分包服务（外加工）的执行进度，服务完成后，及时提交对应的收货单以完成流程记录。",
+        "description": "按需为分包采购合同调度原料。跟进供应商的货物交期，确认发货数量后，在系统中提交采购收货单（Subcontracting Receipt））。",
     }]
 
     pf_name = get_process_flow_trace_id_by_reference("Purchase Order", [self.name])

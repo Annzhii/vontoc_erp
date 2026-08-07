@@ -21,7 +21,9 @@ doctype_js = {
     #"Delivery Note": "public/js/delivery_note.js",
     #"Sales Order": "public/js/sales_order.js",
     "Shipment": "public/js/shipment.js",
-    #"Quotation": "public/js/quotation.js"
+    "Purchase Order": "public/js/purchase_order.js",
+    "Subcontracting Receipt": "public/js/subcontracting_receipt.js",
+    "Subcontracting Order": "public/js/subcontracting_order.js",
 }
 
 # Apps
@@ -158,6 +160,7 @@ override_doctype_class = {
     #"Payment Entry": "vontoc.api.overrides.VONTOCPaymentEntry",
     "Sales Order": "vontoc.api.overrides.VONTOCSalesOrder",
     "Sales Invoice": "vontoc.api.overrides.VONTOCSalesInvoice",
+    "Purchase Invoice": "vontoc.api.overrides.VONTOCPurchaseInvoice",
     "Delivery Note": "vontoc.api.overrides.VONTOCDeliveryNote",
     "Material Request": "vontoc.api.overrides.VONTOCMaterialRequest", 
     "Subcontracting Receipt": "vontoc.api.overrides.VONTOCSubcontractingReceipt",
@@ -179,6 +182,10 @@ doc_events = {
 # 		"on_cancel": "method",
 # 		"on_trash": "method"
 # 	}
+    "Supplier": {
+        "after_insert": "vontoc.api.supplier.create_supplier_warehouse"
+    },
+
     "Item": {
         "before_save": "vontoc.event.item.auto_rename_on_group_change",
     },
@@ -240,9 +247,12 @@ override_whitelisted_methods = {
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
-# override_doctype_dashboards = {
-# 	"Task": "vontoc.task.get_dashboard_data"
-# }
+override_doctype_dashboards = {
+	"Subcontracting Order": "vontoc.overrides_dashboard.subcontracting_order.get_data",
+	"Subcontracting Receipt": "vontoc.overrides_dashboard.subcontracting_receipt.get_data",
+	"Sales Invoice": "vontoc.overrides_dashboard.sales_invoice.get_data",
+	"Purchase Invoice": "vontoc.overrides_dashboard.purchase_invoice.get_data",
+}
 
 # exempt linked doctypes from being automatically cancelled
 #

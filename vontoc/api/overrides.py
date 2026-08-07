@@ -9,17 +9,18 @@ from erpnext.subcontracting.doctype.subcontracting_order.subcontracting_order im
 from erpnext.stock.doctype.item.item import Item
 from erpnext.buying.doctype.supplier_quotation.supplier_quotation import SupplierQuotation
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import SalesInvoice
+from erpnext.accounts.doctype.purchase_invoice.purchase_invoice import PurchaseInvoice
 from erpnext.stock.doctype.delivery_note.delivery_note import DeliveryNote
 from erpnext.selling.doctype.sales_order.sales_order import SalesOrder
-from erpnext.controllers.buying_controller import BuyingController
 
 from vontoc.vontoc.doctype.guideline_price.guideline_price import GuidelinePrice, submit_guideline_price
-from frappe.utils import flt, strip_html, cstr
+from frappe.utils import flt, get_link_to_form
 from frappe.desk.doctype.notification_log.notification_log import (enqueue_create_notification)
 from erpnext.buying.utils import validate_for_items
 from erpnext.manufacturing.doctype.blanket_order.blanket_order import (validate_against_blanket_order)
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import (validate_inter_company_party, update_linked_doc)
 
+from vontoc.custom_controller.status_updater import _update_prevdoc_status
 from vontoc.api.purchase_receipt import stock_purchase_receipt, mirror_internal_pr
 from vontoc.api.subcontracting_receipt import stock_subcontracting_receipt
 from vontoc.api.subcontracting_order import subcontracting_order_submitted
@@ -151,10 +152,56 @@ class VONTOCShipment(Shipment):
 		if self.workflow_state == "Ready For Dispatch":
 			check_delivery_notes_submitted(self)
 
+class VONTOCPurchaseInvoice(PurchaseInvoice):
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+
+		self.status_updater.extend(
+			[
+				{
+					"source_dt": "Purchase Invoice Item",
+					"target_dt": "Subcontracting Order Item",
+					"join_field": "custom_subcontracting_order_detail",
+					"target_field": "custom_billed_amt",
+					"target_parent_dt": "Subcontracting Order",
+					"target_parent_field": "custom_amount_billed",
+					"target_ref_field": "amount",
+					"source_field": "amount",
+					"percent_join_field": "custom_subcontracting_order",
+					"overflow_type": "billing",
+				},
+			]
+		)
+
 class VONTOCSalesInvoice(SalesInvoice):
 	def on_update_after_submit(self):
 		check_allocated_amount(self)
 		sync_sales_invoice_to_delivery_note(self)
+
+	def update_prevdoc_status(self):
+		_update_prevdoc_status(self)
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+
+		self.status_updater.extend(
+			[
+				{
+					"source_dt": "Sales Invoice Item",
+					"target_field": "custom_billed_amt",
+					"target_ref_field": "amount",
+					"target_dt": "Subcontracting Receipt Supplied Item",
+					"join_field": "custom_subcontracting_receipt_detail",
+					"target_parent_dt": "Subcontracting Receipt",
+					"target_parent_field": "custom_amount_billed",
+					"source_field": "amount",
+					"percent_join_field": "custom_subcontracting_receipt",
+					"keyword": "Billed",
+					"overflow_type": "billing",
+				},
+			]
+		)
 
 class VONTOCDeliveryNote(DeliveryNote):
 	def on_submit(self):
@@ -165,3 +212,4 @@ class VONTOCSalesOrder(SalesOrder):
 	def on_submit(self):
 		super().on_submit()
 		sales_order_submitted(self)
+
