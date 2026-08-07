@@ -125,6 +125,11 @@ def get_mapped_purchase_invoice(source_name, target_doc=None, ignore_permissions
 
 def set_missing_values(source, target):
 	target.selling_price_list = "Standard Buying"
+	target.currency = frappe.db.get_value(
+		"Price List",
+		target.buying_price_list,
+		"currency"
+	)
 	target.run_method("set_missing_values")
 	target.run_method("calculate_taxes_and_totals")
 	target.run_method("set_use_serial_batch_fields")

@@ -33,6 +33,8 @@ frappe.ui.form.on("Subcontracting Receipt", {
 				__("Create")
 			);
 
+			frm.remove_custom_button(__("Purchase Receipt"), __("Create"));
+
 		}
 	}
 });

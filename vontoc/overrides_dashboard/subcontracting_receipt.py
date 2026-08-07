@@ -20,6 +20,7 @@ def get_data(data=None):
 				"label": _("Reference"),
 				"items": [
 					"Purchase Order",
+					"Purchase Receipt",
 					"Subcontracting Order",
 					"Quality Inspection",
 					"Project",

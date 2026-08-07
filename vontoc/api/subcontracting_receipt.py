@@ -282,6 +282,11 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False, a
 
 	def set_missing_values(source, target):
 		target.selling_price_list = "Cost Price"
+		target.currency = frappe.db.get_value(
+			"Price List",
+			target.selling_price_list,
+			"currency"
+		)
 		target.flags.ignore_permissions = True
 		target.run_method("set_missing_values")
 		target.run_method("set_po_nos")
@@ -326,7 +331,7 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False, a
 					"party_account_currency": "party_account_currency",
 					"supplier":"customer"
 				},
-				"field_no_map": ["payment_terms_template"],
+				"field_no_map": ["payment_terms_template", "currency", "conversion_rate"],
 				"validation": {"docstatus": ["=", 1]},
 			},
 			"Subcontracting Receipt Supplied Item": {
