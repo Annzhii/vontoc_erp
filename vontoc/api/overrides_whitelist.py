@@ -10,6 +10,11 @@ from frappe.model.utils import get_fetch_values
 from frappe.contacts.doctype.address.address import get_company_address
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
+from erpnext.manufacturing.doctype.production_plan.production_plan import (
+	get_items_for_material_requests,
+)
+from frappe.utils import add_days, cint, cstr, flt, nowdate, strip_html
+
 
 @frappe.whitelist()
 def add(args=None, *, ignore_permissions=False):
@@ -600,3 +605,63 @@ def make_delivery_note(source_name, target_doc=None, kwargs=None):
 	set_missing_values(so, target_doc)
 
 	return target_doc
+
+# bug; raw_materials only has item_main_code, does not have main_bom_item
+@frappe.whitelist()
+def make_raw_material_request(items, company, sales_order, project=None):
+	if not frappe.has_permission("Sales Order", "write"):
+		frappe.throw(_("Not permitted"), frappe.PermissionError)
+
+	if isinstance(items, str):
+		items = frappe._dict(json.loads(items))
+
+	for item in items.get("items"):
+		item["include_exploded_items"] = items.get("include_exploded_items")
+		item["ignore_existing_ordered_qty"] = items.get("ignore_existing_ordered_qty")
+		item["include_raw_materials_from_sales_order"] = items.get("include_raw_materials_from_sales_order")
+
+	items.update({"company": company, "sales_order": sales_order})
+
+	item_wh = {}
+	for item in items.get("items"):
+		if item.get("warehouse"):
+			item_wh[item.get("item_code")] = item.get("warehouse")
+
+	raw_materials = get_items_for_material_requests(items)
+	if not raw_materials:
+		frappe.msgprint(_("Material Request not created, as quantity for Raw Materials already available."))
+		return
+
+	material_request = frappe.new_doc("Material Request")
+	material_request.update(
+		dict(
+			doctype="Material Request",
+			transaction_date=nowdate(),
+			company=company,
+			material_request_type="Purchase",
+		)
+	)
+	for item in raw_materials:
+		item_doc = frappe.get_cached_doc("Item", item.get("item_code"))
+
+		schedule_date = add_days(nowdate(), cint(item_doc.lead_time_days))
+		row = material_request.append(
+			"items",
+			{
+				"item_code": item.get("item_code"),
+				"qty": item.get("quantity"),
+				"schedule_date": schedule_date,
+				"warehouse": item_wh.get(item.get("main_item_code")) or item.get("warehouse"),
+				"sales_order": sales_order,
+				"project": project,
+			},
+		)
+
+		if not (strip_html(item.get("description")) and strip_html(item_doc.description)):
+			row.description = item_doc.item_name or item.get("item_code")
+
+	material_request.insert()
+	material_request.flags.ignore_permissions = 1
+	material_request.run_method("set_missing_values")
+	material_request.submit()
+	return material_request

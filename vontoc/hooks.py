@@ -24,6 +24,7 @@ doctype_js = {
     "Purchase Order": "public/js/purchase_order.js",
     "Subcontracting Receipt": "public/js/subcontracting_receipt.js",
     "Subcontracting Order": "public/js/subcontracting_order.js",
+    "Material Request": "public/js/material_request.js",
 }
 
 # Apps
@@ -242,6 +243,8 @@ override_whitelisted_methods = {
     "erpnext.stock.doctype.material_request.material_request.make_purchase_order": "vontoc.api.material_request.make_purchase_order",
     #覆盖从SO常见DN的方法，DN的ignore pricing rule 和SO同步；禁止非库存物料进入DN
     "erpnext.selling.doctype.sales_order.sales_order.make_delivery_note":"vontoc.api.overrides_whitelist.make_delivery_note",
+    #原材料创建,系统bug，get_material_request_items() 返回： main_item_code， 但是"warehouse": item_wh.get(item.get("main_bom_item")) or item.get("warehouse")
+    "erpnext.selling.doctype.sales_order.sales_order.make_raw_material_request":"vontoc.api.overrides_whitelist.make_raw_material_request",
 }
 #
 # each overriding function accepts a `data` argument;
@@ -252,6 +255,7 @@ override_doctype_dashboards = {
 	"Subcontracting Receipt": "vontoc.overrides_dashboard.subcontracting_receipt.get_data",
 	"Sales Invoice": "vontoc.overrides_dashboard.sales_invoice.get_data",
 	"Purchase Invoice": "vontoc.overrides_dashboard.purchase_invoice.get_data",
+    "Material Request": "vontoc.overrides_dashboard.material_request.get_data",
 }
 
 # exempt linked doctypes from being automatically cancelled

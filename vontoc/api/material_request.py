@@ -8,6 +8,9 @@ from erpnext.subcontracting.doctype.subcontracting_bom.subcontracting_bom import
 )
 from frappe.model.mapper import get_mapped_doc
 from erpnext.stock.doctype.item.item import get_item_defaults
+from erpnext.stock.get_item_details import get_default_bom
+from frappe.utils import add_days, cint, flt, nowdate, strip_html
+from erpnext.manufacturing.doctype.production_plan.production_plan import get_items_for_material_requests
 
 @frappe.whitelist()
 def material_request_submitted (doc):
@@ -160,3 +163,92 @@ def update_item(obj, target, source_parent):
 			)
 			target.qty = target.fg_item_qty * sc_bom.conversion_factor
 			target.stock_qty = target.qty * target.conversion_factor
+
+@frappe.whitelist()
+def get_work_order_items(material_request):
+    """
+    Return items with BOM from Material Request
+    """
+
+    mr = frappe.get_doc("Material Request", material_request)
+
+    items = []
+
+    for i in mr.items:
+        bom = get_default_bom(i.item_code)
+
+        if not bom:
+            continue
+
+        items.append(
+            {
+                "name": i.name,
+                "item_code": i.item_code,
+                "item_name": i.item_name,
+                "description": i.description,
+                "bom": bom,
+                "warehouse": i.warehouse,
+                "pending_qty": i.qty,
+                "required_qty": i.qty,
+                "material_request_item": i.name,
+            }
+        )
+
+    return items
+
+@frappe.whitelist()
+def make_raw_material_request(items, company, material_request, project=None):
+
+	if isinstance(items, str):
+		items = frappe._dict(json.loads(items))
+
+	for item in items.get("items"):
+		item["include_exploded_items"] = items.get("include_exploded_items")
+		item["ignore_existing_ordered_qty"] = items.get("ignore_existing_ordered_qty")
+		item["include_raw_materials_from_sales_order"] = items.get("include_raw_materials_from_sales_order")
+
+	items.update({"company": company, "custom_material_request": material_request})
+
+	item_wh = {}
+	for item in items.get("items"):
+		if item.get("warehouse"):
+			item_wh[item.get("item_code")] = item.get("warehouse")
+
+	raw_materials = get_items_for_material_requests(items)
+	if not raw_materials:
+		frappe.msgprint(_("Material Request not created, as quantity for Raw Materials already available."))
+		return
+
+	new_material_request = frappe.new_doc("Material Request")
+	new_material_request.update(
+		dict(
+			doctype="Material Request",
+			transaction_date=nowdate(),
+			company=company,
+			material_request_type="Purchase",
+		)
+	)
+	for item in raw_materials:
+		item_doc = frappe.get_cached_doc("Item", item.get("item_code"))
+
+		schedule_date = add_days(nowdate(), cint(item_doc.lead_time_days))
+		row = new_material_request.append(
+			"items",
+			{
+				"item_code": item.get("item_code"),
+				"qty": item.get("quantity"),
+				"schedule_date": schedule_date,
+				"warehouse": item_wh.get(item.get("main_item_code")) or item.get("warehouse"),
+				"custom_material_request": material_request,
+				"project": project,
+			},
+		)
+
+		if not (strip_html(item.get("description")) and strip_html(item_doc.description)):
+			row.description = item_doc.item_name or item.get("item_code")
+
+	new_material_request.insert()
+	new_material_request.flags.ignore_permissions = 1
+	new_material_request.run_method("set_missing_values")
+	new_material_request.submit()
+	return new_material_request
