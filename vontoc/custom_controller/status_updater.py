@@ -84,6 +84,9 @@ def validate_qty(self):
 
             # Query regular items with item_code field
             if regular_items:
+                for item in regular_items:
+                    if not item.get("rm_item_code"):
+                        item["rm_item_code"] = item.get("item_code")
                 item_details.extend(self.fetch_items_with_pending_qty(args, "rm_item_code", regular_items))
 
             # Query production plan items with production_item field
