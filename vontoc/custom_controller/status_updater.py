@@ -3,9 +3,8 @@ from frappe import _
 from frappe.utils import flt, get_link_to_form
 
 def _update_prevdoc_status(self):
-	self.update_qty()
-	validate_qty(self)
-
+    self.update_qty()
+    validate_qty(self)
 def validate_qty(self):
     """Validates qty at row level"""
     self.item_allowance = {}
@@ -47,7 +46,7 @@ def validate_qty(self):
                             "production_plan_sub_assembly_item": d.get(
                                 "production_plan_sub_assembly_item"
                             ),
-                            "rm_item_code": d.get("rm_item_code"),
+                            "custom_subcontracting_receipt": d.get("custom_subcontracting_receipt"),
                             "idx": d.idx,
                             "child_doc": d,
                         }
@@ -80,7 +79,7 @@ def validate_qty(self):
                 if item.production_plan_sub_assembly_item in pp_subcontract_items:
                     pp_items.append(item.name)
                 else:
-                    if item.rm_item_code:
+                    if item.custom_subcontracting_receipt:
                         rm_items.append(item.name)
                     else:
                         regular_items.append(item.name)
@@ -88,7 +87,7 @@ def validate_qty(self):
             item_details = []
 
             if rm_items:
-                item_details.extend(self.fetch_items_with_pending_qty(args, "rm_item_code", regular_items))
+                item_details.extend(self.fetch_items_with_pending_qty(args, "rm_item_code", rm_items))
 
             # Query regular items with item_code field
             if regular_items:
