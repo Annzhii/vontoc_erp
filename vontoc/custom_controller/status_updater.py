@@ -47,6 +47,7 @@ def validate_qty(self):
                             "production_plan_sub_assembly_item": d.get(
                                 "production_plan_sub_assembly_item"
                             ),
+                            "rm_item_code": d.get("rm_item_code"),
                             "idx": d.idx,
                             "child_doc": d,
                         }
@@ -71,6 +72,7 @@ def validate_qty(self):
                     pluck="name",
                 )
 
+            rm_items = []
             regular_items = []
             pp_items = []
 
@@ -78,16 +80,19 @@ def validate_qty(self):
                 if item.production_plan_sub_assembly_item in pp_subcontract_items:
                     pp_items.append(item.name)
                 else:
-                    regular_items.append(item.name)
+                    if item.rm_item_code:
+                        rm_items.append(item.name)
+                    else:
+                        regular_items.append(item.name)
 
             item_details = []
 
+            if rm_items:
+                item_details.extend(self.fetch_items_with_pending_qty(args, "rm_item_code", regular_items))
+
             # Query regular items with item_code field
             if regular_items:
-                for item in regular_items:
-                    if not item.get("rm_item_code"):
-                        item["rm_item_code"] = item.get("item_code")
-                item_details.extend(self.fetch_items_with_pending_qty(args, "rm_item_code", regular_items))
+                item_details.extend(self.fetch_items_with_pending_qty(args, "item_code", regular_items))
 
             # Query production plan items with production_item field
             if pp_items:
