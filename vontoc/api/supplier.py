@@ -113,6 +113,11 @@ def create_supplier_warehouse(doc, method=None):
 
     company = frappe.defaults.get_user_default("Company")
 
+    abbr = frappe.db.get_value(
+        "Company",
+        company,
+        "abbr"
+    )
     # 防止重复创建
     if frappe.db.exists(
         "Warehouse",
@@ -128,7 +133,7 @@ def create_supplier_warehouse(doc, method=None):
         "Warehouse",
         {
             "company": company,
-            "warehouse_name": "Supplier",
+            "warehouse_name": f"Supplier - {abbr}",
             "is_group": 1,
         },
         "name"
