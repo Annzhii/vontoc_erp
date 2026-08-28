@@ -295,5 +295,27 @@
   "name": "Convert To PI",
   "script": "frappe.ui.form.on('Quotation', {\n    refresh(frm) {\n        if (frm.doc.custom_custom_status) {\n            frm.page.set_indicator(frm.doc.custom_custom_status, \"blue\", \"custom-status-indicator\");\n        }\n\n        // 只要提交了、不是 PI、不是 Ordered，就显示按钮\n        if (frm.doc.docstatus === 1 && frm.doc.custom_custom_status !== \"PI\") {\n\n            frm.add_custom_button(\"Convert To PI\", () => {\n\n                frappe.call({\n                    method: \"frappe.client.set_value\",\n                    args: {\n                        doctype: frm.doc.doctype,\n                        name: frm.doc.name,\n                        fieldname: \"custom_custom_status\",\n                        value: \"PI\"\n                    },\n                    callback: function () {\n                        frappe.show_alert({\n                            message: \"Quotation 已转换为 PI 状态\",\n                            indicator: \"green\"\n                        });\n                        frm.reload_doc();\n                    }\n                });\n\n            });\n        }\n    }\n});",
   "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Purchase Order",
+  "enabled": 1,
+  "modified": "2026-08-01 23:23:24.791796",
+  "module": null,
+  "name": "Hide Create PI Button If Subcontracted",
+  "script": "frappe.ui.form.on(\"Purchase Order\", {\n\trefresh(frm) {\n\t\tif (frm.doc.is_subcontracted) {\n\t\t\tfrm.remove_custom_button(__(\"Purchase Invoice\"));\n\t\t}\n\t}\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Item",
+  "enabled": 1,
+  "modified": "2026-08-28 16:19:51.227649",
+  "module": "VONTOC",
+  "name": "Calculate Cavity",
+  "script": "frappe.ui.form.on('Item', {\n    refresh: function(frm) {\n        update_mold_cavity(frm);\n    }\n});\n\nfrappe.ui.form.on('Molded Part Item', {\n    custom_cavity_number: function(frm, cdt, cdn) {\n        update_mold_cavity(frm);\n    },\n\n    custom_molded_part_remove: function(frm) {\n        update_mold_cavity(frm);\n    }\n});\n\nfunction update_mold_cavity(frm) {\n    let molded_parts = frm.doc.custom_molded_part || [];\n\n    let total_cavity = molded_parts.reduce((total, row) => {\n        return total + (flt(row.cavity_number) || 0);\n    }, 0);\n\n    frm.set_value('custom_cavity_number', total_cavity);\n}",
+  "view": "Form"
  }
 ]

@@ -19,6 +19,7 @@
   {
    "fieldname": "cavity_number",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Cavity Number",
    "read_only": 1
   }
@@ -27,7 +28,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-05-28 14:44:36.816476",
+ "modified": "2026-08-26 23:50:26.547169",
  "modified_by": "Administrator",
  "module": "VONTOC",
  "name": "Molded Part Item",
