@@ -312,10 +312,10 @@
   "doctype": "Client Script",
   "dt": "Item",
   "enabled": 1,
-  "modified": "2026-08-28 16:19:51.227649",
+  "modified": "2026-08-28 17:10:12.457525",
   "module": "VONTOC",
   "name": "Calculate Cavity",
-  "script": "frappe.ui.form.on('Item', {\n    refresh: function(frm) {\n        update_mold_cavity(frm);\n    }\n});\n\nfrappe.ui.form.on('Molded Part Item', {\n    custom_cavity_number: function(frm, cdt, cdn) {\n        update_mold_cavity(frm);\n    },\n\n    custom_molded_part_remove: function(frm) {\n        update_mold_cavity(frm);\n    }\n});\n\nfunction update_mold_cavity(frm) {\n    let molded_parts = frm.doc.custom_molded_part || [];\n\n    let total_cavity = molded_parts.reduce((total, row) => {\n        return total + (flt(row.cavity_number) || 0);\n    }, 0);\n\n    frm.set_value('custom_cavity_number', total_cavity);\n}",
+  "script": "frappe.ui.form.on('Item', {\n    refresh: function(frm) {\n        update_mold_cavity(frm);\n    }\n});\n\nfrappe.ui.form.on('Molded Part Item', {\n    cavity_number: function(frm, cdt, cdn) {\n        update_mold_cavity(frm);\n    },\n\n    custom_molded_part_remove: function(frm) {\n        update_mold_cavity(frm);\n    }\n});\n\nfunction update_mold_cavity(frm) {\n    let molded_parts = frm.doc.custom_molded_part || [];\n\n    if (molded_parts.length === 0) {\n        frm.set_value('custom_mold_cavity_number', '');\n        return;\n    }\n\n    let cavity_values = molded_parts.map(row => {\n        return flt(row.cavity_number) || 0;\n    });\n\n    let result;\n\n    if (molded_parts.length === 1) {\n        // 单行：1 X 腔数\n        result = `1 X ${cavity_values[0]}`;\n    } else {\n        // 多行：腔数之间用 +\n        result = cavity_values.join(' + ');\n    }\n\n    frm.set_value('custom_mold_cavity_number', result);\n}",
   "view": "Form"
  }
 ]
