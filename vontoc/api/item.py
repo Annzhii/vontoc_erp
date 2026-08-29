@@ -251,7 +251,7 @@ def build_item_description(doc):
     fields = [
         ("材料", "Material", "custom_material"),
         ("材料牌号", "Material Grade", "custom_material_grade"),
-        ("腔数", "Cavities", "custom_mold_cavity"),
+        ("腔数", "Cavities", "custom_mold_cavity_number"),
         ("颜色", "Color", "custom_color"),
         ("重量(g)", "Weight(g)", "custom_weightg"),
         ("尺寸(mm)", "Size(mm)", "custom_sizemm"),
@@ -283,10 +283,10 @@ def build_item_description(doc):
             zh_value, en_value = value
 
             if zh_value:
-                zh_parts.append(f"--{zh_label}--<br>{zh_value}")
+                zh_parts.append(f"<br>--{zh_label}--<br>{zh_value}")
 
             if en_value:
-                en_parts.append(f"--{en_label}--<br>{en_value}")
+                en_parts.append(f"<br>--{en_label}--<br>{en_value}")
         else:
             zh_parts.append(f"{zh_label}: {value}")
             en_parts.append(f"{en_label}: {value}")
