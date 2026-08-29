@@ -119,7 +119,7 @@ def reject_item(docname):
 
 FIELD_LABELS = {
     "item": ("物料编码", "Item"),
-    "cavity_number": ("腔数", "Cavity Number"),
+    "cavity_number": ("出件数", "Cavity Number"),
 }
 
 
