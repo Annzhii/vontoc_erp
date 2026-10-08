@@ -250,26 +250,14 @@ def get_field_display_value(doc, fieldname):
 def build_item_description(doc):
     fields = [
         ("材料", "Material", "custom_material"),
-        ("材料牌号", "Material Grade", "custom_material_grade"),
         ("腔数", "Cavities", "custom_mold_cavity_number"),
         ("颜色", "Color", "custom_color"),
         ("重量(g)", "Weight(g)", "custom_weightg"),
-        ("尺寸(mm)", "Size(mm)", "custom_sizemm"),
         ("表面处理", "Surface Finish", "custom_surface_finish"),
-        ("规格", "Specification", "custom_specification"),
-        ("塑料牌号", "Plastic Type", "custom_plastic_type"),
-        ("塑料类型", "Plastic Grade", "custom_plastic_grade"),
-        ("品牌或厂家", "Brand / Manufacturer", "custom_plastic_brand"),
-        ("制件信息", "Molded Part", "custom_molded_part"),
-        ("客供料", "Customer Supplied Material", "custom_customer_supplied_material"),
-        ("组成部分", "Component", "custom_component"),
     ]
 
     zh_parts = []
     en_parts = []
-
-    zh_title = doc.custom_item_name_inter or doc.item_name or ""
-    en_title = doc.item_name or ""
 
     for zh_label, en_label, fieldname in fields:
         value = get_field_display_value(doc, fieldname)
@@ -292,9 +280,9 @@ def build_item_description(doc):
             en_parts.append(f"{en_label}: {value}")
 
     doc.custom_description_zh = (
-        zh_title + "<br>" + " | ".join(zh_parts)
+        "<br>".join(zh_parts)
     )
 
     doc.description = (
-        en_title + "<br>" + " | ".join(en_parts)
+        "<br>".join(en_parts)
     )
