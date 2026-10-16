@@ -190,13 +190,13 @@ doc_events = {
     "Item": {
         "before_save": "vontoc.event.item.auto_rename_on_group_change",
     },
-    "Communication": {
+    #"Communication": {
         # event 负责推送push notification， api负责内部 notify_user
-        "after_insert": ["vontoc.event.communication.communication_after_insert", "vontoc.api.communication.after_insert_communication"]
-    },
-    "Notification Log":{
-        "after_insert": "vontoc.event.notification_log.notification_after_insert",
-    }
+    #    "after_insert": ["vontoc.event.communication.communication_after_insert", "vontoc.api.communication.after_insert_communication"]
+    #},
+    #"Notification Log":{
+    #    "after_insert": "vontoc.event.notification_log.notification_after_insert",
+    #}
 }
 
 # Scheduled Tasks

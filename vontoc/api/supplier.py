@@ -133,7 +133,7 @@ def create_supplier_warehouse(doc, method=None):
         "Warehouse",
         {
             "company": company,
-            "warehouse_name": f"Supplier - {abbr}",
+            "warehouse_name": ["in", ["Supplier", f"Supplier - {abbr}"]],
             "is_group": 1,
         },
         "name"
