@@ -83,8 +83,12 @@ def stock_purchase_receipt(docname):
 
     mrs = set()
     for item in pr.items:
-        mrs.add(item.material_request)
+        # 跳过超收行
+        if item.over_receipt:
+            continue
 
+        mrs.add(item.material_request)
+        
     for mr in mrs:
         full_received = if_full_received(mr)
         if full_received == False:
