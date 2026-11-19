@@ -206,7 +206,10 @@ scheduler_events = {
         "0/1 * * * *": [
             "frappe.email.doctype.email_account.email_account.pull"
         ]
-    }
+    },
+    "daily": [
+        "vontoc.tasks.renew_jmap_push_subscriptions"
+    ]
 }
 
 # scheduler_events = {
