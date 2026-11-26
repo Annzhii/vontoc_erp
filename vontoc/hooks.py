@@ -208,7 +208,7 @@ scheduler_events = {
         ]
     },
     "daily": [
-        "vontoc.tasks.renew_jmap_push_subscriptions"
+        "vontoc.task.renew_jmap_push_subscriptions"
     ]
 }
 
