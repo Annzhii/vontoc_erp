@@ -171,6 +171,7 @@ override_doctype_class = {
     "Supplier Quotation": "vontoc.api.overrides.VONTOCSupplierQuotation",
     "Guideline Price": "vontoc.api.overrides.VONTOCGuidelinePrice",
     "Shipment": "vontoc.api.overrides.VONTOCShipment",
+    "Email Account": "vontoc.api.overrides.CustomEmailAccount"
 }
 
 # Document Events
